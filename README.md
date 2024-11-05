@@ -1,6 +1,6 @@
 # Flip Proof
 
-Flip Proof is an Orientation and Type Safe Medical Imaging Framework for .NET languages including C#, Python (via IronPython), J#, C++/CLI, and Visual Basic. It is intended to support medical image processing for high-stakes settings such as surgery.
+Flip Proof is an Orientation and Type Safe Medical Imaging Framework for .NET languages including C#, Python (via IronPython), F#, C++/CLI, and Visual Basic. It is intended to support medical image processing for high-stakes settings such as surgery.
 
 'Type safety' refers to an inability to accidentally mix images of incompatible types (such as dividing by a binary mask). 
 'Orientation safety' refers to an inability to accidentaly mix images of different orientations, such as multiplying two images together that are not registered.
