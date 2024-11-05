@@ -8,9 +8,12 @@ public class NiftiReader : NiftiReaderBase
 {
 	internal const int headerSizeMustBe = 348;
 
-	public NiftiReader(string filename)
+	public NiftiReader(string filename) : this(Gen.GetUnzippedStream(filename, returnedStreamMustBeSeekable: true))
 	{
-		s = FlipProof.Image.IO.Gen.GetUnzippedStream(filename, returnedStreamMustBeSeekable: true);
+	}
+	public NiftiReader(Stream unzippedStream)
+	{
+		s = unzippedStream;
 		br = new BinaryReader(s);
 	}
 

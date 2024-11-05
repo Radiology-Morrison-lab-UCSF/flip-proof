@@ -110,7 +110,7 @@ public class DenseMatrix<T> where T:struct, IFloatingPoint<T>
 		{
 			throw new ArgumentException($"Expected {NoCols} but got {row.Length}");
 		}
-      return new DenseMatrix<T>(Tensor<T>.CreateTensor(torch.cat([storage.Storage, storage.ArrayToTensor(row)]), false));
+      return new DenseMatrix<T>(storage.RowStack(row));
    }
 
    public DenseMatrix<T> MatMul(DenseMatrix<T> right) => NewFromResultOfOperation(torch.matmul, right);

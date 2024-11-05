@@ -26,32 +26,40 @@ public static class Gen
 	{
 		Stream s;
 		if (filename.EndsWith(".gz"))
-		{
-			FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 192000);
-			GZipStream gzip = new GZipStream(fs, CompressionMode.Decompress);
-			if (returnedStreamMustBeSeekable)
-			{
-				using (gzip)
-				{
-					s = new LargeMemoryStream(fs.Length);
-					gzip.CopyTo(s);
-					s.Seek(0L, SeekOrigin.Begin);
-				}
-				fs.Dispose();
-			}
-			else
-			{
-				s = gzip;
-			}
-		}
-		else
+      {
+         FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 192000);
+         s = GetUnzippedStream(fs, returnedStreamMustBeSeekable);
+      }
+      else
 		{
 			s = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 192000);
 		}
 		return s;
 	}
 
-	public static float ConvertEndian(float f)
+   internal static Stream GetUnzippedStream(Stream zippedStream, bool returnedStreamMustBeSeekable)
+   {
+      Stream s;
+      GZipStream gzip = new GZipStream(zippedStream, CompressionMode.Decompress);
+      if (returnedStreamMustBeSeekable)
+      {
+         using (gzip)
+         {
+            s = new LargeMemoryStream(zippedStream.Length);
+            gzip.CopyTo(s);
+            s.Seek(0L, SeekOrigin.Begin);
+         }
+         zippedStream.Dispose();
+      }
+      else
+      {
+         s = gzip;
+      }
+
+      return s;
+   }
+
+   public static float ConvertEndian(float f)
 	{
 		return BitConverter.ToSingle(BitConverter.GetBytes(ConvertEndian(BitConverter.ToUInt32(BitConverter.GetBytes(f), 0))).ToArray(), 0);
 	}

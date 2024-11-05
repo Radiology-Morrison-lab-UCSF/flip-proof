@@ -97,7 +97,7 @@ public sealed class DecomposableTransform<T> : IEquatable<DecomposableTransform<
 
     public static DenseMatrix<T> NiftiMatToFastMat_Static(DenseMatrix<T> rotate, T[] pixDim, T[] offset, T qfac)
     {
-        if (!qfac.Equals(1) && !qfac.Equals(-1))
+        if (!qfac.Equals(T.One) && !qfac.Equals(T.NegativeOne))
         {
             throw new ArgumentException("qfac should be -1 or 1");
         }

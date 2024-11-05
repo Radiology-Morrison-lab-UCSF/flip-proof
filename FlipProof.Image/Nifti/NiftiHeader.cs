@@ -222,7 +222,6 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
          // Method 3 
          // Method 1
 
-         Matrix4x4 mat;
 			if (qFormCode > 0)
 			{
 				return GetVox2WorldMatrix_ScannerSpace();
@@ -302,34 +301,33 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
          M11 = (float)d[0, 0],
          M21 = (float)d[1, 0],
          M31 = (float)d[2, 0],
-         M41 = (float)d[3, 0],
+         M41 = 0f,
 
          M12 = (float)d[0, 1],
          M22 = (float)d[1, 1],
          M32 = (float)d[2, 1],
-         M42 = (float)d[3, 1],
+         M42 = 0f,
 
          M13 = (float)d[0, 2],
          M23 = (float)d[1, 2],
          M33 = (float)d[2, 2],
-         M43 = (float)d[3, 2],
+         M43 = 0f,
 
          M14 = (float)d[0, 3],
          M24 = (float)d[1, 3],
          M34 = (float)d[2, 3],
-         M44 = (float)d[3, 3],
+         M44 = 1f,
 
       };
    }
    public DecomposableTransform<double> GetVox2WorldDecomposableMatrix_ScannerSpace()
    {
-      return DecomposableTransform<double>.FromNiftiQuaternions(quartern_b, quartern_c, quartern_d, PixDim.Skip(1L).Take(3L).Select((Func<float, double>)((float entry) => entry))
-         .ToArray(), new double[3]
-      {
+      return DecomposableTransform<double>.FromNiftiQuaternions(quartern_b, quartern_c, quartern_d, PixDim.Skip(1L).Take(3L).Select(Convert.ToDouble).ToArray(),
+      [
          quartern_x,
          quartern_y,
          quartern_z
-      }, Qface);
+      ], Qface);
 
    }
    public void RemoveFlatDimensions(int startAtIndex = 3)
@@ -365,7 +363,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		quartern_z = (float)translation[2];
 	}
 
-	public bool Verify(List<string> warnings, out string errMsg)
+	public bool Verify(IList<string> warnings, out string? errMsg)
 	{
 		if (bitPix != dataType.BitsPerPixel())
 		{
@@ -631,7 +629,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		};
 
 
-		if(!header.Verify(new List<string>(), out string error))
+		if(!header.Verify([], out string? error))
 		{
 			throw new Exception(error);
 		}

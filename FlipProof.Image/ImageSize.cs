@@ -19,7 +19,7 @@ public readonly record struct ImageSize : IEnumerable<uint>
    /// <summary>
    /// 4 if volumes is > 1, else 3
    /// </summary>
-   public int NDims => Volumes == 1 ? 4 : 3;
+   public int NDims => Volumes == 1 ? 3 : 4;
 
    public uint VoxelCount => X * Y * Z * Volumes;
 

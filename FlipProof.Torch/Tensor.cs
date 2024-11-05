@@ -125,7 +125,6 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       return CreateTensor(wrapCopy ? t.clone() : t);
    }
 
-
    public Tensor<T> DeepClone()
    {
       var clone = CreateSameSizeBlank();
@@ -271,11 +270,34 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
 
    #endregion
 
+   #region Wrapped Methods
    public BoolTensor ValuewiseEquals<S>(Tensor<S> other)
       where S:struct
    {
       return new(Storage.eq(other.Storage));
    }
+
+   public Tensor<T> RowStack(T[] other)
+   {
+      using Tensor<T> row = this.Create1D(other);
+      return RowStack(row);
+   }
+   /// <summary>
+   /// Returns a new tensor that is this with the additional row added
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public Tensor<T> RowStack(Tensor<T> other) => CreateFromTensor(torch.row_stack([Storage, other.Storage]), true);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional column added
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public Tensor<T> ColumnStack(Tensor<T> other) => CreateFromTensor(torch.column_stack([Storage, other.Storage]), true);
+
+
+   #endregion
 
    /// <summary>
    /// True if all elements and shapes are equal
