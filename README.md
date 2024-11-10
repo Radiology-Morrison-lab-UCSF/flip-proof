@@ -33,10 +33,10 @@ the kind of image contained. For example, a PET image aligned and resliced to a 
 space:
 
 ```csharp
-Image<NativeCT, float> reslicedPET = ...
+Image<float, NativeCT> reslicedPET = ...
 ```
 
-In Flip Proof, attempts to create two images of the same `TSpace` but mismatched orientations results in either a 
+In Flip Proof, attempts to create two images of the same `TSpace` but with mismatched orientations results in either a 
 run-time or compile-time error, depending on the attempt made. 
 
 How this works is best understood by exploring the two ways images can be created: from raw information, or by 
@@ -124,8 +124,8 @@ For example, this method will only accept masks and attempts to use it with non-
 ```csharp
 int CountTrueVoxels<TSpace>(Image<bool,TSpace> image) => ...
 
-Image<double, TSpace> im = ...
-CountTrueVoxels(im); // Compilation error
+Image<double, MNI152> im = ...
+CountTrueVoxels(im); // Compilation error - cannot convert from Image<double, MNI152) to Image<bool, MNI152>
 
 ```
 
