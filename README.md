@@ -100,25 +100,24 @@ some frameworks, image voxels are mutable, but image orientations are not.
 ## Understanding Type Safety
 
 Flip Proof is fully type safe, which means that it is impossible to write impossible operations. For example, while in
-vanilla python you might be able code such as
+vanilla python you might be able to write faulty code such as
 
-```
-def AddImage(im1, im2):
+```python
+def add_image(im1, im2):
     return im1 + im2
 
-
-AddImage(ReadImage("t1.nii"), "banana")
+add_image(read_image("t1.nii"), "banana")
 ```
 
-this would not compile when using Flip Proof. Likewise, some frameworks such as Simple ITK will allow you to attempt 
-to apply operations that are impossible through weak static typing, only for run-time checks to cause an exception
-because the voxel data are of the wrong type. This comes about due to methods and parameters accepting `Image` objects
-without requiring that they contain any particular type of voxel data. 
+this would not compile when using Flip Proof. Likewise, some frameworks will allow you to attempt to apply operations 
+that are impossible through weak static typing, only for run-time checks to cause an exception because the voxel data 
+are of the wrong type. This comes about due to methods and parameters accepting `Image` objects without requiring that 
+they contain any particular type of voxel data. 
 
 In Flip Proof, `Image` classes include both the space (see above) and voxel type (e.g. `double` or `bool`) they contain.
 Resultantly, all methods are compile-time checked for correct usage. Note that, due to limitations of C#, there are 
-concrete classes for each type that allow operators to work. For example `ImageDouble<TSpace>` is a 
-`Image<double,TSpace>`.
+concrete classes for each type that allow operators to work. For example `ImageDouble<TSpace>` derives from
+`Image<double,TSpace>` to allow certain operators to be defined.
 
 For example, this method will only accept masks and attempts to use it with non-boolean images will prevent compilation:
 
