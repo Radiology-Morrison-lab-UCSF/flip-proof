@@ -16,7 +16,11 @@ public abstract class ImageTestsBase(int seed)
    [TestInitialize]
    public virtual void Initialise()
    {
+#if DEBUG
       ISpace.Debug_Clear<TestSpace3D>();
+#else
+      throw new Exception("Tests require clearing the space, which is not availabe in Release mode");
+#endif
    }
 
 

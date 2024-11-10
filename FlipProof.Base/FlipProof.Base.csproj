@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Win-CPU-Debug;Win-CPU-Release;Linux-CPU-Debug;Linux-CPU-Release;MacOS-CPU-Debug;MacOS-CPU-Release;Win-GPU-Debug;Win-GPU-Release;Linux-GPU-Debug;Linux-GPU-Release</Configurations>
+    <Platforms>x64;ARM64</Platforms>
   </PropertyGroup>
 
 </Project>
