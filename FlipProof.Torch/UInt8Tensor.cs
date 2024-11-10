@@ -13,7 +13,8 @@ public class UInt8Tensor : IntegerTensor<byte, UInt8Tensor>
    {
    }
 
-   internal UInt8Tensor(Tensor t) : base(t) { }
+
+   public UInt8Tensor(Tensor t) : base(t) { }
 
    public override ScalarType DType => ScalarType.Byte;
 
@@ -32,5 +33,8 @@ public class UInt8Tensor : IntegerTensor<byte, UInt8Tensor>
    public override Tensor ScalarToTensor(byte arr) => torch.tensor(arr);
    public override Tensor ArrayToTensor(byte[] arr) => torch.tensor(arr);
 
+
+
    protected override byte ToScalar(Tensor t) => t.ToByte();
+
 }

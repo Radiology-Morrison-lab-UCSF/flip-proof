@@ -67,6 +67,14 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
 
 
    #endregion
+
+   public TSelf Abs() => UnsafeCreate(Data.Abs());
+   public TSelf AbsInPlace()
+   {
+      Data.AbsInPlace();
+      return (TSelf)this;
+   }
+
    #region Operators
 
    private ImageBool<TSpace> Compare(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right, Func<Tensor, Tensor, Tensor> comparison)
@@ -91,5 +99,7 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
 
 
    #endregion
+
+
 
 }

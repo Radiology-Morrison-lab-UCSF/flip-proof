@@ -41,7 +41,8 @@ public static class VoxelArrayExtensionMethods
    {
       default(double) => ScalarType.Float64,
       default(float) => ScalarType.Float32,
-      default(byte) => ScalarType.Int8,
+      default(byte) => ScalarType.Byte,
+      default(sbyte) => ScalarType.Int8,
       default(short) => ScalarType.Int16,
       default(int) => ScalarType.Int32,
       default(long) => ScalarType.Int64,

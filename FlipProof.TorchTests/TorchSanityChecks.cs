@@ -1,4 +1,6 @@
-﻿using TorchSharp;
+﻿using FlipProof.Torch;
+using System;
+using TorchSharp;
 
 namespace FlipProof.TorchTests;
 
