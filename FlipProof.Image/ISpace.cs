@@ -6,16 +6,11 @@ using static TorchSharp.torch.utils;
 namespace FlipProof.Image;
 
 
-public interface IDimensionality
-{
-   static abstract int NDims { get; }
-
-}
 
 /// <summary>
 /// Describes the orientation and dimensionality of an image
 /// </summary>
-public interface ISpace : IDimensionality
+public interface ISpace
 {
    static abstract ImageHeader? Orientation { get; internal set; }
    static abstract object LockObj { get; }
@@ -61,7 +56,7 @@ public interface ISpace : IDimensionality
 
       static void ThrowIfOrientationMismatch(ImageHeader orientation)
       {
-         if (!Matches<T>(T.NDims, orientation))
+         if (!Matches<T>(orientation))
          {
             throw new OrientationException($"{typeof(T)} is already intialised with a differing orientation to that requested");
          }
@@ -73,13 +68,13 @@ public interface ISpace : IDimensionality
       where T : ISpace
    {
 
-      return Matches<T>(S.NDims, S.Orientation);
+      return Matches<T>(S.Orientation);
    }
-   static bool Matches<T>(int NDims, ImageHeader orientation) 
+   static bool Matches<T>(ImageHeader orientation) 
       where T:ISpace
    {
       
-      return T.NDims == NDims && T.Orientation.Equals(orientation);
+      return T.Orientation.Equals(orientation);
    }
 
 #if DEBUG

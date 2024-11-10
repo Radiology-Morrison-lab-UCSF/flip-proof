@@ -39,6 +39,12 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
       _data.Storage.mul_(multiplyBy).add_(thenAdd);
    }
 
+   /// <summary>
+   /// Returns a new image with voxels converted to their absolute values
+   /// </summary>
+   /// <returns></returns>
+   public ImageFloat<TSpace> Abs() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.Abs());
+
    #region Operators
 
    // Operators remove ambiguity from operators in base class

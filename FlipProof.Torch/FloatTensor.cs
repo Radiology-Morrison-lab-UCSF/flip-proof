@@ -29,6 +29,8 @@ public class FloatTensor : SimpleNumericTensor<float, FloatTensor>
 
    protected override float ToScalar(Tensor t) => t.ToSingle();
 
+   public FloatTensor Abs() => new(Storage.abs());
+
    #region Operators
    // Operators remove ambiguity between float and double operations specified in the base class
    public static DoubleTensor operator +(FloatTensor left, DoubleTensor right) => new(left.Storage + right.Storage);
