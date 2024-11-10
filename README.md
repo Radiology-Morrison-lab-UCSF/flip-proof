@@ -193,7 +193,7 @@ Image<float, TSpace> AbsDifference<TSpace>(ImageFloat<TSpace> im1, ImageFloat<TS
 }
 ```
 
-Avoid `using` Torch dispose scopes in your code as these will corrupt non-disposed images that you have not disposed of.
+Avoid `using` Torch dispose scopes in your code as these will corrupt images that you have not disposed of.
 
 
 ## Disclaimer
