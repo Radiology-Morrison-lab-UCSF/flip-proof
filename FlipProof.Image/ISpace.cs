@@ -1,9 +1,4 @@
-﻿using FlipProof.Torch;
-using System.Diagnostics;
-using System.Numerics;
-using static TorchSharp.torch.utils;
-
-namespace FlipProof.Image;
+﻿namespace FlipProof.Image;
 
 
 

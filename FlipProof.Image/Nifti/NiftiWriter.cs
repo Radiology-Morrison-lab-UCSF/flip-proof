@@ -59,11 +59,11 @@ public static class NiftiWriter
 		br.Write(16384);
 		br.Write((short)0);
 		br.Write('r');
-		NiftiHeader nh = file.head;
-		br.Write(file.head.dimInfo);
+		NiftiHeader nh = file.Head;
+		br.Write(file.Head.dimInfo);
 		for (int j = 0; j < 8; j++)
 		{
-			br.Write(file.head.DataArrayDims[j]);
+			br.Write(file.Head.DataArrayDims[j]);
 		}
 		br.Write(nh.intentParam1);
 		br.Write(nh.intentParam2);

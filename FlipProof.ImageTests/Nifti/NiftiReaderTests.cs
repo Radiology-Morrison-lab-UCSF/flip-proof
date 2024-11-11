@@ -1,10 +1,5 @@
 ﻿using FlipProof.Image.IO;
 using FlipProof.Image.Nifti;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlipProof.ImageTests.Nifti;
 [TestClass]
@@ -27,14 +22,14 @@ public class NiftiReaderTests
         comments:          FSL3.2beta
         mrtrix_version:    3.0.4-69-g0c84d455
        */
-      using NiftiReader nr = new(Gen.GetUnzippedStream(new MemoryStream( Resource1.fmri_example_nii, false), true));
+      using NiftiReader nr = new(Gen.GetUnzippedStream(new MemoryStream(Resource1.fmri_example_nii, false), true));
       bool result = nr.TryRead(out string msg, out NiftiFile_Base? nf);
       Assert.IsTrue(result);
       Assert.IsNotNull(nf);
 
       Assert.IsTrue(nf.Has4thDimension);
-      CollectionAssert.AreEqual(nf.head.DataArrayDims, new short[] { 4, 64, 60, 21, 3, 1, 1, 1 });
-      CollectionAssert.AreEqual(nf.head.PixDim.Skip(1).Take(4).ToArray(), new float[] { 1.2f, 3.4f, 5.4f, 3f });
+      CollectionAssert.AreEqual(nf.Head.DataArrayDims, new short[] { 4, 64, 60, 21, 3, 1, 1, 1 });
+      CollectionAssert.AreEqual(nf.Head.PixDim.Skip(1).Take(4).ToArray(), new float[] { 1.2f, 3.4f, 5.4f, 3f });
       Assert.IsInstanceOfType<NiftiFile<UInt16>>(nf);
       NiftiFile<UInt16> nf16 = (NiftiFile<UInt16>)nf;
 

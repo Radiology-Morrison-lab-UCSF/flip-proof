@@ -5,28 +5,28 @@ using System.Numerics;
 
 namespace FlipProof.Image.Nifti;
 
-public abstract class NiftiFile_Base : IDisposable
+public abstract class NiftiFile_Base(NiftiHeader head, Stream voxels) : IDisposable
 {
-	protected Stream voxels;
+	protected readonly Stream _voxels = voxels;
 
-	public NiftiHeader head { get; internal set; }
+	public NiftiHeader Head { get; } = head;
 
-	public bool Has4thDimension => head.DataArrayDims[4] > 1;
+	public bool Has4thDimension => Head.DataArrayDims[4] > 1;
 
-	public long VoxelCount => voxels.Length / SizeOfT;
+	public long VoxelCount => _voxels.Length / SizeOfT;
 
 	public abstract long SizeOfT { get; }
 
-	public int VoxelsPerVolume => head.DataArrayDims[1] * head.DataArrayDims[2] * head.DataArrayDims[3];
+	public int VoxelsPerVolume => Head.DataArrayDims[1] * Head.DataArrayDims[2] * Head.DataArrayDims[3];
 
 	public TimeSpan TR
 	{
 		get
 		{
-			switch (head.UnitsTime)
+			switch (Head.UnitsTime)
 			{
 			case MeasurementUnits.Unknown:
-				if (head.PixDim[4] == 0f)
+				if (Head.PixDim[4] == 0f)
 				{
 					return TimeSpan.Zero;
 				}
@@ -38,11 +38,11 @@ public abstract class NiftiFile_Base : IDisposable
 			case MeasurementUnits.MicroMeter:
 				throw new NotSupportedException("Units for time are not convertable to seconds");
 			case MeasurementUnits.Seconds:
-				return TimeSpan.FromSeconds(head.PixDim[4]);
+				return TimeSpan.FromSeconds(Head.PixDim[4]);
 			case MeasurementUnits.Miliseconds:
-				return TimeSpan.FromMilliseconds(head.PixDim[4]);
+				return TimeSpan.FromMilliseconds(Head.PixDim[4]);
 			case MeasurementUnits.Microseconds:
-				return TimeSpan.FromMilliseconds(head.PixDim[4] * 1000f);
+				return TimeSpan.FromMilliseconds(Head.PixDim[4] * 1000f);
 			case MeasurementUnits.Hertz:
 				throw new NotSupportedException("Units for time are not convertable to seconds");
 			case MeasurementUnits.PartsPerMillion:
@@ -85,21 +85,22 @@ public abstract class NiftiFile_Base : IDisposable
 
 	internal Stream GetDataStream()
 	{
-		return voxels;
+		return _voxels;
 	}
 
 	public void ReplaceData(byte[] newData)
 	{
-		if (newData.Length != voxels.Length)
+		if (newData.Length != _voxels.Length)
 		{
 			throw new ArgumentException("Data size mismatch");
 		}
-		voxels.Position = 0L;
-		voxels.Write(newData, 0, newData.Length);
+		_voxels.Position = 0L;
+		_voxels.Write(newData, 0, newData.Length);
 	}
 
    public void Dispose()
    {
-      ((IDisposable)voxels).Dispose();
+      ((IDisposable)_voxels).Dispose();
+		GC.SuppressFinalize(this);
    }
 }

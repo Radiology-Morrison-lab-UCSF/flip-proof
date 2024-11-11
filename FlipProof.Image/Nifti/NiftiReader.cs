@@ -392,9 +392,9 @@ public class NiftiReader : NiftiReaderBase
 	{
 		if (TryRead(locFrom, lookForZippedVariantIfNotFound: true, out var nf, out var err))
 		{
-			nf.head.HeaderExtras.Clear();
-			nf.head.AuxFile = "";
-			nf.head.Description = "";
+			nf.Head.HeaderExtras.Clear();
+			nf.Head.AuxFile = "";
+			nf.Head.Description = "";
 			if (NiftiWriter.Write(nf, locTo, FileMode.Create, out err))
 			{
 				return;

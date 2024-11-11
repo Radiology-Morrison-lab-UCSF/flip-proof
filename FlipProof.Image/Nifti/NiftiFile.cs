@@ -17,29 +17,23 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	public override long SizeOfT => _sizeOfT;
 
 
-   private NiftiFile()
-	{
-		_sizeOfT = GenMethods.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: false);
-	}
-
 	public NiftiFile(NiftiHeader nh, T[] vox)
 		: this(nh, new MemoryStream(vox.ToBytes()))
 	{
 	}
 
-	public NiftiFile(NiftiHeader nh, Stream vox)
-		: this()
+	public NiftiFile(NiftiHeader nh, Stream vox) :base(nh, vox)
+		
 	{
-		voxels = vox;
-		base.head = nh;
-		if (base.head.DataArrayDims[0] >= base.head.DataArrayDims.Length)
+      _sizeOfT = GenMethods.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: false);
+		if (base.Head.DataArrayDims[0] >= base.Head.DataArrayDims.Length)
 		{
 			throw new Exception("Header indicates more dimensions than can be supported by the nifti format");
 		}
 		long noVoxelsShouldBe = 1L;
-		for (int i = 1; i <= base.head.DataArrayDims[0]; i++)
+		for (int i = 1; i <= base.Head.DataArrayDims[0]; i++)
 		{
-			noVoxelsShouldBe *= base.head.DataArrayDims[i];
+			noVoxelsShouldBe *= base.Head.DataArrayDims[i];
 		}
 		if (noVoxelsShouldBe != vox.Length / SizeOfT)
 		{
@@ -50,14 +44,14 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 
 	public T[] GetAllVoxels()
 	{
-		voxels.Position = 0L;
-		return voxels.ReadBytes((int)voxels.Length).FromByteArray<T>();
+		_voxels.Position = 0L;
+		return _voxels.ReadBytes((int)_voxels.Length).FromByteArray<T>();
 	}
 
 	
 	public override Image<TSpace> ToImage<TSpace>(bool applyScalingFactors = true)
    {
-		bool scaleVoxels = applyScalingFactors && (base.head.sclSlope != 1f || base.head.scl_inter != 0f);
+		bool scaleVoxels = applyScalingFactors && (base.Head.sclSlope != 1f || base.Head.scl_inter != 0f);
 		T[] voxels = GetAllVoxels();
 
 
@@ -65,23 +59,23 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
       {
 			return voxels switch
 			{
-				bool[] b =>		ToFloatImage<bool, TSpace>(head, b, Convert.ToSingle),
-				byte[] b =>		ToFloatImage<byte, TSpace>(head, b, Convert.ToSingle),
-				UInt16[] b =>	ToFloatImage<UInt16, TSpace>(head, b, Convert.ToSingle),
-				UInt32[] b =>	ToFloatImage<UInt32, TSpace>(head, b, Convert.ToSingle),
-				UInt64[] b => ToDoubleImage<UInt64, TSpace>(head, b, Convert.ToDouble),
-				sbyte[] b =>	ToFloatImage<sbyte, TSpace>(head, b, Convert.ToSingle),
-				Int16[] b =>	ToFloatImage<Int16, TSpace>(head, b, Convert.ToSingle),
-				Int32[] b =>	ToFloatImage<Int32, TSpace>(head, b, Convert.ToSingle),
-				Int64[] b => ToDoubleImage<Int64, TSpace>(head, b, Convert.ToDouble),
+				bool[] b =>		ToFloatImage<bool, TSpace>(Head, b, Convert.ToSingle),
+				byte[] b =>		ToFloatImage<byte, TSpace>(Head, b, Convert.ToSingle),
+				UInt16[] b =>	ToFloatImage<UInt16, TSpace>(Head, b, Convert.ToSingle),
+				UInt32[] b =>	ToFloatImage<UInt32, TSpace>(Head, b, Convert.ToSingle),
+				UInt64[] b => ToDoubleImage<UInt64, TSpace>(Head, b, Convert.ToDouble),
+				sbyte[] b =>	ToFloatImage<sbyte, TSpace>(Head, b, Convert.ToSingle),
+				Int16[] b =>	ToFloatImage<Int16, TSpace>(Head, b, Convert.ToSingle),
+				Int32[] b =>	ToFloatImage<Int32, TSpace>(Head, b, Convert.ToSingle),
+				Int64[] b => ToDoubleImage<Int64, TSpace>(Head, b, Convert.ToDouble),
 				// TO DO: reinstate once complex available again
 				//Complex[] b => ToComplexImage(head,b), // NB NiftiReader does not support double-pairs at the time of writing
-            double[] b =>  ToDoubleImage<TSpace>(head, b, true),
-				_ => throw new NotSupportedException($"Files of type {head.dataType} are not supported")
+            double[] b =>  ToDoubleImage<TSpace>(Head, b, true),
+				_ => throw new NotSupportedException($"Files of type {Head.dataType} are not supported")
 			};
       }
 
-		ImageHeader imHead = ImageHeader.Create(head);
+		ImageHeader imHead = ImageHeader.Create(Head);
 #pragma warning disable CS0618 // Type or member is obsolete
       return voxels switch
       {
@@ -99,7 +93,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
          //Complex[] b => ToImage(head, torch.tensor(b), Image3dComplex.Create), // NB NiftiReader does not support double-pairs at the time of writing
          float[] b => new ImageFloat<TSpace>(imHead, b),
          double[] b => new ImageDouble<TSpace>(imHead, b),
-         _ => throw new NotSupportedException($"Files of type {head.dataType} are not supported")
+         _ => throw new NotSupportedException($"Files of type {Head.dataType} are not supported")
       };
 #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -227,7 +221,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	public NiftiFile<T> To3DNii(int fourthDim)
 	{
 		T[] dataToUse = GetUnscaledVoxelsFrom3dVolume(fourthDim);
-		NiftiHeader niftiHeader = base.head.DeepClone();
+		NiftiHeader niftiHeader = base.Head.DeepClone();
 		niftiHeader.PixDim[4] = 1f;
 		niftiHeader.DataArrayDims[0] = 3;
 		niftiHeader.DataArrayDims[4] = 1;
@@ -239,14 +233,14 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		T[] dataToUse;
 		if (base.Has4thDimension)
 		{
-			if (fourthDim >= base.head.DataArrayDims[4])
+			if (fourthDim >= base.Head.DataArrayDims[4])
 			{
-				throw new IndexOutOfRangeException($"Size of fourth dimension is {base.head.DataArrayDims[4]} but index of {fourthDim} was specified");
+				throw new IndexOutOfRangeException($"Size of fourth dimension is {base.Head.DataArrayDims[4]} but index of {fourthDim} was specified");
 			}
 			int voxelsPerSlice = base.VoxelsPerVolume;
 			dataToUse = new T[voxelsPerSlice];
-			voxels.Position = fourthDim * voxelsPerSlice * SizeOfT;
-			using BinaryReader br = new(voxels, Encoding.Default, leaveOpen: true);
+			_voxels.Position = fourthDim * voxelsPerSlice * SizeOfT;
+			using BinaryReader br = new(_voxels, Encoding.Default, leaveOpen: true);
 			br.ReadDataToFillArray(dataToUse);
 		}
 		else
@@ -263,15 +257,15 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 
 	public XYZf Vox2WorldCoordinates(XYZf imageCoords)
 	{
-		if (base.head.sFormCode != CoordinateMapping_Nifti.Unknown)
+		if (base.Head.sFormCode != CoordinateMapping_Nifti.Unknown)
       {
          return CalcWithSForm(imageCoords);
       }
-      float b = base.head.quartern_b;
+      float b = base.Head.quartern_b;
 		float b_sq = b * b;
-		float c = base.head.quartern_c;
+		float c = base.Head.quartern_c;
 		float c_sq = c * c;
-		float d = base.head.quartern_d;
+		float d = base.Head.quartern_d;
 		float d_sq = d * d;
 		float a_sq = 1f - b * b + c * c + d * d;
 		float num = (float)Math.Sqrt(a_sq);
@@ -297,28 +291,28 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		{
 			[0, 0] = imageCoords.X,
 			[1, 0] = imageCoords.Y,
-			[2, 0] = imageCoords.Z * base.head.PixDim[0]
+			[2, 0] = imageCoords.Z * base.Head.PixDim[0]
 		};
 		DenseMatrix<float> pixDim = new(3, 1)
 		{
-			[0, 0] = base.head.PixDim[1],
-			[1, 0] = base.head.PixDim[2],
-			[2, 0] = base.head.PixDim[3]
+			[0, 0] = base.Head.PixDim[1],
+			[1, 0] = base.Head.PixDim[2],
+			[2, 0] = base.Head.PixDim[3]
 		};
 
       DenseMatrix<float> result = new DenseMatrix<float>(3, 1)
 		{
-			[0, 0] = base.head.quartern_x,
-			[1, 0] = base.head.quartern_y,
-			[2, 0] = base.head.quartern_z
+			[0, 0] = base.Head.quartern_x,
+			[1, 0] = base.Head.quartern_y,
+			[2, 0] = base.Head.quartern_z
 		} +  obj.MatMul(ijqk).MultiplyPointwise(pixDim);
 		return new XYZf(result[0,0], result[1,0], result[2,0]);
 
       XYZf CalcWithSForm(XYZf imageCoords)
       {
-         float[] srow_x = base.head.Srow_x;
-         float[] srow_y = base.head.Srow_y;
-         float[] srow_z = base.head.Srow_z;
+         float[] srow_x = base.Head.Srow_x;
+         float[] srow_y = base.Head.Srow_y;
+         float[] srow_z = base.Head.Srow_z;
          float i = imageCoords.X;
          float j = imageCoords.Y;
          float k = imageCoords.Z;
@@ -331,7 +325,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 
 	public XYZf World2VoxCoordinates_ScannerSpace(XYZf worldCoords)
 	{
-		if (base.head.qFormCode > CoordinateMapping_Nifti.Unknown)
+		if (base.Head.qFormCode > CoordinateMapping_Nifti.Unknown)
 		{
 			DenseMatrix<float> vox2WorldMatrix_ScannerSpace_Old = GetVox2WorldMatrix_ScannerSpace_Old();
 			DenseMatrix<double> world_matrix = new(4, 1)
@@ -349,22 +343,22 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 
 	public DecomposableTransform<double> GetVox2WorldMatrix_ScannerSpace()
 	{
-		return DecomposableTransform<double>.FromNiftiQuaternions(base.head.quartern_b, base.head.quartern_c, base.head.quartern_d, base.head.PixDim.Skip(1L).Take(3L).Select((Func<float, double>)((float entry) => entry))
+		return DecomposableTransform<double>.FromNiftiQuaternions(base.Head.quartern_b, base.Head.quartern_c, base.Head.quartern_d, base.Head.PixDim.Skip(1L).Take(3L).Select((Func<float, double>)((float entry) => entry))
 			.ToArray(),
       [
-         base.head.quartern_x,
-			base.head.quartern_y,
-			base.head.quartern_z
-		], base.head.Qface);
+         base.Head.quartern_x,
+			base.Head.quartern_y,
+			base.Head.quartern_z
+		], base.Head.Qface);
 	}
 
 	private DenseMatrix<float> GetVox2WorldMatrix_ScannerSpace_Old()
 	{
-		double b = base.head.quartern_b;
+		double b = base.Head.quartern_b;
 		double b_sq = b * b;
-		double c = base.head.quartern_c;
+		double c = base.Head.quartern_c;
 		double c_sq = c * c;
-		double d = base.head.quartern_d;
+		double d = base.Head.quartern_d;
 		double d_sq = d * d;
 		double a_sq = 1.0 - b_sq - c_sq - d_sq;
 		double num = ((a_sq <= 0.0) ? 0.0 : Math.Sqrt(a_sq));
@@ -375,9 +369,9 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		double bd = b * d;
 		double cd = c * d;
 		DenseMatrix<float> denseMatrix = new(3, 4);
-		double pixSize_x = base.head.PixDim[1];
-		double pixSize_y = base.head.PixDim[2];
-		double pixSize_z = base.head.PixDim[3];
+		double pixSize_x = base.Head.PixDim[1];
+		double pixSize_y = base.Head.PixDim[2];
+		double pixSize_z = base.Head.PixDim[3];
 		denseMatrix[0, 0] = (float)((a_sq + b_sq - c_sq - d_sq) * pixSize_x);
 		denseMatrix[1, 0] = (float)(2.0 * (bc + ad) * pixSize_y);
 		denseMatrix[2, 0] = (float)(2.0 * (bd - ac) * pixSize_z);
@@ -387,9 +381,9 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		denseMatrix[0, 2] = (float)(2.0 * (bd + ac) * pixSize_x);
 		denseMatrix[1, 2] = (float)(2.0 * (cd - ab) * pixSize_y);
 		denseMatrix[2, 2] = (float)((a_sq + d_sq - b_sq - c_sq) * pixSize_z);
-		denseMatrix[0, 3] = (float)((double)base.head.quartern_x * pixSize_x);
-		denseMatrix[1, 3] = (float)((double)base.head.quartern_y * pixSize_y);
-		denseMatrix[2, 3] = (float)((double)base.head.quartern_z * pixSize_z);
+		denseMatrix[0, 3] = (float)((double)base.Head.quartern_x * pixSize_x);
+		denseMatrix[1, 3] = (float)((double)base.Head.quartern_y * pixSize_y);
+		denseMatrix[2, 3] = (float)((double)base.Head.quartern_z * pixSize_z);
 		return denseMatrix;
 	}
 
@@ -397,18 +391,18 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	{
 		return new DenseMatrix<float>(4, 4)
 		{
-			[0, 0] = base.head.Srow_x[0],
-			[0, 1] = base.head.Srow_x[1],
-			[0, 2] = base.head.Srow_x[2],
-			[0, 3] = base.head.Srow_x[3],
-			[1, 0] = base.head.Srow_y[0],
-			[1, 1] = base.head.Srow_y[1],
-			[1, 2] = base.head.Srow_y[2],
-			[1, 3] = base.head.Srow_y[3],
-			[2, 0] = base.head.Srow_z[0],
-			[2, 1] = base.head.Srow_z[1],
-			[2, 2] = base.head.Srow_z[2],
-			[2, 3] = base.head.Srow_z[3],
+			[0, 0] = base.Head.Srow_x[0],
+			[0, 1] = base.Head.Srow_x[1],
+			[0, 2] = base.Head.Srow_x[2],
+			[0, 3] = base.Head.Srow_x[3],
+			[1, 0] = base.Head.Srow_y[0],
+			[1, 1] = base.Head.Srow_y[1],
+			[1, 2] = base.Head.Srow_y[2],
+			[1, 3] = base.Head.Srow_y[3],
+			[2, 0] = base.Head.Srow_z[0],
+			[2, 1] = base.Head.Srow_z[1],
+			[2, 2] = base.Head.Srow_z[2],
+			[2, 3] = base.Head.Srow_z[3],
 			[3, 3] = 1f
 		};
 	}
@@ -417,18 +411,18 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	{
 		return new Matrix4x4_Optimised<float>
 		{
-			_0_0 = base.head.Srow_x[0],
-			_0_1 = base.head.Srow_x[1],
-			_0_2 = base.head.Srow_x[2],
-			_0_3 = base.head.Srow_x[3],
-			_1_0 = base.head.Srow_y[0],
-			_1_1 = base.head.Srow_y[1],
-			_1_2 = base.head.Srow_y[2],
-			_1_3 = base.head.Srow_y[3],
-			_2_0 = base.head.Srow_z[0],
-			_2_1 = base.head.Srow_z[1],
-			_2_2 = base.head.Srow_z[2],
-			_2_3 = base.head.Srow_z[3],
+			_0_0 = base.Head.Srow_x[0],
+			_0_1 = base.Head.Srow_x[1],
+			_0_2 = base.Head.Srow_x[2],
+			_0_3 = base.Head.Srow_x[3],
+			_1_0 = base.Head.Srow_y[0],
+			_1_1 = base.Head.Srow_y[1],
+			_1_2 = base.Head.Srow_y[2],
+			_1_3 = base.Head.Srow_y[3],
+			_2_0 = base.Head.Srow_z[0],
+			_2_1 = base.Head.Srow_z[1],
+			_2_2 = base.Head.Srow_z[2],
+			_2_3 = base.Head.Srow_z[3],
 			_3_3 = 1f
 		};
 	}
@@ -451,23 +445,23 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 			throw new ArgumentException("One or more volumes is already 4D: ");
 		}
 		typeof(T).Type2DataType(crashIfUnknown: true);
-		NiftiHeader niftiHeader = vols.First().head.DeepClone();
+		NiftiHeader niftiHeader = vols.First().Head.DeepClone();
 		niftiHeader.DataArrayDims[0] = 4;
-		LargeMemoryStream allData = vols.Select((NiftiFile<T> a) => a.voxels).Concatenate();
+		LargeMemoryStream allData = vols.Select((NiftiFile<T> a) => a._voxels).Concatenate();
 		return new NiftiFile<T>(niftiHeader, allData);
 	}
 
 	private static void ConcatenateTimeSeries_Checks(IEnumerable<NiftiFile<T>> vols, bool allowMisalignedImages = false)
 	{
-		if (vols.Select((NiftiFile<T> a) => a.head.bitPix).Distinct().Count() > 1)
+		if (vols.Select((NiftiFile<T> a) => a.Head.bitPix).Distinct().Count() > 1)
 		{
 			throw new ArgumentException("Bit depths do not match");
 		}
-		if (vols.Select((NiftiFile<T> a) => a.head.DataArrayDims).Distinct(new ArrayComparer_Int16()).Count() > 1)
+		if (vols.Select((NiftiFile<T> a) => a.Head.DataArrayDims).Distinct(new ArrayComparer_Int16()).Count() > 1)
 		{
 			throw new ArgumentException("Data dimensions do not match");
 		}
-		if (!allowMisalignedImages && (vols.Select((NiftiFile<T> a) => a.head.qFormCode).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_b).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_c).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_d).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_x).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_y).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.head.quartern_z).Distinct().Count() > 1))
+		if (!allowMisalignedImages && (vols.Select((NiftiFile<T> a) => a.Head.qFormCode).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_b).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_c).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_d).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_x).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_y).Distinct().Count() > 1 || vols.Select((NiftiFile<T> a) => a.Head.quartern_z).Distinct().Count() > 1))
 		{
 			throw new ArgumentException("Vox2World matrices do not match");
 		}
@@ -495,15 +489,15 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 			throw new ArgumentException("This method is for 4d images only");
 		}
 		typeof(T).Type2DataType(crashIfUnknown: true);
-		NiftiHeader niftiHeader = vols.First().head.DeepClone();
-		niftiHeader.DataArrayDims[4] = (short)vols.Sum((NiftiFile<T> a) => a.head.DataArrayDims[4]);
-		LargeMemoryStream allData = vols.Select((NiftiFile<T> a) => a.voxels).Concatenate();
+		NiftiHeader niftiHeader = vols.First().Head.DeepClone();
+		niftiHeader.DataArrayDims[4] = (short)vols.Sum((NiftiFile<T> a) => a.Head.DataArrayDims[4]);
+		LargeMemoryStream allData = vols.Select((NiftiFile<T> a) => a._voxels).Concatenate();
 		return new NiftiFile<T>(niftiHeader, allData);
 	}
 
 	public void DeleteVolumes_AllButOne(int vol)
 	{
-		if (vol >= base.head.DataArrayDims[4])
+		if (vol >= base.Head.DataArrayDims[4])
 		{
 			throw new ArgumentException("Nifti file does not have that many dimensions");
 		}
@@ -513,18 +507,18 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		}
 		int bytesPerVolume = base.VoxelsPerVolume * GenMethods.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: true);
 		byte[] volData = new byte[bytesPerVolume];
-		voxels.Position = vol * bytesPerVolume;
-		voxels.Read(volData, 0, volData.Length);
-		voxels.SetLength(bytesPerVolume);
-		voxels.Position = 0L;
-		voxels.Write(volData, 0, volData.Length);
-		base.head.DataArrayDims[4] = 1;
+		_voxels.Position = vol * bytesPerVolume;
+		_voxels.Read(volData, 0, volData.Length);
+		_voxels.SetLength(bytesPerVolume);
+		_voxels.Position = 0L;
+		_voxels.Write(volData, 0, volData.Length);
+		base.Head.DataArrayDims[4] = 1;
 	}
 
 	public override float[] GetDataAsFloat()
 	{
-		voxels.Position = 0L;
-      using BinaryReader br = new(voxels, Encoding.Default, leaveOpen: true);
+		_voxels.Position = 0L;
+      using BinaryReader br = new(_voxels, Encoding.Default, leaveOpen: true);
 		float[] asF = new float[base.VoxelCount];
 		br.ReadDataToFillArray_f(asF);
 		return asF;

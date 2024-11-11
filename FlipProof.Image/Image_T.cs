@@ -16,11 +16,15 @@ public abstract class Image<TSpace> : IDisposable
 
    internal Image(Tensor _rawData) 
    {
+      if(_rawData.ndim != 4)
+      {
+         throw new ArgumentException("Tensor must be 4D, ordered x,y,z,volume");
+      }
       RawData = _rawData;
+      
    }
-
+   
    protected Tensor RawData { get; }
-   public int NDims => TSpace.NDims;
    public ImageHeader Header => TSpace.Orientation!;
 
 
@@ -49,8 +53,13 @@ public abstract class Image<TSpace> : IDisposable
    #region Comparison Operators
 
 
-
+   /// <summary>
+   /// Voxelwise comparison
+   /// </summary>
    public static ImageBool<TSpace> operator ==(Image<TSpace> left, Image<TSpace> right) => left.VoxelwiseEquals(right);
+   /// <summary>
+   /// Voxelwise comparison
+   /// </summary>
    public static ImageBool<TSpace> operator !=(Image<TSpace> left, Image<TSpace> right)
    {
       return (left == right).NotInPlace();
@@ -99,10 +108,6 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    internal Image(ImageHeader header, Tensor<TVoxel> voxels) : this(voxels.DeepClone(), false) // Space not initialised yet so can't be verified
    {
-      if (header.NDims is not 3 and not 4)
-      {
-         throw new NotSupportedException("Only 3D and 4D images are supported. Use a flat dimension if wanting more");
-      }
       ISpace.Initialise<TSpace>(header);
       VerifyVoxelArrayShape(header);
    }
@@ -125,9 +130,10 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
    private void VerifyVoxelArrayShape(ImageHeader header)
    {
-      if (_data.Storage.ndim != header.NDims)
+      // Base class enforces 4D tensor
+      if (header.NDims == 3 && _data.Storage.shape[3] != 1)
       {
-         throw new ArgumentException("The number of dimensions of the voxel data does not match the image header");
+         throw new ArgumentException($"The image is 3D and so the fourth dimension of the voxel data should be size 1 but it is {_data.Storage.shape[3]}");
       }
       if (!_data.Storage.shape.Zip(header.Size, (a, b) => a == b).All(a => a))
       {
@@ -252,6 +258,8 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    public override bool Equals(object? obj) => obj is not null && ReferenceEquals(this, obj);
 
 
+   public override int GetHashCode() => _data.GetHashCode();
+
    #region Dispose
 
 
@@ -272,10 +280,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// Returns a copy of the internal voxel data
    /// </summary>
    /// <returns></returns>
-   internal Tensor<TVoxel> GetVoxelTensor()
-   {
-      return _data.DeepClone();
-   }
+   internal Tensor<TVoxel> GetVoxelTensor() => _data.DeepClone();
    internal LargeMemoryStream GetVoxelBytes()
    {
       long totalSize = _data.Count * GenMethods.SizeOfType(Array.Empty<TVoxel>(), true);
