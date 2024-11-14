@@ -1,5 +1,8 @@
 # Flip Proof
 
+![Linux workflow](https://github.com/Radiology-Morrison-lab-UCSF/flip-proof/actions/workflows/linux-cpu.yml/badge.svg)
+![Linux workflow](https://github.com/Radiology-Morrison-lab-UCSF/flip-proof/actions/workflows/windows-cpu.yml/badge.svg)
+
 Flip Proof is an Orientation and Voxel-Type Safe Medical Imaging Framework for .NET languages including C#, Python (via 
 IronPython), F#, C++/CLI, and Visual Basic. It is intended to support medical image processing for high-stakes settings 
 such as surgery.
