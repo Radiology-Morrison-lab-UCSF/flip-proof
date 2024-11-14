@@ -6,11 +6,11 @@ using FlipProof.Image.IO;
 
 namespace FlipProof.Image.Nifti;
 
-public abstract class NiftiReaderBase : IDisposable
+public abstract class NiftiReaderBase(BinaryReader reader) : IDisposable
 {
-	protected Stream s;
+	protected Stream Stream => br.BaseStream;
 
-	protected BinaryReader br;
+	protected readonly BinaryReader br = reader;
 
 	protected bool[] ReadIntoArray_Bool(long count)
 	{
@@ -23,7 +23,7 @@ public abstract class NiftiReaderBase : IDisposable
 	{
 		int byteCount = (int)Math.Ceiling((double)boolean_count / 8.0);
 		BitArray ba = new BitArray((from b in br.ReadBytes(byteCount)
-			select (byte)((ulong)((((long)b * 2149582850L) & 0x884422110L) * 4311810305L) >> 32)).ToArray());
+											 select (byte)((ulong)((((long)b * 2149582850L) & 0x884422110L) * 4311810305L) >> 32)).ToArray());
 		for (int i = 0; i < boolean_count; i++)
 		{
 			arr[i] = ba[i];
@@ -204,15 +204,7 @@ public abstract class NiftiReaderBase : IDisposable
 
 	public void Dispose()
 	{
-		if (s != null)
-		{
-			s.Dispose();
-			s = null;
-		}
-		if (br != null)
-		{
-			br.Dispose();
-			br = null;
-		}
+		br?.Dispose();
+		GC.SuppressFinalize(this);
 	}
 }

@@ -8,13 +8,13 @@ public class Nifti2Header
 {
 	private int sizeof_hdr = 540;
 
-	public char[] magic;
+	public char[] magic = [];
 
 	public DataType datatype;
 
 	public ushort bitpix;
 
-	public ulong[] dim;
+	public ulong[] dim = [];
 
 	public double intent_p1;
 
@@ -22,7 +22,7 @@ public class Nifti2Header
 
 	public double intent_p3;
 
-	public double[] pixdim;
+	public double[] pixdim = [];
 
 	public ulong vox_offset;
 
@@ -42,9 +42,9 @@ public class Nifti2Header
 
 	public ulong slice_end;
 
-	public char[] descrip;
+	public char[] descrip = [];
 
-	public char[] aux_file;
+	public char[] aux_file = [];
 
 	public int qform_code;
 
@@ -62,11 +62,11 @@ public class Nifti2Header
 
 	public double qoffset_z;
 
-	public double[] srow_x;
+	public double[] srow_x = [];
 
-	public double[] srow_y;
+	public double[] srow_y = [];
 
-	public double[] srow_z;
+	public double[] srow_z = [];
 
 	public int slice_code;
 
@@ -74,26 +74,30 @@ public class Nifti2Header
 
 	public int intent_code;
 
-	public char[] intent_name;
+	public char[] intent_name = [];
 
 	public byte dim_info;
 
-	public char[] unused_str;
+	public char[] unused_str = [];
 
 	public static Nifti2Header Read(BinaryReader br)
 	{
-		Nifti2Header head = new Nifti2Header();
+      Nifti2Header head = new();
+
 		head.sizeof_hdr = br.ReadInt32();
-		if (head.sizeof_hdr != 540)
-		{
-			if (head.sizeof_hdr == 348)
-			{
-				throw new Exception("Nifti-1, not a Nifti-2 file");
-			}
-			throw new Exception("Not a Nifti-2 file");
-		}
-		head.magic = (from a in br.ReadBytes(8)
-			select (char)a).ToArray();
+
+      if (head.sizeof_hdr != 540)
+      {
+         if (head.sizeof_hdr == 348)
+         {
+            throw new Exception("Nifti-1, not a Nifti-2 file");
+         }
+         throw new Exception("Not a Nifti-2 file");
+      }
+
+      head.magic = (from a in br.ReadBytes(8)
+						 select (char)a).ToArray();
+		
 		head.datatype = (DataType)br.ReadUInt16();
 		head.bitpix = br.ReadUInt16();
 		head.dim = new ulong[8]

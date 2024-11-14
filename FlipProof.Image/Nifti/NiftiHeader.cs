@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using FlipProof.Image;
@@ -363,7 +364,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		quartern_z = (float)translation[2];
 	}
 
-	public bool Verify(IList<string> warnings, out string? errMsg)
+	public bool Verify(IList<string> warnings, [NotNullWhen(false)] out string? errMsg)
 	{
 		if (bitPix != dataType.BitsPerPixel())
 		{

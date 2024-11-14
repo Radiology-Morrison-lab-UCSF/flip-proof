@@ -4,8 +4,16 @@ namespace FlipProof.Image;
 
 internal class ArrayComparer_Byte : IEqualityComparer<byte[]>
 {
-   bool IEqualityComparer<byte[]>.Equals(byte[] x, byte[] y)
+   bool IEqualityComparer<byte[]>.Equals(byte[]? x, byte[]? y)
    {
+      if(x == null)
+      {
+         return y == null;
+      }
+      if(y == null)
+      {
+         return false;
+      }
       return x.SequenceEqual(y);
    }
 

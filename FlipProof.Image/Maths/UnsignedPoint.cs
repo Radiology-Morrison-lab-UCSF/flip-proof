@@ -193,9 +193,9 @@ internal class UnsignedPoint : IEquatable<UnsignedPoint>, IComparable<UnsignedPo
         return false;
     }
 
-    public bool Equals(UnsignedPoint other)
+    public bool Equals(UnsignedPoint? other)
     {
-        return UniqueId == other.UniqueId;
+        return other != null && UniqueId == other.UniqueId;
     }
 
     public virtual int CompareTo(UnsignedPoint other)

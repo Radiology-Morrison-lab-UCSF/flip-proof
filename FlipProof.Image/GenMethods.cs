@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FlipProof.Base;
 using FlipProof.Base.Geometry;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace FlipProof.Image;
 
@@ -402,11 +404,11 @@ public static class GenMethods
       return me;
    }
 
-   public static LinkedListNode<T> FirstOrDefault_Node<T>(this LinkedList<T> me, Func<T, int, bool> actionSubsequent)
+   public static LinkedListNode<T>? FirstOrDefault_Node<T>(this LinkedList<T> me, Func<T, int, bool> actionSubsequent)
    {
       if (me.Any())
       {
-         LinkedListNode<T> cur = me.First;
+         LinkedListNode<T>? cur = me.First;
          int i = 0;
          while (cur != null)
          {
@@ -1028,7 +1030,7 @@ public static class GenMethods
       }
    }
 
-   public static bool RunProcessAndWait(string[][] command_args, out string err)
+   public static bool RunProcessAndWait(string[][] command_args, [NotNullWhen(false)] out string? err)
    {
       for (int i = 0; i < command_args.Length; i++)
       {
@@ -1049,7 +1051,7 @@ public static class GenMethods
       }
    }
 
-   public static bool RunProcessAndWait(string command, string args, out string err, bool redirectOutput = false)
+   public static bool RunProcessAndWait(string command, string args, [NotNullWhen(false)] out string? err, bool redirectOutput = false)
    {
       ProcessStartInfo psi = new ProcessStartInfo(command, args);
       if (redirectOutput)
@@ -1057,45 +1059,56 @@ public static class GenMethods
          psi.UseShellExecute = false;
          psi.RedirectStandardOutput = true;
       }
-      using Process p = Process.Start(psi);
-      p.WaitForExit();
-      if (p.ExitCode == 0)
+      using Process? p = Process.Start(psi);
+      if (p != null)
       {
-         err = null;
-         return true;
+         p.WaitForExit();
+         if (p.ExitCode == 0)
+         {
+            err = null;
+            return true;
+         }
       }
+
       err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
       return false;
    }
 
-   public static bool RunProcessAndWait(string command, out string err)
+   public static bool RunProcessAndWait(string command, [NotNullWhen(false)] out string? err)
    {
-      using Process p = Process.Start(new ProcessStartInfo(command));
-      p.WaitForExit();
-      if (p.ExitCode == 0)
+      using Process? p = Process.Start(new ProcessStartInfo(command));
+      if (p != null)
       {
-         err = null;
-         return true;
+         p.WaitForExit();
+         if (p.ExitCode == 0)
+         {
+            err = null;
+            return true;
+         }
       }
+   
       err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
       return false;
    }
 
-   public static bool RunProcessAndWait_PipeIn(string command, string pipeIn, bool makeSilent, out string err)
+   public static bool RunProcessAndWait_PipeIn(string command, string pipeIn, bool makeSilent, [NotNullWhen(false)] out string? err)
    {
-      using Process p = Process.Start(new ProcessStartInfo(command)
+      using Process? p = Process.Start(new ProcessStartInfo(command)
       {
          RedirectStandardInput = true,
          UseShellExecute = false,
          RedirectStandardOutput = makeSilent
       });
-      p.StandardInput.Write(pipeIn);
-      p.StandardInput.Dispose();
-      p.WaitForExit();
-      if (p.ExitCode == 0)
+      if (p != null)
       {
-         err = null;
-         return true;
+         p.StandardInput.Write(pipeIn);
+         p.StandardInput.Dispose();
+         p.WaitForExit();
+         if (p.ExitCode == 0)
+         {
+            err = null;
+            return true;
+         }
       }
       err = "Failed to run command " + command;
       return false;
@@ -1103,13 +1116,13 @@ public static class GenMethods
 
    public static IList<T> SortIListInPlace<T>(IList<T> vals) where T : IComparable<T>
    {
-      if (vals is Array)
+      if (vals is T[] arr)
       {
-         Array.Sort(vals as T[]);
+         Array.Sort(arr);
       }
-      else if (vals is List<T>)
+      else if (vals is List<T> list)
       {
-         (vals as List<T>).Sort();
+         list.Sort();
       }
       else
       {
@@ -1212,7 +1225,7 @@ public static class GenMethods
       }
    }
 
-   public static IEnumerable<int> IndexOfAll<T>(this T[] coll, Func<T, bool> lookFor, int[] onlyInvestigateTheseIndices = null)
+   public static IEnumerable<int> IndexOfAll<T>(this T[] coll, Func<T, bool> lookFor, int[]? onlyInvestigateTheseIndices = null)
    {
       if (onlyInvestigateTheseIndices == null)
       {
@@ -1304,7 +1317,7 @@ public static class GenMethods
       return -1;
    }
 
-   public static int IndexOfNth<T>(this T[] coll, Func<T, bool> lookFor, int nth, int[] onlyInvestigateTheseIndices = null)
+   public static int IndexOfNth<T>(this T[] coll, Func<T, bool> lookFor, int nth, int[]? onlyInvestigateTheseIndices = null)
    {
       int countFound = 0;
       if (onlyInvestigateTheseIndices == null)

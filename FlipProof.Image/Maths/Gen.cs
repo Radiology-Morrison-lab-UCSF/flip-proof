@@ -2671,9 +2671,8 @@ public static class Gen
 
     public static double Mean(this IEnumerable<double> arr)
     {
-        if (arr is double[])
+        if (arr is double[] array)
         {
-            double[] array = arr as double[];
             double sum = 0.0;
             for (int i = 0; i < array.Length; i++)
             {
@@ -2686,9 +2685,8 @@ public static class Gen
 
     public static float Mean(this IEnumerable<float> arr)
     {
-        if (arr is float[])
+        if (arr is float[] array)
         {
-            float[] array = arr as float[];
             double sum = 0.0;
             for (int i = 0; i < array.Length; i++)
             {

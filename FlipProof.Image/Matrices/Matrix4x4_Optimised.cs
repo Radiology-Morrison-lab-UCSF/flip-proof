@@ -1,5 +1,4 @@
 using FlipProof.Base;
-using FlipProof.Base;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;

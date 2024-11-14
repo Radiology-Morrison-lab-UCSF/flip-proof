@@ -299,6 +299,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
 
    #endregion
 
+   public override bool Equals(object? obj) => obj is Tensor<T> objT && Equals(objT);
+
    /// <summary>
    /// True if all elements and shapes are equal
    /// </summary>

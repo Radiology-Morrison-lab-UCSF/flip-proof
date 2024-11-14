@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -9,7 +10,7 @@ namespace FlipProof.Image.Nifti;
 
 public static class NiftiWriter
 {
-	public static bool Write(NiftiFile_Base file, string loc, FileMode fm, out string err)
+	public static bool Write(NiftiFile_Base file, string loc, FileMode fm, [NotNullWhen(false)] out string? err)
 	{
 		try
 		{
@@ -272,13 +273,13 @@ public static class NiftiWriter<T> where T : struct, INumber<T>
 
 	private static void WriteFromArray(BinaryWriter br, T[] data, int length)
 	{
-		if (data is bool[])
+		if (data is bool[] b)
 		{
-			WriteFromArray(br, data as bool[], length);
+			WriteFromArray(br, b, length);
 		}
-		else if (data is byte[] && data.Length == length)
+		else if (data is byte[] by && data.Length == length)
 		{
-			br.Write(data as byte[]);
+			br.Write(by);
 		}
 		else
 		{

@@ -21,7 +21,7 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
    {
    }
 
-   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")] 
    internal ImageFloat(FloatTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
    }
@@ -39,11 +39,7 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
       _data.Storage.mul_(multiplyBy).add_(thenAdd);
    }
 
-   /// <summary>
-   /// Returns a new image with voxels converted to their absolute values
-   /// </summary>
-   /// <returns></returns>
-   public ImageFloat<TSpace> Abs() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.Abs());
+
 
    #region Operators
 

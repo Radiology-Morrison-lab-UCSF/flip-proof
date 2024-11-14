@@ -15,7 +15,12 @@ public interface IBinaryReader : IDisposable
 
 	int PeekChar();
 
-	char[] PeekChars(int no);
+	/// <summary>
+	/// Returns null if peek is not possible
+	/// </summary>
+	/// <param name="no"></param>
+	/// <returns></returns>
+	char[]? PeekChars(int no);
 
 	char ReadChar();
 

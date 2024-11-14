@@ -10,7 +10,7 @@ public class BinaryReaderWithInterface : BinaryReader, IBinaryReader, IDisposabl
 	{
 	}
 
-	public char[] PeekChars(int no)
+	public char[]? PeekChars(int no)
 	{
 		if (BaseStream.CanSeek && BaseStream.CanRead && BaseStream.Length - BaseStream.Position > no)
 		{

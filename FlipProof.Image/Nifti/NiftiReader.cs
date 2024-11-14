@@ -4,27 +4,22 @@ using FlipProof.Image.IO;
 
 namespace FlipProof.Image.Nifti;
 
-public class NiftiReader : NiftiReaderBase
+public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryReader(unzippedStream))
 {
 	internal const int headerSizeMustBe = 348;
 
 	public NiftiReader(string filename) : this(Gen.GetUnzippedStream(filename, returnedStreamMustBeSeekable: true))
 	{
 	}
-	public NiftiReader(Stream unzippedStream)
-	{
-		s = unzippedStream;
-		br = new BinaryReader(s);
-	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <typeparam name="TVoxel">The anticipated nifti data type</typeparam>
-	/// <typeparam name="TSpace"></typeparam>
-	/// <param name="folder"></param>
-	/// <returns></returns>
-	public static Image<TSpace>[] ReadSeriesToVolume<TVoxel,TSpace>(string folder) where TVoxel : struct, IComparable<TVoxel>, IComparable, IEquatable<TVoxel>
+   /// <summary>
+   /// 
+   /// </summary>
+   /// <typeparam name="TVoxel">The anticipated nifti data type</typeparam>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="folder"></param>
+   /// <returns></returns>
+   public static Image<TSpace>[] ReadSeriesToVolume<TVoxel,TSpace>(string folder) where TVoxel : struct, IComparable<TVoxel>, IComparable, IEquatable<TVoxel>
 		where TSpace:ISpace
 	{
 		return (from a in ReadSeries<TVoxel>(folder)
@@ -163,12 +158,11 @@ public class NiftiReader : NiftiReaderBase
 	public static Image<TSpace> ReadToVolume<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound)
 	where TSpace : ISpace
 	{
-		NiftiFile_Base origNifti;
-		return ReadToVolume<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out origNifti);
-	}
+      return ReadToVolume<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
+   }
 
 
-	public static Image<TSpace> ReadToVolume<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
+	public static Image<TSpace> ReadToVolume<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base? origNifti)
    where TSpace : ISpace
    {
       Checkfilename(ref fileLoc, lookForZippedVariantIfNotFound);
@@ -182,7 +176,7 @@ public class NiftiReader : NiftiReaderBase
 	
 	public static NiftiFile<T> Read<T>(string fileLoc, bool lookForZippedVariantIfNotFound) where T : struct, IComparable<T>, IComparable, IEquatable<T>
 	{
-		if (TryRead(fileLoc, lookForZippedVariantIfNotFound, out NiftiFile<T> readAndConverted, out string err))
+		if (TryRead(fileLoc, lookForZippedVariantIfNotFound, out NiftiFile<T>? readAndConverted, out string err))
 		{
 			return readAndConverted;
 		}
@@ -325,11 +319,12 @@ public class NiftiReader : NiftiReaderBase
 			char[] extraBit = br.ReadChars(eSize - 8);
 			nh.HeaderExtras.Add(new KeyValuePair<HeaderExtraType, string>((HeaderExtraType)eCode, new string(extraBit)));
 		}
-		if (!nh.Verify(warnings, out msg))
+		if (!nh.Verify(warnings, out string? verificationErr))
 		{
+			msg = verificationErr;
 			return false;
 		}
-		s.Seek(nh.VoxOffset, SeekOrigin.Begin);
+		Stream.Seek(nh.VoxOffset, SeekOrigin.Begin);
 		long noVoxelsTotal = FlipProof.Image.Maths.Gen.Product(nh.DataArrayDims.Skip(1).TakeWhile((short a) => a != 0));
 		DataType dataType = nh.dataType;
       nf = dataType switch
@@ -347,9 +342,9 @@ public class NiftiReader : NiftiReaderBase
          DataType.longlong => new NiftiFile<long>(nh, ReadIntoStream(noVoxelsTotal * 8)),
          _ => throw new NotSupportedException("Unsupported data type " + nh.dataType),
       };
-      if (s.Position != s.Length)
+      if (Stream.Position != Stream.Length)
 		{
-			msg = $"File length longer than stated in header. Expected {noVoxelsTotal} voxels, but found {(float)s.Length - nh.voxOffset - (float)noVoxelsTotal}";
+			msg = $"File length longer than stated in header. Expected {noVoxelsTotal} voxels, but found {(float)Stream.Length - nh.voxOffset - (float)noVoxelsTotal}";
 		}
 		else
 		{

@@ -67,6 +67,14 @@ public abstract class Image<TSpace> : IDisposable
 
    #endregion
 
+   /// <summary>
+   /// Reference equals
+   /// </summary>
+   /// <param name="obj">Other</param>
+   /// <returns>True if images are the same object</returns>
+   public override bool Equals(object? obj) => obj is not null && ReferenceEquals(this, obj);
+
+   public override int GetHashCode() => RawData.GetHashCode();
    public abstract void Dispose();
 
 }
@@ -250,15 +258,6 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    #endregion
 
 
-   /// <summary>
-   /// Reference equals
-   /// </summary>
-   /// <param name="obj">Other</param>
-   /// <returns>True if images are the same object</returns>
-   public override bool Equals(object? obj) => obj is not null && ReferenceEquals(this, obj);
-
-
-   public override int GetHashCode() => _data.GetHashCode();
 
    #region Dispose
 
