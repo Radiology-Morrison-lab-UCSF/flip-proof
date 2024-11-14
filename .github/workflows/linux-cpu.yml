@@ -28,6 +28,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Linux-CPU-Debug --arch x64 --no-restore
+      run: dotnet build --configuration Linux-CPU-Debug --no-restore
     - name: Test
-      run: dotnet test --configuration Linux-CPU-Debug --arch x64 --no-build --verbosity normal
+      run: dotnet test --configuration Linux-CPU-Debug --no-build --verbosity normal

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,14 +8,16 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <Configurations>Win-CPU-Debug;Win-CPU-Release;Linux-CPU-Debug;Linux-CPU-Release;MacOS-CPU-Debug;MacOS-CPU-Release;Win-GPU-Debug;Win-GPU-Release;Linux-GPU-Debug;Linux-GPU-Release</Configurations>
-    <Platforms>x64;ARM64</Platforms>
+    <Platforms>AnyCPU</Platforms><!--Due to limitations in the build tooling, this needs to say AnyCPU, then specify the platform manually below-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Win-CPU-Release' Or '$(Configuration)' == 'Win-GPU-Release' Or '$(Configuration)' == 'Win-CPU-Debug' Or '$(Configuration)' == 'Win-GPU-Debug'">
     <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Linux-CPU-Release' Or '$(Configuration)' == 'Linux-GPU-Release' Or '$(Configuration)' == 'Linux-CPU-Debug' Or '$(Configuration)' == 'Linux-GPU-Debug' ">
     <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
 
 
@@ -27,8 +29,7 @@
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Win-CPU-Release' Or '$(Configuration)' == 'Linux-CPU-Release' Or '$(Configuration)' == 'MacOS-CPU-Release' Or
-                            '$(Configuration)' == 'Win-CPU-Debug' Or '$(Configuration)' == 'Linux-CPU-Debug' Or '$(Configuration)' == 'MacOS-CPU-Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Win-CPU-Release' Or '$(Configuration)' == 'Linux-CPU-Release' Or '$(Configuration)' == 'MacOS-CPU-Release' Or '$(Configuration)' == 'Win-CPU-Debug' Or '$(Configuration)' == 'Linux-CPU-Debug' Or '$(Configuration)' == 'MacOS-CPU-Debug'">
     <DefineConstants>$(DefineConstants);CPU</DefineConstants>
   </PropertyGroup>
 
