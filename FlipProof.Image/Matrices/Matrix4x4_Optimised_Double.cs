@@ -8,29 +8,29 @@ internal static class Matrix4x4_Optimised_ExtensionMethods
 	public static Matrix4x4_Optimised<double> InterpolateRotationMatrix(this Matrix4x4_Optimised<double> mat, double factor)
 	{
 		Quaternion.FromMatrixValues(mat).ToAxisAngle(out var axes, out var angle);
-		return Quaternion.FromAxisAngle_Normalised(axes, angle * factor).ToMatrixD(trustAlreadyNormalised: true, new XYZ<double>(mat._0_3 * factor, mat._1_3 * factor, mat._2_3 * factor));
+		return Quaternion.FromAxisAngle_Normalised(axes, angle * factor).ToMatrixD(trustAlreadyNormalised: true, new XYZ<double>(mat.M0_3 * factor, mat.M1_3 * factor, mat.M2_3 * factor));
 	}
 
 	public static Matrix4x4_Optimised<float> ToFloat(this Matrix4x4_Optimised<double> m)
 	{
 		return new Matrix4x4_Optimised<float>
 		{
-			_0_0 = (float)m._0_0,
-			_0_1 = (float)m._0_1,
-			_0_2 = (float)m._0_2,
-			_0_3 = (float)m._0_3,
-			_1_0 = (float)m._1_0,
-			_1_1 = (float)m._1_1,
-			_1_2 = (float)m._1_2,
-			_1_3 = (float)m._1_3,
-			_2_0 = (float)m._2_0,
-			_2_1 = (float)m._2_1,
-			_2_2 = (float)m._2_2,
-			_2_3 = (float)m._2_3,
-			_3_0 = (float)m._3_0,
-			_3_1 = (float)m._3_1,
-			_3_2 = (float)m._3_2,
-			_3_3 = (float)m._3_3
+			M0_0 = (float)m.M0_0,
+			M0_1 = (float)m.M0_1,
+			M0_2 = (float)m.M0_2,
+			M0_3 = (float)m.M0_3,
+			M1_0 = (float)m.M1_0,
+			M1_1 = (float)m.M1_1,
+			M1_2 = (float)m.M1_2,
+			M1_3 = (float)m.M1_3,
+			M2_0 = (float)m.M2_0,
+			M2_1 = (float)m.M2_1,
+			M2_2 = (float)m.M2_2,
+			M2_3 = (float)m.M2_3,
+			M3_0 = (float)m.M3_0,
+			M3_1 = (float)m.M3_1,
+			M3_2 = (float)m.M3_2,
+			M3_3 = (float)m.M3_3
 		};
 	}
 }

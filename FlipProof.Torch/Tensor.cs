@@ -20,7 +20,9 @@ namespace FlipProof.Torch;
 public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    where T : struct
 {
+   [CLSCompliant(false)]
    protected readonly Tensor _storage;
+   [CLSCompliant(false)]
    public Tensor Storage => _storage;
 
    /// <summary>
@@ -46,6 +48,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// </summary>
    /// <param name="storage"></param>
    /// <exception cref="ArgumentException">The dtype of the tensor does not match Dtype </exception>
+   [CLSCompliant(false)]
    protected Tensor(Tensor storage) 
    {
       if (storage.dtype != DType)
@@ -55,7 +58,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       this._storage = storage;
    }
 
-   public abstract torch.ScalarType DType { get; }
+   [CLSCompliant(false)]
+   public virtual torch.ScalarType DType => throw new NotImplementedException("Must be overridden in non-abstract class");
 
    public T this[params long[] indices]
    {
@@ -116,6 +120,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <exception cref="NotSupportedException">The type of T is not supported</exception>
    /// <remarks>Contents are copied to avoid the internal representation being altered in-place in an unexpected way</remarks>
    /// <returns></returns>
+   [CLSCompliant(false)]
    public static Tensor<T> CreateTensor(Tensor t, bool wrapCopy)
    {
       if (TypeConversions.GetScalarType<T>() != t.dtype)
@@ -139,6 +144,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <param name="doNotCast">Diallows casting, guaranteeing the input tensor is wrapped, not a copy. If the input is the wrong type, an exception is thrown</param>
    /// <param name="t">The tensor to wrap</param>
    /// <returns></returns>
+   [CLSCompliant(false)]
    public Tensor<T> CreateFromTensor(Tensor t, bool doNotCast=false)
    {
       if (t.dtype != DType)
@@ -157,7 +163,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// </summary>
    /// <param name="scalar">Guaranteed to be the correct DType</param>
    /// <returns></returns>
-   protected abstract Tensor<T> CreateFromTensor_Sub(Tensor scalar);
+   [CLSCompliant(false)]
+   protected virtual Tensor<T> CreateFromTensor_Sub(Tensor scalar) => throw new NotImplementedException("Must be overridden in non-abstract class");
 
    /// <summary>
    /// Creates a new 1D single value tensor from a given scalar
@@ -178,11 +185,13 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// </summary>
    /// <param name="input"></param>
    /// <returns></returns>
-   public abstract Tensor ScalarToTensor(T input);
+   [CLSCompliant(false)]
+   public virtual Tensor ScalarToTensor(T input) => throw new NotImplementedException("Must be overridden in non-abstract class");
    /// <summary>
    /// Calls torch.tensor on the input
    /// </summary>
-   public abstract Tensor ArrayToTensor(T[] input);
+   [CLSCompliant(false)]
+   public virtual Tensor ArrayToTensor(T[] input) => throw new NotImplementedException("Must be overridden in non-abstract class");
 
    /// <summary>
    /// Applies a function to calculate a scalar, which is returned as a <see cref="T"/>
@@ -190,6 +199,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <param name="func"></param>
    /// <returns></returns>
    /// <exception cref="ArgumentException">The function does not return the same dtype</exception>
+   [CLSCompliant(false)]
    public T GetScalarFromResult(Func<Tensor, Tensor> func)
    {
       using Tensor result = func(Storage);
@@ -207,7 +217,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <summary>
    /// Returns the scalar inside the provided Tensor, assuming it is a scalar
    /// </summary>
-   protected abstract T ToScalar(Tensor t);
+   [CLSCompliant(false)]
+   protected virtual T ToScalar(Tensor t) => throw new NotImplementedException("Must be overridden in non-abstract class");
 
 
    #region Cast
@@ -236,6 +247,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
+   [CLSCompliant(false)]
    public Int8Tensor ToInt8() => Cast<Int8Tensor>(a=>a.to(ScalarType.Int8));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
@@ -315,6 +327,12 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       using Tensor result = match.all();
       return result.ToBoolean();
    }
+
+   public override int GetHashCode()
+   {
+      return Storage.GetHashCode();
+   }
+
 
    public bool ShapesEqual<S>(Tensor<S> other) where S:struct
    {

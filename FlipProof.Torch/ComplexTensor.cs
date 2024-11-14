@@ -11,8 +11,10 @@ public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
    {
    }
 
+   [CLSCompliant(false)]
    public ComplexTensor(Tensor t) : base(t) { }
 
+   [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.ComplexFloat64;
 
 
@@ -21,11 +23,15 @@ public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
 
    protected override ComplexTensor CreateSameSizeBlank() => new(_storage.shape);
 
+   [CLSCompliant(false)]
    protected override ComplexTensor CreateFromTensorSub(Tensor t) => new(t);
 
 
+   [CLSCompliant(false)]
    public override Tensor ScalarToTensor(Complex arr) => torch.tensor(arr);
+   [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Complex[] arr) => torch.tensor(arr);
 
+   [CLSCompliant(false)]
    protected override Complex ToScalar(Tensor t) => t.ToSingle();
 }

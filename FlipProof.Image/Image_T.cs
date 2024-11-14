@@ -23,7 +23,8 @@ public abstract class Image<TSpace> : IDisposable
       RawData = _rawData;
       
    }
-   
+
+   [CLSCompliant(false)]
    protected Tensor RawData { get; }
    public ImageHeader Header => TSpace.Orientation!;
 
@@ -88,6 +89,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    where TSpace : ISpace
    where TVoxel : struct
 {
+   [CLSCompliant(false)]
    protected readonly Tensor<TVoxel> _data;
 
    #region Construction
@@ -229,6 +231,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    public override ImageBool<TSpace> ToBool() => ImageBool<TSpace>.UnsafeCreate(_data.ToBool());
 
 #pragma warning disable CS0618 // Type or member is obsolete
+   [CLSCompliant(false)]
    public static explicit operator ImageInt8<TSpace>(Image<TVoxel,TSpace> value) => new(value._data.ToInt8(), false);
    // TO DO: Uncomment once implemented
    //public static explicit operator Image3dInt16<TSpace>(Image<TVoxel, TSpace> value) => new(value._data.ToInt16(), false);

@@ -98,6 +98,7 @@ public class Array4D<T> : IVoxelArray<T>, IDisposable
       Size1 = size1;
       Size2 = size2;
       Size3 = size3;
+      Shape = ImmutableArray.Create([Size0, Size1, Size2, Size3]);
 
       _data = new Array3D<T>[size3];
       InitialiseAsBlank();

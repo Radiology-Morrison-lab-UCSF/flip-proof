@@ -4,6 +4,7 @@ using TorchSharp;
 namespace FlipProof.Torch;
 public static class ArrayAndValueExtensionMethods
 {
+   [CLSCompliant(false)]
    public static torch.Tensor ToTensor1D<T>(this T[] values) => values.ToTensor([values.LongLength]);
    /// <summary>
    /// Creates a row-wise tensor (row moves fastest), so that input[j][k] would give a tensor[j,k]
@@ -11,6 +12,7 @@ public static class ArrayAndValueExtensionMethods
    /// <typeparam name="T"></typeparam>
    /// <param name="values">All elements must be the same length</param>
    /// <returns></returns>
+   [CLSCompliant(false)]
    public static torch.Tensor ToTensor<T>(this T[][] values) where T : struct
    {
       ToTensorPrep(values, out int lenDim0, out T[] as1D);
@@ -45,6 +47,7 @@ public static class ArrayAndValueExtensionMethods
    /// <typeparam name="T"></typeparam>
    /// <param name="values">All elements must be the same length</param>
    /// <returns></returns>
+   [CLSCompliant(false)]
    public static torch.Tensor ToTensor(this Complex[][] values)
    {
       ToTensorPrep(values, out int lenDim0, out Complex[] as1D);

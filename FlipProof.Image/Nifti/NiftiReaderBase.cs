@@ -65,15 +65,15 @@ public abstract class NiftiReaderBase(BinaryReader reader) : IDisposable
 			arr[i] = br.ReadByte();
 		}
 	}
-
-	protected sbyte[] ReadIntoArray_SByte(long count)
+   [CLSCompliant(false)]
+   protected sbyte[] ReadIntoArray_SByte(long count)
 	{
 		sbyte[] arr = new sbyte[count];
 		ReadIntoArray_SByte(arr, count);
 		return arr;
 	}
-
-	protected void ReadIntoArray_SByte(sbyte[] arr, long count)
+   [CLSCompliant(false)]
+   protected void ReadIntoArray_SByte(sbyte[] arr, long count)
 	{
 		ReadIntoArrayCheck(count);
 		for (int i = 0; i < count; i++)
@@ -81,15 +81,15 @@ public abstract class NiftiReaderBase(BinaryReader reader) : IDisposable
 			arr[i] = br.ReadSByte();
 		}
 	}
-
-	protected ushort[] ReadIntoArray_UInt16(long count)
+   [CLSCompliant(false)]
+   protected ushort[] ReadIntoArray_UInt16(long count)
 	{
 		ushort[] arr = new ushort[count];
 		ReadIntoArray_UInt16(arr, count);
 		return arr;
 	}
-
-	protected void ReadIntoArray_UInt16(ushort[] arr, long count)
+   [CLSCompliant(false)]
+   protected void ReadIntoArray_UInt16(ushort[] arr, long count)
 	{
 		ReadIntoArrayCheck(count * 2);
 		for (int i = 0; i < count; i++)
@@ -114,14 +114,16 @@ public abstract class NiftiReaderBase(BinaryReader reader) : IDisposable
 		}
 	}
 
-	protected uint[] ReadIntoArray_UInt32(long count)
+   [CLSCompliant(false)]
+   protected uint[] ReadIntoArray_UInt32(long count)
 	{
 		uint[] arr = new uint[count];
 		ReadIntoArray_UInt32(arr, count);
 		return arr;
 	}
 
-	protected void ReadIntoArray_UInt32(uint[] arr, long count)
+   [CLSCompliant(false)]
+   protected void ReadIntoArray_UInt32(uint[] arr, long count)
 	{
 		ReadIntoArrayCheck(count * 4);
 		for (int i = 0; i < count; i++)
@@ -146,14 +148,16 @@ public abstract class NiftiReaderBase(BinaryReader reader) : IDisposable
 		}
 	}
 
-	protected ulong[] ReadIntoArray_UInt64(long count)
+   [CLSCompliant(false)]
+   protected ulong[] ReadIntoArray_UInt64(long count)
 	{
 		ulong[] arr = new ulong[count];
 		ReadIntoArray_UInt64(arr, count);
 		return arr;
 	}
 
-	protected void ReadIntoArray_UInt64(ulong[] arr, long count)
+   [CLSCompliant(false)]
+   protected void ReadIntoArray_UInt64(ulong[] arr, long count)
 	{
 		ReadIntoArrayCheck(count * 8);
 		for (int i = 0; i < count; i++)

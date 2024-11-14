@@ -267,15 +267,15 @@ public sealed class DecomposableTransform<T> : IEquatable<DecomposableTransform<
         double pixSize_x = pixDim[0];
         double pixSize_y = pixDim[1];
         double pixSize_z = pixDim[2];
-        fastMat._0_0 = (float)(fastMat._0_0 / pixSize_x);
-        fastMat._0_1 = (float)(fastMat._0_1 / pixSize_x);
-        fastMat._0_2 = (float)(fastMat._0_2 / pixSize_x);
-        fastMat._1_0 = (float)(fastMat._1_0 / pixSize_y);
-        fastMat._1_1 = (float)(fastMat._1_1 / pixSize_y);
-        fastMat._1_2 = (float)(fastMat._1_2 / pixSize_y);
-        fastMat._2_0 = (float)(fastMat._2_0 / pixSize_z);
-        fastMat._2_1 = (float)(fastMat._2_1 / pixSize_z);
-        fastMat._2_2 = (float)(fastMat._2_2 / pixSize_z);
+        fastMat.M0_0 = (float)(fastMat.M0_0 / pixSize_x);
+        fastMat.M0_1 = (float)(fastMat.M0_1 / pixSize_x);
+        fastMat.M0_2 = (float)(fastMat.M0_2 / pixSize_x);
+        fastMat.M1_0 = (float)(fastMat.M1_0 / pixSize_y);
+        fastMat.M1_1 = (float)(fastMat.M1_1 / pixSize_y);
+        fastMat.M1_2 = (float)(fastMat.M1_2 / pixSize_y);
+        fastMat.M2_0 = (float)(fastMat.M2_0 / pixSize_z);
+        fastMat.M2_1 = (float)(fastMat.M2_1 / pixSize_z);
+        fastMat.M2_2 = (float)(fastMat.M2_2 / pixSize_z);
     }
 
     internal static void DeScaleMatrix(double[] pixDim, Matrix4x4_Optimised<double> fastMat)
@@ -283,15 +283,15 @@ public sealed class DecomposableTransform<T> : IEquatable<DecomposableTransform<
         double pixSize_x = pixDim[0];
         double pixSize_y = pixDim[1];
         double pixSize_z = pixDim[2];
-        fastMat._0_0 /= pixSize_x;
-        fastMat._0_1 /= pixSize_x;
-        fastMat._0_2 /= pixSize_x;
-        fastMat._1_0 /= pixSize_y;
-        fastMat._1_1 /= pixSize_y;
-        fastMat._1_2 /= pixSize_y;
-        fastMat._2_0 /= pixSize_z;
-        fastMat._2_1 /= pixSize_z;
-        fastMat._2_2 /= pixSize_z;
+        fastMat.M0_0 /= pixSize_x;
+        fastMat.M0_1 /= pixSize_x;
+        fastMat.M0_2 /= pixSize_x;
+        fastMat.M1_0 /= pixSize_y;
+        fastMat.M1_1 /= pixSize_y;
+        fastMat.M1_2 /= pixSize_y;
+        fastMat.M2_0 /= pixSize_z;
+        fastMat.M2_1 /= pixSize_z;
+        fastMat.M2_2 /= pixSize_z;
     }
 
     internal void FlipX(T imWidth_rawCoords)

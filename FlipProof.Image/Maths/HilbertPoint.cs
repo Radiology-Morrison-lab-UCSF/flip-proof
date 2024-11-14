@@ -88,7 +88,7 @@ internal class HilbertPoint : UnsignedPoint, IEquatable<HilbertPoint>, IComparab
       return logTwo;
    }
 
-   public override bool Equals(object obj)
+   public override bool Equals(object? obj)
    {
       if (obj is HilbertPoint p)
       {

@@ -2,8 +2,9 @@ using System;
 
 namespace FlipProof.Image.IO;
 
-public interface IBinaryWriter : IDisposable
+internal interface IBinaryWriter : IDisposable
 {
+
 	void Write(sbyte allOfMe);
 
 	void Write(byte allOfMe);

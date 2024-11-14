@@ -4,10 +4,15 @@ using TorchSharp;
 
 namespace FlipProof.Torch;
 
-public abstract class IntegerTensor<T, TSelf>(torch.Tensor t) : SimpleNumericTensor<T, TSelf>(t)
+public abstract class IntegerTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>
   where T : struct, IBinaryInteger<T>
   where TSelf : NumericTensor<T, TSelf>
 {
+   [CLSCompliant(false)]
+   public IntegerTensor(torch.Tensor t) : base(t)
+   {
+   }
+
    public static FloatTensor operator +(IntegerTensor<T, TSelf> left, FloatTensor right) => new(left.Storage + right.Storage);
    public static FloatTensor operator +(FloatTensor left, IntegerTensor<T, TSelf> right) => new(left.Storage + right.Storage);
    public static FloatTensor operator -(IntegerTensor<T, TSelf> left, FloatTensor right) => new(left.Storage - right.Storage);

@@ -12,9 +12,11 @@ public class Nifti2Header
 
 	public DataType datatype;
 
-	public ushort bitpix;
+   [CLSCompliant(false)]
+   public ushort bitpix;
 
-	public ulong[] dim = [];
+   [CLSCompliant(false)]
+   public ulong[] dim = [];
 
 	public double intent_p1;
 
@@ -24,7 +26,8 @@ public class Nifti2Header
 
 	public double[] pixdim = [];
 
-	public ulong vox_offset;
+   [CLSCompliant(false)]
+   public ulong vox_offset;
 
 	public double scl_slope;
 
@@ -38,9 +41,11 @@ public class Nifti2Header
 
 	public double toffset;
 
-	public ulong slice_start;
+   [CLSCompliant(false)]
+   public ulong slice_start;
 
-	public ulong slice_end;
+   [CLSCompliant(false)]
+   public ulong slice_end;
 
 	public char[] descrip = [];
 

@@ -7,11 +7,14 @@ namespace FlipProof.Torch;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TSelf"></typeparam>
-/// <param name="t"></param>
-public abstract class SimpleNumericTensor<T,TSelf>(torch.Tensor t) : NumericTensor<T,TSelf>(t)
+public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
   where T : struct
   where TSelf : NumericTensor<T, TSelf>
 {
+   [CLSCompliant(false)]
+   public SimpleNumericTensor(torch.Tensor t) : base(t)
+   {
+   }
 
    /// <summary>
    /// Returns a new <see cref="TSelf"/> with absolute values

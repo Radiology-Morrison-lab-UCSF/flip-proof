@@ -13,6 +13,7 @@ public static class TensorExtensionMethods
    /// <param name="maskDim0">True/False to indicate which indices to get for dim 0</param>
    /// <param name="indicesDim1">Range of indices to get for dim 1</param>
    /// <exception cref="NotSupportedException">Tensor is larger than supported</exception>
+   [CLSCompliant(false)]
    public static Tensor GetSubTensor(this Tensor tensor, Tensor maskDim0, Range indicesDim1)
    {
       if (tensor.shape[1] > int.MaxValue)
@@ -50,6 +51,7 @@ public static class TensorExtensionMethods
    /// <param name="indicesDim1">Range of indices to get for dim 1</param>
    /// <param name="value">The new values</param>
    /// <exception cref="NotSupportedException">Tensor is larger than supported</exception>
+   [CLSCompliant(false)]
    public static Tensor SetSubTensor(this Tensor tensor, Tensor maskDim0, Range indicesDim1, Tensor value)
    {
       if (tensor.shape[1] > int.MaxValue)
@@ -246,51 +248,90 @@ public static class TensorExtensionMethods
    private static Int8Tensor OperationToTensor(this Tensor<sbyte> left, sbyte right, Func<Tensor, Tensor, Tensor> func) => new(func(left.Storage, right));
    private static Int8Tensor OperationToTensor(this Tensor<sbyte> left, byte right, Func<Tensor, Tensor, Tensor> func) => new(func(left.Storage, right));
 
+   [CLSCompliant(false)]
    public static Int8Tensor Add(this Tensor<sbyte> left, Tensor<sbyte> right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int8Tensor Subtract(this Tensor<sbyte> left, Tensor<sbyte> right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int8Tensor Multiply(this Tensor<sbyte> left, Tensor<sbyte> right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int8Tensor Divide(this Tensor<sbyte> left, Tensor<sbyte> right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
 
+   [CLSCompliant(false)]
    public static DoubleTensor Add(this Tensor<sbyte> left, double right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static DoubleTensor Subtract(this Tensor<sbyte> left, double right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static DoubleTensor Multiply(this Tensor<sbyte> left, double right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static DoubleTensor Divide(this Tensor<sbyte> left, double right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static DoubleTensor LeftDivide(this Tensor<sbyte> right, double left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static FloatTensor Add(this Tensor<sbyte> left, float right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static FloatTensor Subtract(this Tensor<sbyte> left, float right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static FloatTensor Multiply(this Tensor<sbyte> left, float right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static FloatTensor Divide(this Tensor<sbyte> left, float right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static FloatTensor LeftDivide(this Tensor<sbyte> right, float left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int64Tensor Add(this Tensor<sbyte> left, Int64 right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int64Tensor Subtract(this Tensor<sbyte> left, Int64 right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int64Tensor Multiply(this Tensor<sbyte> left, Int64 right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int64Tensor Divide(this Tensor<sbyte> left, Int64 right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int64Tensor LeftDivide(this Tensor<sbyte> right, Int64 left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int32Tensor Add(this Tensor<sbyte> left, Int32 right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int32Tensor Subtract(this Tensor<sbyte> left, Int32 right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int32Tensor Multiply(this Tensor<sbyte> left, Int32 right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int32Tensor Divide(this Tensor<sbyte> left, Int32 right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int32Tensor LeftDivide(this Tensor<sbyte> right, Int32 left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int16Tensor Add(this Tensor<sbyte> left, Int16 right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int16Tensor Subtract(this Tensor<sbyte> left, Int16 right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int16Tensor Multiply(this Tensor<sbyte> left, Int16 right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int16Tensor Divide(this Tensor<sbyte> left, Int16 right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int16Tensor LeftDivide(this Tensor<sbyte> right, Int16 left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int8Tensor Add(this Tensor<sbyte> left, sbyte right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int8Tensor Subtract(this Tensor<sbyte> left, sbyte right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int8Tensor Multiply(this Tensor<sbyte> left, sbyte right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int8Tensor Divide(this Tensor<sbyte> left, sbyte right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int8Tensor LeftDivide(this Tensor<sbyte> right, sbyte left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int8Tensor Add(this Tensor<sbyte> left, byte right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int8Tensor Subtract(this Tensor<sbyte> left, byte right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int8Tensor Multiply(this Tensor<sbyte> left, byte right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int8Tensor Divide(this Tensor<sbyte> left, byte right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int8Tensor LeftDivide(this Tensor<sbyte> right, byte left) => new(torch.divide(left, right.Storage));
 
    #endregion
@@ -343,10 +384,15 @@ public static class TensorExtensionMethods
    public static Int16Tensor Divide(this Tensor<byte> left, Int16 right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
    public static Int16Tensor LeftDivide(this Tensor<byte> right, Int16 left) => new(torch.divide(left, right.Storage));
 
+   [CLSCompliant(false)]
    public static Int8Tensor Add(this Tensor<byte> left, sbyte right) => OperationToTensor(left, right, torch.add);
+   [CLSCompliant(false)]
    public static Int8Tensor Subtract(this Tensor<byte> left, sbyte right) => OperationToTensor(left, right, torch.subtract);
+   [CLSCompliant(false)]
    public static Int8Tensor Multiply(this Tensor<byte> left, sbyte right) => OperationToTensor(left, right, torch.multiply);
+   [CLSCompliant(false)]
    public static Int8Tensor Divide(this Tensor<byte> left, sbyte right) => OperationToTensor(left, right, (a, b) => torch.divide(a, b));
+   [CLSCompliant(false)]
    public static Int8Tensor LeftDivide(this Tensor<byte> right, sbyte left) => new(torch.divide(left, right.Storage));
 
    public static UInt8Tensor Add(this Tensor<byte> left, byte right) => OperationToTensor(left, right, torch.add);
@@ -367,6 +413,7 @@ public static class TensorExtensionMethods
    public static Int64Tensor Mask(this Tensor<Int64> right, Tensor<bool> left) => new(torch.multiply(left.ToInt64().Storage, right.Storage));
    public static Int32Tensor Mask(this Tensor<Int32> right, Tensor<bool> left) => new(torch.multiply(left.ToInt32().Storage, right.Storage));
    public static Int16Tensor Mask(this Tensor<Int16> right, Tensor<bool> left) => new(torch.multiply(left.ToInt16().Storage, right.Storage));
+   [CLSCompliant(false)]
    public static Int8Tensor Mask(this Tensor<sbyte> right, Tensor<bool> left) => new(torch.multiply(left.ToInt8().Storage, right.Storage));
    public static UInt8Tensor Mask(this Tensor<byte> right, Tensor<bool> left) => new(torch.multiply(left.ToUInt8().Storage, right.Storage));
 

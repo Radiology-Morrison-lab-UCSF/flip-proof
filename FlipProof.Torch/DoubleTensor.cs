@@ -11,8 +11,10 @@ public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>
    {
    }
 
+   [CLSCompliant(false)]
    public DoubleTensor(Tensor t) : base(t) { }
 
+   [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Float64;
 
 
@@ -20,13 +22,15 @@ public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>
 
 
    protected override DoubleTensor CreateSameSizeBlank() => new(_storage.shape);
-
+   [CLSCompliant(false)]
    protected override DoubleTensor CreateFromTensorSub(Tensor t) => new(t);
 
-
+   [CLSCompliant(false)]
    public override Tensor ScalarToTensor(double arr) => torch.tensor(arr);
+   [CLSCompliant(false)]
    public override Tensor ArrayToTensor(double[] arr) => torch.tensor(arr);
 
+   [CLSCompliant(false)]
    protected override double ToScalar(Tensor t) => t.ToDouble();
 
    public static DoubleTensor operator *(DoubleTensor left, double right) => new(left.Storage.multiply(right));

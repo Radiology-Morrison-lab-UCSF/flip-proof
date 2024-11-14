@@ -11,6 +11,7 @@ public static class TypeConversions
    /// <typeparam name="T"></typeparam>
    /// <returns></returns>
    /// <exception cref="NotSupportedException"></exception>
+   [CLSCompliant(false)]
    public static ScalarType GetScalarType<T>() 
    {
       return default(T) switch

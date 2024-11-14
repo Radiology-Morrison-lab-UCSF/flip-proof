@@ -361,11 +361,11 @@ public struct Line : IEquatable<Line>
 		return false;
 	}
 
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		if (obj is Line)
+		if (obj is Line l)
 		{
-			return Equals((Line)obj);
+			return Equals(l);
 		}
 		return base.Equals(obj);
 	}

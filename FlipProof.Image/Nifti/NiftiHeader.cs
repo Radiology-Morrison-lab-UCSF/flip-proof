@@ -49,7 +49,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 	public float intentParam3;
 
-	public string intentName;
+	public string intentName = string.Empty;
 
 	public DataType dataType;
 
@@ -65,7 +65,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 	private float[] pixDim = new float[8] { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
 
-	public float voxOffset = 352f;
+	internal float _voxOffset = 352f;
 
 	public float sclSlope = 1f;
 
@@ -121,7 +121,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 	public float[] PixDim => pixDim;
 
-	public int VoxOffset => (int)voxOffset;
+	public int VoxOffset => (int)_voxOffset;
 
 	public MeasurementUnits UnitsXYZ => xyztUnits & MeasurementUnits.MicroMeter;
 
@@ -458,9 +458,9 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		return clone;
 	}
 
-	public bool Equals(NiftiHeader other)
+	public bool Equals(NiftiHeader? other)
 	{
-		return Equals(other, strict: true, checkIntensityParams: true, ignoreStringPadding: false);
+		return other != null && Equals(other, strict: true, checkIntensityParams: true, ignoreStringPadding: false);
 	}
 
 	public bool Equals(NiftiHeader other, bool strict, bool checkIntensityParams, bool ignoreStringPadding)
@@ -473,7 +473,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		{
 			return false;
 		}
-		bool sizeAndTypeOK = dataType == other.dataType && bitPix == other.bitPix && sliceCode == other.sliceCode && sliceStart == other.sliceStart && sliceLast == other.sliceLast && sliceDuration == other.sliceDuration && voxOffset == other.voxOffset;
+		bool sizeAndTypeOK = dataType == other.dataType && bitPix == other.bitPix && sliceCode == other.sliceCode && sliceStart == other.sliceStart && sliceLast == other.sliceLast && sliceDuration == other.sliceDuration && _voxOffset == other._voxOffset;
 		if (strict)
 		{
 			sizeAndTypeOK = sizeAndTypeOK && pixDim.SequenceEqual(other.pixDim);
@@ -580,7 +580,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 		// first slice is inclusice, 1 indexed
 		// last slice is inclusive, 1-indexed
-		uint lastSlice = other.SliceEncodingDimension switch
+		long lastSlice = other.SliceEncodingDimension switch
 		{
 			EncodingDirection.UnknownOrNA => other.Size.X,
 			EncodingDirection.X => other.Size.X,
@@ -626,7 +626,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 			sliceLast = (short)lastSlice, // inclusive, 1-indexed
          tOffset = 0, // not supported
 			_dataArrayDims = GetDataArrayDimensions(other),
-			voxOffset = 0,// set upon write
+			_voxOffset = 0,// set upon write
 		};
 
 

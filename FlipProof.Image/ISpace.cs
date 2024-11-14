@@ -65,11 +65,11 @@ public interface ISpace
 
       return Matches<T>(S.Orientation);
    }
-   static bool Matches<T>(ImageHeader orientation) 
+   static bool Matches<T>(ImageHeader? orientation) 
       where T:ISpace
    {
       
-      return T.Orientation.Equals(orientation);
+      return T.Orientation != null && T.Orientation.Equals(orientation);
    }
 
 #if DEBUG

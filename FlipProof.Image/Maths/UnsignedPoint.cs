@@ -184,7 +184,7 @@ internal class UnsignedPoint : IEquatable<UnsignedPoint>, IComparable<UnsignedPo
         return _hashCode;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is UnsignedPoint p)
         {
@@ -198,9 +198,9 @@ internal class UnsignedPoint : IEquatable<UnsignedPoint>, IComparable<UnsignedPo
         return other != null && UniqueId == other.UniqueId;
     }
 
-    public virtual int CompareTo(UnsignedPoint other)
+    public virtual int CompareTo(UnsignedPoint? other)
     {
-        return UniqueId.CompareTo(other.UniqueId);
+        return other == null ? -1 : UniqueId.CompareTo(other.UniqueId);
     }
 
     public virtual long SquareDistance(UnsignedPoint other)
@@ -333,11 +333,11 @@ internal class UnsignedPoint : IEquatable<UnsignedPoint>, IComparable<UnsignedPo
 
     public static UnsignedPoint Centroid(IEnumerable<UnsignedPoint> points)
     {
-        double[] sums = null;
+        double[] sums = null!; // null value never used
         int numPoints = 0;
         foreach (UnsignedPoint p in points)
         {
-            if (sums == null)
+            if (numPoints == 0)
             {
                 sums = new double[p.Dimensions];
             }
@@ -350,7 +350,7 @@ internal class UnsignedPoint : IEquatable<UnsignedPoint>, IComparable<UnsignedPo
         }
         if (numPoints == 0)
         {
-            return null;
+            throw new ArgumentException("No elements in Ienumerable", nameof(points));
         }
         uint[] coords = new uint[sums.Length];
         for (int dim = 0; dim < sums.Length; dim++)

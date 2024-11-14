@@ -10,6 +10,7 @@ namespace FlipProof.Image;
 /// </summary>
 /// <typeparam name="TVoxel"></typeparam>
 /// <typeparam name="TSpace"></typeparam>
+[CLSCompliant(true)]
 public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpace>
    where TVoxel : struct, INumber<TVoxel>
    where TSpace : ISpace

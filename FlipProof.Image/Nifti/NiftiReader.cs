@@ -280,7 +280,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 			Console.WriteLine("Warning - file pixel dimension 4 is NaN. Replaced with 1");
 			nh.PixDim[4] = 1f;
 		}
-		nh.voxOffset = br.ReadSingle();
+		nh._voxOffset = br.ReadSingle();
 		nh.sclSlope = br.ReadSingle();
 		nh.scl_inter = br.ReadSingle();
 		if (nh.sclSlope == 0f)
@@ -344,7 +344,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
       };
       if (Stream.Position != Stream.Length)
 		{
-			msg = $"File length longer than stated in header. Expected {noVoxelsTotal} voxels, but found {(float)Stream.Length - nh.voxOffset - (float)noVoxelsTotal}";
+			msg = $"File length longer than stated in header. Expected {noVoxelsTotal} voxels, but found {(float)Stream.Length - nh._voxOffset - (float)noVoxelsTotal}";
 		}
 		else
 		{

@@ -9,13 +9,16 @@ namespace FlipProof.Torch;
 
 public static class VoxelArrayExtensionMethods
 {
+   [CLSCompliant(false)]
    public static Tensor ToTensor(this IVoxelArray<Complex> array)
    {
       var as1D = array.GetAllVoxels_LastDimFastest();
       return torch.tensor(as1D, array.Shape.Select(Convert.ToInt64).ToArray(), null, null, false);
    }
+   [CLSCompliant(false)]
    public static Tensor ToTensor<T>(this IVoxelArray<T> array) where T : struct => array.GetAllVoxels_LastDimFastest().ToTensor(array.Shape.Select(Convert.ToInt64).ToArray());
 
+   [CLSCompliant(false)]
    public static TArr ToArray<TArr,T>(this Tensor tensor, Func<int[], TArr> createEmptyArray, int expectedDimensions)
       where TArr:IVoxelArray<T>
       where T : struct
@@ -37,6 +40,7 @@ public static class VoxelArrayExtensionMethods
       return voxelArray;
    }
 
+   [CLSCompliant(false)]
    public static ScalarType GetTypeEnum<T>() => default(T) switch
    {
       default(double) => ScalarType.Float64,

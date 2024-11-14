@@ -264,13 +264,15 @@ public class LargeMemoryStream : Stream
 	{
 		_position = 0L;
 		_length = 0L;
+
+		// Eager clean up of managed data
 		if (blocks != null)
 		{
 			for (int i = 0; i < blocks.Length; i++)
 			{
-				blocks[i] = null;
+				blocks[i] = null!;
 			}
-			blocks = null;
+			blocks = null!;
 		}
 		base.Dispose(disposing);
 	}

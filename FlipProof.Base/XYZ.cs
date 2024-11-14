@@ -60,6 +60,7 @@ public readonly record struct XYZ<T>(T X, T Y, T Z) : IReadOnlyList<T>
    /// </summary>
    /// <exception cref="InvalidCastException">Cast is not lossless</exception>
    /// <exception cref="OverflowException">Cast is not lossless</exception>
+   [CLSCompliant(false)]
    public XYZ<uint> ToUIntLosslessly()
    {
       uint x = Convert.ToUInt32(X);

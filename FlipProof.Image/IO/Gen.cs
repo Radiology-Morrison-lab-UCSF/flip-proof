@@ -2,6 +2,7 @@ using FlipProof.Base;
 using FlipProof.Image.Matrices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -89,7 +90,8 @@ public static class Gen
 		return BitConverter.ToInt32(ConvertEndian(BitConverter.GetBytes(i)), 0);
 	}
 
-	public static uint ConvertEndian(uint i)
+   [CLSCompliant(false)]
+   public static uint ConvertEndian(uint i)
 	{
 		return BitConverter.ToUInt32(ConvertEndian(BitConverter.GetBytes(i)), 0);
 	}
@@ -99,12 +101,14 @@ public static class Gen
 		return BitConverter.ToInt16(ConvertEndian(BitConverter.GetBytes(i)), 0);
 	}
 
-	public static ushort ConvertEndian(ushort i)
+   [CLSCompliant(false)]
+   public static ushort ConvertEndian(ushort i)
 	{
 		return BitConverter.ToUInt16(ConvertEndian(BitConverter.GetBytes(i)), 0);
 	}
 
-	public static void ConvertEndian_16bit(ref ushort[] arr)
+   [CLSCompliant(false)]
+   public static void ConvertEndian_16bit(ref ushort[] arr)
 	{
 		byte[] bytes = new byte[arr.Length * 2];
 		Buffer.BlockCopy(arr, 0, bytes, 0, bytes.Length);
@@ -143,7 +147,8 @@ public static class Gen
 		Buffer.BlockCopy(bytes, 0, arr, 0, bytes.Length);
 	}
 
-	public static void ConvertEndian_32bit_Untested(ref uint[] arr)
+   [CLSCompliant(false)]
+   public static void ConvertEndian_32bit_Untested(ref uint[] arr)
 	{
 		byte[] bytes = new byte[arr.Length * 4];
 		Buffer.BlockCopy(arr, 0, bytes, 0, bytes.Length);
@@ -191,12 +196,9 @@ public static class Gen
 		}
 	}
 
-	public static void CopyDir(string sourceDirName, string destDirName, OverwriteAction onFileOverwrite, bool copySubDirs = true, string[] ignoreSuffix = null)
+	public static void CopyDir(string sourceDirName, string destDirName, OverwriteAction onFileOverwrite, bool copySubDirs = true, string[]? ignoreSuffix = null)
 	{
-		if (ignoreSuffix == null)
-		{
-			ignoreSuffix = new string[0];
-		}
+		ignoreSuffix ??= [];
 		ignoreSuffix = ignoreSuffix.ToArray((string a) => (a[0] != '.') ? ("." + a) : a);
 		DirectoryInfo directoryInfo = new DirectoryInfo(sourceDirName);
 		if (!directoryInfo.Exists)
@@ -258,7 +260,8 @@ public static class Gen
 		}
 	}
 
-	public static byte[] GetBytes_BE(ushort i)
+   [CLSCompliant(false)]
+   public static byte[] GetBytes_BE(ushort i)
 	{
 		return GenMethods.ReverseInPlace_2(BitConverter.GetBytes(i));
 	}
@@ -268,7 +271,8 @@ public static class Gen
 		return GenMethods.ReverseInPlace_2(BitConverter.GetBytes(i));
 	}
 
-	public static byte[] GetBytes_BE(uint i)
+   [CLSCompliant(false)]
+   public static byte[] GetBytes_BE(uint i)
 	{
 		return GenMethods.ReverseInPlace_4(BitConverter.GetBytes(i));
 	}
@@ -278,7 +282,8 @@ public static class Gen
 		return GenMethods.ReverseInPlace_4(BitConverter.GetBytes(i));
 	}
 
-	public static byte[] GetBytes_BE(ulong i)
+   [CLSCompliant(false)]
+   public static byte[] GetBytes_BE(ulong i)
 	{
 		return GenMethods.ReverseInPlace_8(BitConverter.GetBytes(i));
 	}
@@ -328,30 +333,14 @@ public static class Gen
 	{
 		if (p.Last() == Path.DirectorySeparatorChar)
 		{
-			return p.Substring(0, p.Length - 1);
+			return p[..^1];
 		}
-		return string.Copy(p);
+		return p;
 	}
 
-	public static DirectoryInfo GetParentDirectory(string directoryPath)
+	public static DirectoryInfo? GetParentDirectory(string directoryPath)
 	{
 		return Directory.GetParent(RemoveDirSeparatorChar(directoryPath));
-	}
-
-	public static string GetTopDirName(string folderOrFile)
-	{
-		folderOrFile = Path.GetFullPath(folderOrFile);
-		if (File.Exists(folderOrFile))
-		{
-			folderOrFile = Path.GetDirectoryName(folderOrFile);
-		}
-		string nom = folderOrFile.Substring(GetParentDirectory(folderOrFile).FullName.Length + 1);
-		int indexOfSlash = nom.IndexOf(Path.DirectorySeparatorChar);
-		if (indexOfSlash > -1)
-		{
-			nom = nom.Substring(0, indexOfSlash);
-		}
-		return nom;
 	}
 
 	public static string[] GetImageLocs(string dir, string suffix = "dcm")
@@ -403,7 +392,8 @@ public static class Gen
 		return floats;
 	}
 
-	public unsafe static float ParseFloat(char* input, int len)
+   [CLSCompliant(false)]
+   public unsafe static float ParseFloat(char* input, int len)
 	{
 		int pos = 0;
 		int part = 0;
@@ -611,7 +601,7 @@ public static class Gen
 		}
 	}
 
-	public static bool UnZip_gz(string loc_unzipTo, bool deleteZip, out string err)
+	public static bool UnZip_gz(string loc_unzipTo, bool deleteZip, [NotNullWhen(false)] out string? err)
 	{
 		string loc_zip = loc_unzipTo + ".gz";
 		bool allowOverwrite = true;
@@ -627,7 +617,7 @@ public static class Gen
 		}
 	}
 
-	public static bool UnZip_gz(string loc_unzipTo, bool deleteZip, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, out string err)
+	public static bool UnZip_gz(string loc_unzipTo, bool deleteZip, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, [NotNullWhen(false)] out string? err)
 	{
 		if (allowOverwrite || !File.Exists(loc_unzipTo))
 		{
@@ -682,7 +672,7 @@ public static class Gen
 		}
 	}
 
-	public static bool Zip_gz(string loc_zipFrom, bool deleteOriginal, out string err)
+	public static bool Zip_gz(string loc_zipFrom, bool deleteOriginal, [NotNullWhen(false)] out string? err)
 	{
 		string loc_zip = loc_zipFrom + ".gz";
 		bool allowOverwrite = true;
@@ -698,7 +688,7 @@ public static class Gen
 		}
 	}
 
-	public static bool Zip_gz(string loc_zipFrom, bool deleteOriginal, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, out string err)
+	public static bool Zip_gz(string loc_zipFrom, bool deleteOriginal, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, [NotNullWhen(false)] out string? err)
 	{
 		if (allowOverwrite || !File.Exists(loc_zip))
 		{
@@ -729,7 +719,7 @@ public static class Gen
 		return true;
 	}
 
-	public static bool Zip_gz(Stream stream, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, out string err)
+	public static bool Zip_gz(Stream stream, string loc_zip, bool allowOverwrite, bool returnErrIfExistsAndNoOverwrite, [NotNullWhen(false)] out string? err)
 	{
 		if (allowOverwrite || !File.Exists(loc_zip))
 		{
@@ -839,19 +829,19 @@ public static class Gen
 
 	public static void ReadDataToFillArray<T>(this UnbufferedStreamReader sr, T[] pointLocXYZ) where T : struct
 	{
-		if (pointLocXYZ is float[])
+		if (pointLocXYZ is float[] f)
 		{
-			sr.ReadDataToFillArray_f(pointLocXYZ as float[]);
+			sr.ReadDataToFillArray_f(f);
 			return;
 		}
-		if (pointLocXYZ is double[])
+		if (pointLocXYZ is double[] d)
 		{
-			sr.ReadDataToFillArray_d(pointLocXYZ as double[]);
+			sr.ReadDataToFillArray_d(d);
 			return;
 		}
-		if (pointLocXYZ is byte[])
+		if (pointLocXYZ is byte[] b)
 		{
-			sr.ReadDataToFillArray(pointLocXYZ as byte[]);
+			sr.ReadDataToFillArray(b);
 			return;
 		}
 		throw new NotSupportedException();
@@ -859,19 +849,19 @@ public static class Gen
 
 	public static void ReadDataToFillArray<T>(this BinaryReader br, T[] pointLocXYZ) where T : struct
 	{
-		if (pointLocXYZ is float[])
+		if (pointLocXYZ is float[] f)
 		{
-			br.ReadDataToFillArray_f(pointLocXYZ as float[]);
+			br.ReadDataToFillArray_f(f);
 			return;
 		}
-		if (pointLocXYZ is double[])
+		if (pointLocXYZ is double[] d)
 		{
-			br.ReadDataToFillArray_d(pointLocXYZ as double[]);
+			br.ReadDataToFillArray_d(d);
 			return;
 		}
-		if (pointLocXYZ is int[])
+		if (pointLocXYZ is int[] i)
 		{
-			br.ReadDataToFillArray_Int32(pointLocXYZ as int[]);
+			br.ReadDataToFillArray_Int32(i);
 			return;
 		}
 		throw new NotSupportedException();
@@ -899,7 +889,7 @@ public static class Gen
 		}
 	}
 
-	public static void ReadDataToFillArray_f(this IBinaryReader br, float[] fillMe, int count = -1)
+	internal static void ReadDataToFillArray_f(this IBinaryReader br, float[] fillMe, int count = -1)
 	{
 		if (count == -1)
 		{
@@ -949,7 +939,8 @@ public static class Gen
 		Buffer.BlockCopy(asBytes, 0, fillMe, 0, asBytes.Length);
 	}
 
-	public static void ReadDataToFillArray_UInt64(this BinaryReader br, ulong[] fillMe, int count = -1)
+   [CLSCompliant(false)]
+   public static void ReadDataToFillArray_UInt64(this BinaryReader br, ulong[] fillMe, int count = -1)
 	{
 		if (count == -1)
 		{
@@ -1105,7 +1096,7 @@ public static class Gen
 		return false;
 	}
 
-	public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true, string excludeSubDirsNamed = null)
+	public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true, string? excludeSubDirsNamed = null)
 	{
 		DirectoryInfo directoryInfo = new DirectoryInfo(sourceDirName);
 		DirectoryInfo[] dirs = directoryInfo.GetDirectories();
@@ -1138,17 +1129,17 @@ public static class Gen
 		}
 	}
 
-	public static IOrderedEnumerable<string> GetNiftiFilesLoc(string dir, string filenameContains = null)
+	public static IOrderedEnumerable<string> GetNiftiFilesLoc(string dir, string? filenameContains = null)
 	{
-		return GetFilesWithExtension_NotCaseSensitive(dir, new string[2] { ".nii", ".nii.gz" }, filenameContains);
+		return GetFilesWithExtension_NotCaseSensitive(dir, [".nii", ".nii.gz"], filenameContains);
 	}
 
-	public static IOrderedEnumerable<string> GetNiftiFilesLoc_UnzippedOnly(string dir, string filenameContains = null)
+	public static IOrderedEnumerable<string> GetNiftiFilesLoc_UnzippedOnly(string dir, string? filenameContains = null)
 	{
-		return GetFilesWithExtension_NotCaseSensitive(dir, new string[1] { ".nii" }, filenameContains);
+		return GetFilesWithExtension_NotCaseSensitive(dir, [".nii"], filenameContains);
 	}
 
-	public static IOrderedEnumerable<string> GetFilesWithExtension_NotCaseSensitive(string dir, string[] extensions, string filenameContains = null, string filenameStartsWith = null)
+	public static IOrderedEnumerable<string> GetFilesWithExtension_NotCaseSensitive(string dir, string[] extensions, string? filenameContains = null, string? filenameStartsWith = null)
 	{
 		filenameContains = ((filenameContains == null) ? null : filenameContains.ToLowerInvariant());
 		extensions = (from a in extensions
@@ -1163,40 +1154,6 @@ public static class Gen
 	}
 
 
-	public static string GetSubjectCodeFromPath(string curPath, bool crashOnNone = true)
-	{
-		List<string> candidateFolderNames = curPath.Split(Path.DirectorySeparatorChar, '\\', '/').ToList();
-		for (int i = candidateFolderNames.Count - 1; i >= 0; i--)
-		{
-			string cur = candidateFolderNames[i];
-			bool matchesPattern = false;
-			if (cur.Length >= 18)
-			{
-				int offset = ((cur[2] != '-') ? ((cur[3] == '-') ? 1 : (-1)) : 0);
-				if (offset >= 0)
-				{
-					matchesPattern = cur[2 + offset] == '-' && cur.Substring(3 + offset, 4).All((char a) => a >= '0' && a <= '9') && cur[7 + offset] == '-' && cur[11 + offset] == '-' && cur.Substring(12 + offset, 2).All((char a) => a >= '0' && a <= '9') && cur[14 + offset] == '_' && cur.Substring(15 + offset, 3).All((char a) => a >= '0' && a <= '9');
-				}
-			}
-			if (!matchesPattern)
-			{
-				candidateFolderNames.RemoveAt(i);
-			}
-		}
-		if (candidateFolderNames.Count == 1)
-		{
-			return candidateFolderNames[0];
-		}
-		if (candidateFolderNames.Count == 0)
-		{
-			if (crashOnNone)
-			{
-				throw new Exception("No subject directory found in path" + curPath);
-			}
-			return null;
-		}
-		throw new Exception("More than one subject directory found in path " + curPath);
-	}
 
 	public static string GetSessionCodeFromPath<TEnum>(string curPath, out TEnum parsed) where TEnum : struct
 	{
@@ -1257,7 +1214,7 @@ public static class Gen
 		br.Write(clone);
 	}
 
-	public static void ThrowExceptionIfNotFound(string loc, string message = null)
+	public static void ThrowExceptionIfNotFound(string loc, string? message = null)
 	{
 		if (File_Exists_GzChecked(loc))
 		{

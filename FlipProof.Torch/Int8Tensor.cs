@@ -7,6 +7,7 @@ namespace FlipProof.Torch;
 /// <see cref="sbyte"/> tensor
 /// </summary>
 /// <remarks>Nomenclature used for consistency between int types</remarks>
+[CLSCompliant(false)]
 public class Int8Tensor : IntegerTensor<sbyte, Int8Tensor>
 {
 

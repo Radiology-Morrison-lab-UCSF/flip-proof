@@ -3,6 +3,7 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
+[CLSCompliant(false)]
 public sealed class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, ImageInt8<TSpace>, Int8Tensor>
    where TSpace : ISpace
 {

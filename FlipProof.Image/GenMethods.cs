@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using FlipProof.Base;
 using FlipProof.Base.Geometry;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
+using System.Collections.Generic;
 
 namespace FlipProof.Image;
 
@@ -13,25 +13,17 @@ public static class GenMethods
 {
    private struct SorterGenericArray<T, S>
    {
-      private List<T> keys;
+      private readonly List<T> keys;
 
-      private List<S> items;
+      private readonly List<S> items;
 
-      private Comparison<T> comparer;
+      private readonly Comparison<T> comparer;
 
       internal SorterGenericArray(List<T> keys, List<S> items, Comparison<T> comparer)
       {
          this.keys = keys;
-         if (keys == null)
-         {
-            throw new ArgumentNullException("keys");
-         }
          this.items = items;
          this.comparer = comparer;
-         if (comparer == null)
-         {
-            throw new ArgumentNullException("comparer");
-         }
       }
 
       internal void SwapIfGreaterWithItems(int a, int b)
@@ -220,10 +212,7 @@ public static class GenMethods
       }
    }
 
-   public static DateTime DateTimeFromMilliseconds(int totalMs)
-   {
-      return new DateTime(1, 1, 1, 0, 0, 0, 0).AddMilliseconds(totalMs);
-   }
+   public static DateTime DateTimeFromMilliseconds(int totalMs) => new DateTime(1, 1, 1, 0, 0, 0, 0).AddMilliseconds(totalMs);
 
    public static List<T> Distinct<T>(this IEnumerable<T> dat, Func<T, T, bool> equality)
    {
@@ -256,6 +245,7 @@ public static class GenMethods
       return arr;
    }
 
+   [CLSCompliant(false)]
    public static uint[] IncrementalArrayU(int length)
    {
       uint[] arr = new uint[length];
@@ -282,15 +272,15 @@ public static class GenMethods
       }
       if (increment == 0f)
       {
-         throw new ArgumentOutOfRangeException("increment is zero");
+         throw new ArgumentOutOfRangeException(nameof(increment), "increment is zero");
       }
       if (end > start && increment < 0f)
       {
-         throw new ArgumentOutOfRangeException("end is greater than start but increment is negative");
+         throw new ArgumentOutOfRangeException(nameof(start), "end is greater than start but increment is negative");
       }
       if (end < start && increment > 0f)
       {
-         throw new ArgumentOutOfRangeException("end is less than start but increment is positive");
+         throw new ArgumentOutOfRangeException(nameof(start), "end is less than start but increment is positive");
       }
       float[] arr = new float[noSteps.Value];
       for (int i = 0; i < arr.Length; i++)
@@ -343,24 +333,6 @@ public static class GenMethods
    public static int[] DecrementalArray(int start, int length)
    {
       return IncrementalArray(start, length, -1);
-   }
-
-   [Obsolete("Use Enumerable.Range instead")]
-   public static IEnumerable<int> IncrementalIEnum(int length)
-   {
-      for (int i = 0; i < length; i++)
-      {
-         yield return i;
-      }
-   }
-
-   [Obsolete("Use Enumerable.Range instead")]
-   public static IEnumerable<int> IncrementalIEnum(int startAt, int length)
-   {
-      for (int i = 0; i < length; i++)
-      {
-         yield return i + startAt;
-      }
    }
 
    public static IEnumerable<float> IncrementalIEnum_F(int length)
@@ -437,10 +409,10 @@ public static class GenMethods
    public static IEnumerable<T> ForEach<T>(this IEnumerable<T> me, Action<T> actionFirstElement, Action<T, T, int> actionSubsequent)
    {
       int count = 0;
-      T prev = default(T);
+      T prev = default!;// this value is never used
       foreach (T cur in me)
       {
-         if (count == 0 && actionFirstElement != null)
+         if (count == 0)
          {
             actionFirstElement(cur);
          }
@@ -469,10 +441,10 @@ public static class GenMethods
    public static IEnumerable<S> Select<T, S>(this IEnumerable<T> me, Func<T, S> actionFirstElement, Func<T, T, int, S> actionSubsequent)
    {
       int count = 0;
-      T prev = default(T);
+      T prev = default!; // this value is never used
       foreach (T cur in me)
       {
-         if (count == 0 && actionFirstElement != null)
+         if (count == 0)
          {
             yield return actionFirstElement(cur);
          }
@@ -571,7 +543,7 @@ public static class GenMethods
       int zWid = zToExclusive - zFrom;
       int stride_Z = yWid * xWid;
       int progressIncrement = 1;
-      Action<int> UpdateProgress = delegate (int i)
+      void UpdateProgress(int i)
       {
          if (printProgress && i % progressIncrement == 0)
          {
@@ -581,8 +553,8 @@ public static class GenMethods
                Console.WriteLine("Progress: \t" + (float)countDone / loopsf * 100f + "%");
             }
          }
-      };
-      Action<int, int> ConvertTo3DAndExecute = delegate (int i, int threadID)
+      }
+      void ConvertTo3DAndExecute(int i, int threadID)
       {
          int result2;
          int num3 = Math.DivRem(i, stride_Z, out result2);
@@ -590,7 +562,7 @@ public static class GenMethods
          int num4 = Math.DivRem(result2, xWid, out result3);
          act(result3 + xFrom, num4 + yFrom, num3 + zFrom, threadID);
          UpdateProgress(i);
-      };
+      }
       Action<int, int> ConvertTo3DAndExecute_Chunked = delegate (int i, int threadID)
       {
          int result;
@@ -640,7 +612,7 @@ public static class GenMethods
 
    public static void Loop3D(int xFrom, int xToExclusive, int xStepSize, int yFrom, int yToExclusive, int yStepSize, int zFrom, int zToExclusive, int zStepSize, int noThreads, bool printProgress, Func<int, int, int, bool> xyzCriteria, Action<int, int, int, int> act)
    {
-      object lockObj = new object();
+      object lockObj = new();
       if (xStepSize < 1 || yStepSize < 1 || zStepSize < 1)
       {
          throw new ArgumentException("Step size < 1");
@@ -656,7 +628,7 @@ public static class GenMethods
       int zWid = (zToExclusive - zFrom - 1) / zStepSize + 1;
       int stride_Z = yWid * xWid;
       int progressIncrement = 1;
-      List<int> iToRun = null;
+      List<int> iToRun = new List<int>();
       Action<int> UpdateProgress = delegate (int i)
       {
          if (printProgress && i % progressIncrement == 0 && i != 0)
@@ -664,21 +636,20 @@ public static class GenMethods
             lock (lockObj)
             {
                countDone += progressIncrement;
-               //Session.WriteLine("Progress: \t" + (float)countDone / loopsf * 100f + "%");
             }
          }
       };
-      Action<int, int> ConvertTo3DAndExecute = delegate (int i, int threadID)
+      void ConvertTo3DAndExecute(int i, int threadID)
       {
          Loop3DIToXYZ(i, xWid, stride_Z, out var x2, out var y2, out var z2);
          act(x2 * xStepSize + xFrom, y2 * yStepSize + yFrom, z2 * zStepSize + zFrom, threadID);
          UpdateProgress(i);
-      };
-      Action<int, int> ConvertTo3DAndExecuteWithCriteria = delegate (int iIniToRun, int threadID)
+      }
+      void ConvertTo3DAndExecuteWithCriteria(int iIniToRun, int threadID)
       {
          int arg = iToRun[iIniToRun];
          ConvertTo3DAndExecute(arg, threadID);
-      };
+      }
       int loops;
       if (xyzCriteria == null)
       {
@@ -689,7 +660,7 @@ public static class GenMethods
          return;
       }
       loops = xWid * yWid * zWid;
-      iToRun = new List<int>();
+      
       for (int j = 0; j < loops; j++)
       {
          Loop3DIToXYZ(j, xWid, stride_Z, out var x, out var y, out var z);
@@ -787,11 +758,6 @@ public static class GenMethods
       onceCompletedRunOncePerThread(generated);
    }
 
-   [Obsolete("Deorecated. Use the method with the parallel arg before the action")]
-   public static void Loop(int from, int toExclusive, Action<int> act, bool parallel)
-   {
-      Loop(from, toExclusive, parallel, act);
-   }
 
    public static void Loop_Parallel(int from, int toExclusive, Action<int> act)
    {
@@ -850,24 +816,7 @@ public static class GenMethods
       });
    }
 
-   [Obsolete("not implemented")]
-   public static void Loop_Parallel<T>(ulong from, ulong toExclusive, uint noThreads, Func<T> runAtAstartOncePerThread, Func<ulong, T, T> act, Action<T> onceCompletedRunOncePerThread)
-   {
-      if (noThreads < 1)
-      {
-         throw new ArgumentOutOfRangeException("noThreads is " + noThreads);
-      }
-      if (from == toExclusive)
-      {
-         return;
-      }
-      if (from > toExclusive)
-      {
-         throw new ArgumentException("to must be larger than from");
-      }
-      throw new NotImplementedException("Code below does not compile because of changes in parallel. May not take much work");
-   }
-
+   [CLSCompliant(false)]
    public static IList<T> Parallel_InversePyramid<T>(IList<T> previousResult, Func<int, int, IList<T>, uint, IList<T>> act, Func<IList<T>[], IList<T>> merge, ushort noThreads_initial = 16, ushort divNoThreadsByPerIteration = 2, bool multiThread = true, int iFrom = 0, int count = -1)
    {
       if (count == -1)
@@ -1006,10 +955,10 @@ public static class GenMethods
       }
    }
 
-   public static bool RunProcessAndWait_Parallel(string[][] command_args, out string error)
+   public static bool RunProcessAndWait_Parallel(string[][] command_args, [NotNullWhen(false)] out string? error)
    {
       bool allPass = true;
-      string errorCopy = null;
+      string? errorCopy = null;
       Loop_Parallel(0, command_args.Length, delegate (int i)
       {
          if (!RunProcessAndWait(command_args[i][0], command_args[i][1], out var err))
@@ -1068,9 +1017,13 @@ public static class GenMethods
             err = null;
             return true;
          }
+         err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
+      }
+      else
+      {
+         err = "Failed to run command: " + command;
       }
 
-      err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
       return false;
    }
 
@@ -1085,9 +1038,14 @@ public static class GenMethods
             err = null;
             return true;
          }
+         err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
+      }
+      else
+      {
+         err = "Failed to run command: " + command;
       }
    
-      err = "Failed to run command (exit code was " + p.ExitCode + "): " + command;
+      
       return false;
    }
 
@@ -1570,7 +1528,7 @@ public static class GenMethods
       }
    }
 
-   public static T MinOrDefault<T>(this IEnumerable<T> coll) where T : IComparable<T>
+   public static T MinOrDefault<T>(this IEnumerable<T> coll) where T : struct, IComparable<T>
    {
       T min = coll.FirstOrDefault();
       foreach (T cur in coll)
@@ -1582,8 +1540,20 @@ public static class GenMethods
       }
       return min;
    }
+   public static T? MinOrNull<T>(this IEnumerable<T> coll) where T : class, IComparable<T>
+   {
+      T? min = coll.FirstOrDefault();
+      foreach (T cur in coll)
+      {
+         if (cur.CompareTo(min) < 0)
+         {
+            min = cur;
+         }
+      }
+      return min;
+   }
 
-   public static T[] MinN<T>(this IList<T> coll, int nMin) where T : IComparable<T>
+   public static T[] MinN<T>(this IList<T> coll, int nMin) where T : struct, IComparable<T>
    {
       if (coll.Count < nMin)
       {
@@ -1594,7 +1564,7 @@ public static class GenMethods
          return coll.ToArray();
       }
       T[] min = new T[nMin];
-      T largestMin = default(T);
+      T largestMin = default;
       int indexOfLargestMin = 0;
       for (int j = 0; j < min.Length; j++)
       {
@@ -1626,7 +1596,7 @@ public static class GenMethods
       return min;
    }
 
-   public static T[] MinN<T>(this IList<T> coll, int nMin, Func<T, T, int> comparer)
+   public static T[] MinN<T>(this IList<T> coll, int nMin, Func<T, T, int> comparer) 
    {
       if (coll.Count < nMin)
       {
@@ -1637,15 +1607,15 @@ public static class GenMethods
          return coll.ToArray();
       }
       T[] min = new T[nMin];
-      T largestMin = default(T);
+      T largestMin = coll[0];
       int indexOfLargestMin = 0;
       for (int j = 0; j < min.Length; j++)
       {
-         T cur2 = (min[j] = coll[j]);
-         if (j == 0 || comparer(cur2, largestMin) > 0)
+         T cur = min[j] = coll[j];
+         if (j == 0 || comparer(cur, largestMin) > 0)
          {
-            largestMin = cur2;
-            indexOfLargestMin = 1;
+            largestMin = cur;
+            indexOfLargestMin = j;
          }
       }
       foreach (T cur in coll.Skip(nMin))
@@ -1810,13 +1780,13 @@ public static class GenMethods
 
    public static int[] IndexOfClosestN_AssumeSorted_Generic<T>(this T[] coll, T closeTo, int minNo)
    {
-      if (coll is int[])
+      if (coll is int[] iArr)
       {
-         return (coll as int[]).IndexOfClosestN_AssumeSorted((int)(object)closeTo, minNo);
+         return iArr.IndexOfClosestN_AssumeSorted(Convert.ToInt32(closeTo), minNo);
       }
-      if (coll is double[])
+      if (coll is double[] dArr)
       {
-         return (coll as double[]).IndexOfClosestN_AssumeSorted((double)(object)closeTo, minNo);
+         return dArr.IndexOfClosestN_AssumeSorted(Convert.ToDouble(closeTo), minNo);
       }
       throw new NotSupportedException();
    }
@@ -1825,7 +1795,7 @@ public static class GenMethods
    {
       if (minNo < 1 || coll.Length == 0)
       {
-         return new int[0];
+         return [];
       }
       minNo = Math.Min(minNo, coll.Length);
       int indexOfMatch = Array.BinarySearch(coll, closeTo);
@@ -1931,11 +1901,6 @@ public static class GenMethods
       return found;
    }
 
-   [Obsolete("Use PerformTasks")]
-   public static void PerformTasksInParallel(params Action[] toDos)
-   {
-      PerformTasks(parallel: true, toDos);
-   }
 
    public static void PerformTasks(bool parallel, params Action[] toDos)
    {
@@ -1984,6 +1949,7 @@ public static class GenMethods
       return arr.Concat(addAtEnd).ToArray();
    }
 
+   [CLSCompliant(false)]
    public static T[] ConcatArrays<T>(params List<T>[] list)
    {
       T[] result = new T[list.Sum((List<T> a) => a.Count)];
@@ -2035,7 +2001,7 @@ public static class GenMethods
       {
          return ie;
       }
-      return arr.Select((U a) => (T)Convert.ChangeType(a, typeof(T)));
+      return arr.Select((U a) => (T)Convert.ChangeType(a, typeof(T))!);
    }
 
    public static T[] CastArray<U, T>(this U[] arr, bool returnSameArrayIfSameType = true) where U : struct
@@ -2094,41 +2060,41 @@ public static class GenMethods
 
    public static float[] CastArrayToFloat<T>(this T[] arr)
    {
-      if (arr is double[])
+      if (arr is double[] d)
       {
-         return Array.ConvertAll(arr as double[], Convert.ToSingle);
+         return Array.ConvertAll(d, Convert.ToSingle);
       }
-      if (arr is sbyte[])
+      if (arr is sbyte[] sb)
       {
-         return Array.ConvertAll(arr as byte[], Convert.ToSingle);
+         return Array.ConvertAll(sb, Convert.ToSingle);
       }
-      if (arr is byte[])
+      if (arr is byte[] b)
       {
-         return Array.ConvertAll(arr as sbyte[], Convert.ToSingle);
+         return Array.ConvertAll(b, Convert.ToSingle);
       }
-      if (arr is ushort[])
+      if (arr is ushort[] us)
       {
-         return Array.ConvertAll(arr as ushort[], Convert.ToSingle);
+         return Array.ConvertAll(us, Convert.ToSingle);
       }
-      if (arr is short[])
+      if (arr is short[] s)
       {
-         return Array.ConvertAll(arr as short[], Convert.ToSingle);
+         return Array.ConvertAll(s, Convert.ToSingle);
       }
-      if (arr is int[])
+      if (arr is int[] ai)
       {
-         return Array.ConvertAll(arr as int[], Convert.ToSingle);
+         return Array.ConvertAll(ai, Convert.ToSingle);
       }
-      if (arr is uint[])
+      if (arr is uint[] ui)
       {
-         return Array.ConvertAll(arr as uint[], Convert.ToSingle);
+         return Array.ConvertAll(ui, Convert.ToSingle);
       }
-      if (arr is long[])
+      if (arr is long[] l )
       {
-         return Array.ConvertAll(arr as long[], Convert.ToSingle);
+         return Array.ConvertAll(l, Convert.ToSingle);
       }
-      if (arr is ulong[])
+      if (arr is ulong[] ul)
       {
-         return Array.ConvertAll(arr as ulong[], Convert.ToSingle);
+         return Array.ConvertAll(ul, Convert.ToSingle);
       }
       throw new NotSupportedException(typeof(T).Name + " is not supported");
    }
@@ -2148,6 +2114,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate_Generic<T>(void* orig, int size, out GCHandle freeMeWhenDone) where T : struct
    {
       new IntPtr(orig);
@@ -2182,12 +2149,8 @@ public static class GenMethods
       throw new NotSupportedException();
    }
 
-   public static T[] Duplicate<T>(this T[] arr) where T : struct
+   public static T[] Duplicate<T>(this T[] arr)
    {
-      if (arr == null)
-      {
-         return null;
-      }
       T[] clone = new T[arr.Length];
       Buffer.BlockCopy(arr, 0, clone, 0, arr.Length * SizeOfType(arr, dotNetSizeForBoolean: true));
       return clone;
@@ -2195,10 +2158,6 @@ public static class GenMethods
 
    public static byte[] Duplicate(this byte[] arr)
    {
-      if (arr == null)
-      {
-         return null;
-      }
       byte[] clone = new byte[arr.Length];
       Buffer.BlockCopy(arr, 0, clone, 0, arr.Length);
       return clone;
@@ -2206,10 +2165,6 @@ public static class GenMethods
 
    public static float[] Duplicate(this float[] arr)
    {
-      if (arr == null)
-      {
-         return null;
-      }
       float[] clone = new float[arr.Length];
       Buffer.BlockCopy(arr, 0, clone, 0, arr.Length * 4);
       return clone;
@@ -2217,18 +2172,15 @@ public static class GenMethods
 
    public static T[] DuplicateAndResize<T>(this T[] arr, int newSize) where T : struct
    {
-      if (arr == null)
-      {
-         return null;
-      }
       T[] clone = new T[newSize];
       Buffer.BlockCopy(arr, 0, clone, 0, Math.Min(arr.Length, newSize) * SizeOfType(arr, dotNetSizeForBoolean: true));
       return clone;
    }
 
+   [CLSCompliant(false)]
    public static T[][] Duplicate<T>(this T[][] arr) where T : struct
    {
-      return arr?.Select((T[] a) => a.Duplicate()).ToArray();
+      return arr.Select((T[] a) => a.Duplicate()).ToArray();
    }
 
    public static int SizeOfType<T>( bool dotNetSizeForBoolean) => SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean);
@@ -2342,10 +2294,6 @@ public static class GenMethods
 
    public static T[] Duplicate_NonPrimitive<T>(this T[] arr)
    {
-      if (arr == null)
-      {
-         return null;
-      }
       T[] clone = new T[arr.Length];
       Array.Copy(arr, clone, arr.Length);
       return clone;
@@ -2434,7 +2382,7 @@ public static class GenMethods
          yield break;
       }
       bool first = true;
-      T last = default(T);
+      T last = default(T)!;// value is never used
       foreach (T cur in arr)
       {
          if (first || !cur.Equals(last))
@@ -2508,26 +2456,7 @@ public static class GenMethods
       return arr;
    }
 
-   [Obsolete("Use Modern C# [from ...] syntax")]
-   public static T[] SubArray_FromIndex<T>(this T[] data, int fromInclusive)
-   {
-      int count = data.Length - fromInclusive;
-      return data.SubArray(fromInclusive, count);
-   }
-
-   public static T[] SubArray_FromIndex<T>(this T[] data, long fromInclusive)
-   {
-      long count = data.Length - fromInclusive;
-      return data.SubArray(fromInclusive, count);
-   }
-
-   [Obsolete("Use Modern C# [from ...] syntax")]
-   public static T[] SubArray<T>(this T[] data, int fromInclusive)
-   {
-      return data.SubArray(fromInclusive, data.Length - fromInclusive);
-   }
-
-   public static T[] SubArray<T>(this T[] data, int fromInclusive, int count) => data[fromInclusive..(fromInclusive + count)];
+   static T[] SubArray<T>(this T[] data, int fromInclusive, int count) => data[fromInclusive..(fromInclusive + count)];
 
    public static T[] SubArray<T>(this T[] data, long fromInclusive, long count)
    {
@@ -2807,6 +2736,7 @@ public static class GenMethods
       return true;
    }
 
+   [CLSCompliant(false)]
    public unsafe static bool SequenceEqual_Fast(this sbyte[] a1, sbyte[] a2)
    {
       if (a1.Length != a2.Length)
@@ -2861,6 +2791,7 @@ public static class GenMethods
       return true;
    }
 
+   [CLSCompliant(false)]
    public unsafe static bool SequenceEqual_Fast(this ushort[] a1, ushort[] a2)
    {
       if (a1.Length != a2.Length)
@@ -2888,6 +2819,7 @@ public static class GenMethods
       return true;
    }
 
+   [CLSCompliant(false)]
    public unsafe static bool SequenceEqual_Fast(this uint[] a1, uint[] a2)
    {
       if (a1.Length != a2.Length)
@@ -3160,11 +3092,7 @@ public static class GenMethods
 
    public static void Sort<T, S>(List<T> keys, List<S> items, int index, int length, Comparison<T> comparer)
    {
-      if (keys == null)
-      {
-         throw new ArgumentNullException("keys");
-      }
-      if (items != null && keys.Count != items.Count)
+      if (keys.Count != items.Count)
       {
          throw new ArgumentException("Lists are different sizes");
       }
@@ -3172,7 +3100,7 @@ public static class GenMethods
       {
          throw new ArgumentOutOfRangeException();
       }
-      if (keys.Count - (index - keys.Count) < length || (items != null && index - items.Count > items.Count - length))
+      if (keys.Count - (index - keys.Count) < length || (index - items.Count > items.Count - length))
       {
          throw new ArgumentException("length");
       }
@@ -3223,6 +3151,7 @@ public static class GenMethods
       return arr.TakeToJagged(arrayLength).ToArray();
    }
 
+   [CLSCompliant(false)]
    public static uint SumBytes(byte[] arr)
    {
       uint sum = 0u;
@@ -3233,6 +3162,7 @@ public static class GenMethods
       return sum;
    }
 
+   [CLSCompliant(false)]
    public static uint SumBytes(IEnumerable<byte> arr)
    {
       uint sum = 0u;
@@ -3243,6 +3173,7 @@ public static class GenMethods
       return sum;
    }
 
+   [CLSCompliant(false)]
    public static ulong SumUInt64(ulong[] arr)
    {
       ulong sum = 0uL;
@@ -3253,6 +3184,7 @@ public static class GenMethods
       return sum;
    }
 
+   [CLSCompliant(false)]
    public static ulong SumUInt64(IEnumerable<ulong> arr)
    {
       ulong sum = 0uL;
@@ -3376,10 +3308,6 @@ public static class GenMethods
 
    public static byte[] ToBytes<T>(this T[] arr) where T : struct
    {
-      if (arr == null)
-      {
-         return null;
-      }
       int sizeOfT = SizeOfType(arr, dotNetSizeForBoolean: true);
       byte[] clone = new byte[arr.Length * sizeOfT];
       arr.ToBytes(clone);
@@ -3399,10 +3327,6 @@ public static class GenMethods
 
    public static T[] FromByteArray<T>(this byte[] arr) where T : struct
    {
-      if (arr == null)
-      {
-         return null;
-      }
       int sizeOfT = SizeOfType(new T[0], dotNetSizeForBoolean: true);
       if (arr.Length % sizeOfT != 0)
       {
@@ -3468,6 +3392,7 @@ public static class GenMethods
       }
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, byte def)
    {
       byte[] arr = new byte[size];
@@ -3480,6 +3405,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, short def)
    {
       short[] arr = new short[size];
@@ -3492,6 +3418,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, int def)
    {
       int[] arr = new int[size];
@@ -3504,6 +3431,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, long def)
    {
       long[] arr = new long[size];
@@ -3516,6 +3444,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, float def)
    {
       float[] arr = new float[size];
@@ -3528,6 +3457,7 @@ public static class GenMethods
       return result;
    }
 
+   [CLSCompliant(false)]
    public unsafe static IntPtr Duplicate(void* orig, int size, out GCHandle freeMeWhenDone, double def)
    {
       double[] arr = new double[size];

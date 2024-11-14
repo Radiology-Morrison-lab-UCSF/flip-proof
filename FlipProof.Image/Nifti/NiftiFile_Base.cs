@@ -7,7 +7,8 @@ namespace FlipProof.Image.Nifti;
 
 public abstract class NiftiFile_Base(NiftiHeader head, Stream voxels) : IDisposable
 {
-	protected readonly Stream _voxels = voxels;
+   [CLSCompliant(false)]
+   protected readonly Stream _voxels = voxels;
 
 	public NiftiHeader Head { get; } = head;
 

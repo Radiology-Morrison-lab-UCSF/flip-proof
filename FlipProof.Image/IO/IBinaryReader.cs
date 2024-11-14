@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FlipProof.Image.IO;
 
-public interface IBinaryReader : IDisposable
+internal interface IBinaryReader : IDisposable
 {
 	Stream BaseStream { get; }
 

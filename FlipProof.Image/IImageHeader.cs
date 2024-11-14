@@ -42,7 +42,7 @@ public interface IImageHeader
    /// Attempts to return the dimension size in the slice encoding direction
    /// </summary>
    /// <returns></returns>
-   public bool TryGetSize_SliceEncodingDirection(out uint size)
+   public bool TryGetSize_SliceEncodingDirection(out long size)
    {
       size = SliceEncodingDimension switch
       {

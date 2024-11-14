@@ -54,33 +54,33 @@ public static class StreamExtensions
 	{
 		return BitConverter.ToInt64(ms.PeekBytes(position, 8), 0);
 	}
-
-	public static ushort PeekUInt16(this Stream ms)
+   [CLSCompliant(false)]
+   public static ushort PeekUInt16(this Stream ms)
 	{
 		return ms.PeekUInt16((int)ms.Position);
 	}
-
-	public static ushort PeekUInt16(this Stream ms, int position)
+   [CLSCompliant(false)]
+   public static ushort PeekUInt16(this Stream ms, int position)
 	{
 		return BitConverter.ToUInt16(ms.PeekBytes(position, 2), 0);
 	}
-
-	public static uint PeekUInt32(this Stream ms)
+   [CLSCompliant(false)]
+   public static uint PeekUInt32(this Stream ms)
 	{
 		return ms.PeekUInt32((int)ms.Position);
 	}
-
-	public static uint PeekUInt32(this Stream ms, int position)
+   [CLSCompliant(false)]
+   public static uint PeekUInt32(this Stream ms, int position)
 	{
 		return BitConverter.ToUInt32(ms.PeekBytes(position, 4), 0);
 	}
-
-	public static ulong PeekUInt64(this Stream ms)
+   [CLSCompliant(false)]
+   public static ulong PeekUInt64(this Stream ms)
 	{
 		return ms.PeekUInt64((int)ms.Position);
 	}
-
-	public static ulong PeekUInt64(this Stream ms, int position)
+   [CLSCompliant(false)]
+   public static ulong PeekUInt64(this Stream ms, int position)
 	{
 		return BitConverter.ToUInt64(ms.PeekBytes(position, 8), 0);
 	}
@@ -116,17 +116,18 @@ public static class StreamExtensions
 		return BitConverter.ToInt64(ms.ReadBytes(8), 0);
 	}
 
-	public static ushort ReadUInt16(this Stream ms)
+   [CLSCompliant(false)]
+   public static ushort ReadUInt16(this Stream ms)
 	{
 		return BitConverter.ToUInt16(ms.ReadBytes(2), 0);
 	}
-
-	public static uint ReadUInt32(this Stream ms)
+   [CLSCompliant(false)]
+   public static uint ReadUInt32(this Stream ms)
 	{
 		return BitConverter.ToUInt32(ms.ReadBytes(4), 0);
 	}
-
-	public static ulong ReadUInt64(this Stream ms)
+   [CLSCompliant(false)]
+   public static ulong ReadUInt64(this Stream ms)
 	{
 		return BitConverter.ToUInt64(ms.ReadBytes(8), 0);
 	}
@@ -197,33 +198,33 @@ public static class StreamExtensions
 	{
 		ms.WriteBytes(position, BitConverter.GetBytes(value));
 	}
-
-	public static void WriteUInt16(this Stream ms, ushort value)
+   [CLSCompliant(false)]
+   public static void WriteUInt16(this Stream ms, ushort value)
 	{
 		ms.Write(BitConverter.GetBytes(value), 0, 2);
 	}
-
-	public static void WriteUInt16(this Stream ms, int position, ushort value)
+   [CLSCompliant(false)]
+   public static void WriteUInt16(this Stream ms, int position, ushort value)
 	{
 		ms.WriteBytes(position, BitConverter.GetBytes(value));
 	}
-
-	public static void WriteUInt32(this Stream ms, uint value)
+   [CLSCompliant(false)]
+   public static void WriteUInt32(this Stream ms, uint value)
 	{
 		ms.Write(BitConverter.GetBytes(value), 0, 4);
 	}
-
-	public static void WriteUInt32(this Stream ms, int position, uint value)
+   [CLSCompliant(false)]
+   public static void WriteUInt32(this Stream ms, int position, uint value)
 	{
 		ms.WriteBytes(position, BitConverter.GetBytes(value));
 	}
-
-	public static void WriteUInt64(this Stream ms, ulong value)
+   [CLSCompliant(false)]
+   public static void WriteUInt64(this Stream ms, ulong value)
 	{
 		ms.Write(BitConverter.GetBytes(value), 0, 8);
 	}
-
-	public static void WriteUInt64(this Stream ms, int position, ulong value)
+   [CLSCompliant(false)]
+   public static void WriteUInt64(this Stream ms, int position, ulong value)
 	{
 		ms.WriteBytes(position, BitConverter.GetBytes(value));
 	}
@@ -257,33 +258,33 @@ public static class StreamExtensions
 	{
 		ms.WriteBytes(position, Gen.GetBytes_BE(value));
 	}
-
-	public static void WriteUInt16_BE(this Stream ms, ushort value)
+   [CLSCompliant(false)]
+   public static void WriteUInt16_BE(this Stream ms, ushort value)
 	{
 		ms.Write(Gen.GetBytes_BE(value), 0, 2);
 	}
-
-	public static void WriteUInt16_BE(this Stream ms, int position, ushort value)
+   [CLSCompliant(false)]
+   public static void WriteUInt16_BE(this Stream ms, int position, ushort value)
 	{
 		ms.WriteBytes(position, Gen.GetBytes_BE(value));
 	}
-
-	public static void WriteUInt32_BE(this Stream ms, uint value)
+   [CLSCompliant(false)]
+   public static void WriteUInt32_BE(this Stream ms, uint value)
 	{
 		ms.Write(Gen.GetBytes_BE(value), 0, 4);
 	}
-
-	public static void WriteUInt32_BE(this Stream ms, int position, uint value)
+   [CLSCompliant(false)]
+   public static void WriteUInt32_BE(this Stream ms, int position, uint value)
 	{
 		ms.WriteBytes(position, Gen.GetBytes_BE(value));
 	}
-
-	public static void WriteUInt64_BE(this Stream ms, ulong value)
+   [CLSCompliant(false)]
+   public static void WriteUInt64_BE(this Stream ms, ulong value)
 	{
 		ms.Write(Gen.GetBytes_BE(value), 0, 8);
 	}
-
-	public static void WriteUInt64_BE(this Stream ms, int position, ulong value)
+   [CLSCompliant(false)]
+   public static void WriteUInt64_BE(this Stream ms, int position, ulong value)
 	{
 		ms.WriteBytes(position, Gen.GetBytes_BE(value));
 	}

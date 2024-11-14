@@ -411,19 +411,19 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	{
 		return new Matrix4x4_Optimised<float>
 		{
-			_0_0 = base.Head.Srow_x[0],
-			_0_1 = base.Head.Srow_x[1],
-			_0_2 = base.Head.Srow_x[2],
-			_0_3 = base.Head.Srow_x[3],
-			_1_0 = base.Head.Srow_y[0],
-			_1_1 = base.Head.Srow_y[1],
-			_1_2 = base.Head.Srow_y[2],
-			_1_3 = base.Head.Srow_y[3],
-			_2_0 = base.Head.Srow_z[0],
-			_2_1 = base.Head.Srow_z[1],
-			_2_2 = base.Head.Srow_z[2],
-			_2_3 = base.Head.Srow_z[3],
-			_3_3 = 1f
+			M0_0 = base.Head.Srow_x[0],
+			M0_1 = base.Head.Srow_x[1],
+			M0_2 = base.Head.Srow_x[2],
+			M0_3 = base.Head.Srow_x[3],
+			M1_0 = base.Head.Srow_y[0],
+			M1_1 = base.Head.Srow_y[1],
+			M1_2 = base.Head.Srow_y[2],
+			M1_3 = base.Head.Srow_y[3],
+			M2_0 = base.Head.Srow_z[0],
+			M2_1 = base.Head.Srow_z[1],
+			M2_2 = base.Head.Srow_z[2],
+			M2_3 = base.Head.Srow_z[3],
+			M3_3 = 1f
 		};
 	}
 

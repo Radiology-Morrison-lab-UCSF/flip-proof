@@ -2770,7 +2770,8 @@ public static class Gen
         return result;
     }
 
-    public static ulong Product(IEnumerable<ulong> vals)
+   [CLSCompliant(false)]
+   public static ulong Product(IEnumerable<ulong> vals)
     {
         ulong result = 1uL;
         foreach (ulong cur in vals)
@@ -2864,8 +2865,8 @@ public static class Gen
         return mean + stdDev * randStdNormal;
     }
 
-
-    public static ulong SumSquare(this IEnumerable<ulong> en)
+   [CLSCompliant(false)]
+   public static ulong SumSquare(this IEnumerable<ulong> en)
     {
         ulong sum = 0uL;
         foreach (ulong cur in en)
@@ -2875,7 +2876,8 @@ public static class Gen
         return sum;
     }
 
-    public static uint Sum(this IEnumerable<uint> en)
+   [CLSCompliant(false)]
+   public static uint Sum(this IEnumerable<uint> en)
     {
         uint sum = 0u;
         foreach (uint cur in en)
@@ -2885,7 +2887,8 @@ public static class Gen
         return sum;
     }
 
-    public static ulong Sum(this IEnumerable<ulong> en)
+   [CLSCompliant(false)]
+   public static ulong Sum(this IEnumerable<ulong> en)
     {
         ulong sum = 0uL;
         foreach (ulong cur in en)
@@ -3002,7 +3005,8 @@ public static class Gen
         return false;
     }
 
-    public static bool IsPowerOf2(uint x)
+   [CLSCompliant(false)]
+   public static bool IsPowerOf2(uint x)
     {
         if (x != 0)
         {
@@ -3186,7 +3190,8 @@ public static class Gen
         return (float)res;
     }
 
-    public static ulong Pow(ulong num, ulong toPowerOf)
+   [CLSCompliant(false)]
+   public static ulong Pow(ulong num, ulong toPowerOf)
     {
         ulong nTimes2 = toPowerOf / 2;
         ulong numSq = num * num;
@@ -3365,7 +3370,8 @@ public static class Gen
       return (byte)Math.Round(sum / (float)count);
     }
 
-    public static sbyte Mean(this IEnumerable<sbyte> arr)
+   [CLSCompliant(false)]
+   public static sbyte Mean(this IEnumerable<sbyte> arr)
     {
       int sum = 0;
       int count = 0;
@@ -3377,7 +3383,8 @@ public static class Gen
       return (sbyte)Math.Round(sum / (float)count);
    }
 
-    public static ushort Mean(this IEnumerable<ushort> arr)
+   [CLSCompliant(false)]
+   public static ushort Mean(this IEnumerable<ushort> arr)
     {
       uint sum = 0;
       int count = 0;
@@ -3401,7 +3408,8 @@ public static class Gen
       return (short)Math.Round(sum / (float)count);
    }
 
-    public static uint Mean(this IEnumerable<uint> arr)
+   [CLSCompliant(false)]
+   public static uint Mean(this IEnumerable<uint> arr)
     {
       ulong sum = 0;
       int count = 0;
@@ -3425,7 +3433,8 @@ public static class Gen
       return (int)Math.Round(sum / (float)count);
    }
 
-    public static ulong Mean(this IEnumerable<ulong> arr)
+   [CLSCompliant(false)]
+   public static ulong Mean(this IEnumerable<ulong> arr)
     {
       ulong sum = 0;
       int count = 0;
