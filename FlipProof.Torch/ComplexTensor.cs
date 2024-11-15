@@ -20,7 +20,8 @@ public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
 
    protected override void Set(Complex value, params long[] indices) => _storage[indices] = value;
 
-
+   [CLSCompliant(false)]
+   public new static ComplexTensor CreateTensor(Tensor t, bool wrapCopy) => (ComplexTensor)NumericTensor<Complex, ComplexTensor>.CreateTensor(t, wrapCopy);
    protected override ComplexTensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
@@ -34,4 +35,14 @@ public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
 
    [CLSCompliant(false)]
    protected override Complex ToScalar(Tensor t) => t.ToSingle();
+
+
+   /// <summary>
+   /// Inverse fourier transform
+   /// </summary>
+   public DoubleTensor IFFTN()
+   {
+      using var realImag = torch.fft.ifftn(Storage);
+      return DoubleTensor.CreateTensor(realImag.real, true);
+   }
 }

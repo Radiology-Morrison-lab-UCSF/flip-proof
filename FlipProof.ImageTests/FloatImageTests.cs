@@ -10,7 +10,7 @@ namespace FlipProof.ImageTests;
 [TestClass]
 public class FloatImageTests() : OperatorsTests(876)
 {
-   
+   #region Operators
    private static void OperatorsDifferentTypeTest<TImage, TVoxel, TSpace, TTensor>(Func<ImageFloat<TSpace>> getIm0, Func<ImageHeader, TImage> getIm1) 
       where TImage : Image_Integer<TVoxel,TSpace, TImage, TTensor>
       where TSpace : ISpace
@@ -103,6 +103,13 @@ public class FloatImageTests() : OperatorsTests(876)
 
    // TO DO: Bool operators
 
+   #endregion
 
+   #region Wrapped
+
+   [TestMethod]
+   public void FFT_IFFT() => FFT_IFFT<ImageFloat<TestSpace3D>, float, TestSpace3D, FloatTensor>(() => GetRandom(out Tensor<float> _));
+
+   #endregion
 
 }

@@ -22,12 +22,13 @@ public static class TypeConversions
          int => ScalarType.Int32,
          long => ScalarType.Int64,
          byte => ScalarType.Byte,
-         UInt16 => throw new NotSupportedException("Unsigned integers other then int8 are not supported"),
-         UInt32 => throw new NotSupportedException("Unsigned integers other then int8 are not supported"),
-         UInt64 => throw new NotSupportedException("Unsigned integers other then int8 are not supported"),
+         UInt16 => throw new NotSupportedException("Unsigned integers other than int8 are not supported"),
+         UInt32 => throw new NotSupportedException("Unsigned integers other than int8 are not supported"),
+         UInt64 => throw new NotSupportedException("Unsigned integers other than int8 are not supported"),
          float => ScalarType.Float32,
          double => ScalarType.Float64,
          Complex => ScalarType.ComplexFloat64,
+         Complex32 => ScalarType.ComplexFloat32,
          _ => throw new NotSupportedException(typeof(T).FullName + " is not supported"),
       };
    }

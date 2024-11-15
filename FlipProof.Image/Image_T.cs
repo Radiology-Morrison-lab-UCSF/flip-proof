@@ -1,4 +1,5 @@
-﻿using FlipProof.Image.IO;
+﻿using FlipProof.Base;
+using FlipProof.Image.IO;
 using FlipProof.Torch;
 using System.Runtime.InteropServices.ObjectiveC;
 using TorchSharp;
@@ -285,7 +286,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    internal Tensor<TVoxel> GetVoxelTensor() => _data.DeepClone();
    internal LargeMemoryStream GetVoxelBytes()
    {
-      long totalSize = _data.Count * GenMethods.SizeOfType(Array.Empty<TVoxel>(), true);
+      long totalSize = _data.Count * CollectionCreation.SizeOfType(Array.Empty<TVoxel>(), true);
       LargeMemoryStream voxels = new(totalSize, (totalSize > 2147483591L) ? (-1) : (int)totalSize)
       {
          Position = 0L

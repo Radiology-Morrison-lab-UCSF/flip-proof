@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Win-CPU-Debug;Win-CPU-Release;Linux-CPU-Debug;Linux-CPU-Release;MacOS-CPU-Debug;MacOS-CPU-Release;Win-GPU-Debug;Win-GPU-Release;Linux-GPU-Debug;Linux-GPU-Release</Configurations>
-    <Platforms>AnyCPU</Platforms><!--Due to limitations in the build tooling, this needs to say AnyCPU, then specify the platform manually below-->
+    <Platforms>AnyCPU</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks><!--Due to limitations in the build tooling, this needs to say AnyCPU, then specify the platform manually below-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Win-CPU-Release' Or '$(Configuration)' == 'Win-GPU-Release' Or '$(Configuration)' == 'Win-CPU-Debug' Or '$(Configuration)' == 'Win-GPU-Debug'">
     <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>

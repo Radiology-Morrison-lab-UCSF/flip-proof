@@ -1,3 +1,4 @@
+using FlipProof.Base;
 using System;
 
 namespace FlipProof.Image.Maths;
@@ -27,7 +28,7 @@ public abstract class AbstractMultivariateRealDistribution : IMultivariateRealDi
         {
             throw new ArgumentOutOfRangeException("sampleSize", sampleSize, "Must be above 0");
         }
-        double[][] returnVal = GenMethods.JaggedArray<double>(sampleSize, dimension);
+        double[][] returnVal = CollectionCreation.JaggedArray<double>(sampleSize, dimension);
         for (int i = 0; i < sampleSize; i++)
         {
             returnVal[i] = sample();

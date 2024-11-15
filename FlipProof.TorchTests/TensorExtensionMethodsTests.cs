@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using TorchSharp;
-using static TorchSharp.torch;
+
 
 namespace FlipProof.TorchTests;
 [TestClass]
@@ -28,4 +29,15 @@ public class TensorExtensionMethodsTests
    //   Assert.AreEqual(17 + 37, addTo[2, 0].ReadCpuDouble(0));
    //   Assert.AreEqual(19 + 41, addTo[2, 1].ReadCpuDouble(0));
    //}
+
+   [TestMethod]
+   public void ReplaceInPlace()
+   {
+      DoubleTensor t = new(torch.tensor(new double[]{ 1, 2, 3, 2, 5, 2, 2, double.PositiveInfinity }));
+
+      t.ReplaceInPlace(2d, 77d);
+
+      CollectionAssert.AreEqual(t.ToArray(), new double[] { 1d, 77, 3, 77, 5, 77, 77, double.PositiveInfinity });
+
+   }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using FlipProof.Base;
 using FlipProof.Image.Maths;
 
 namespace FlipProof.Image.Maths;

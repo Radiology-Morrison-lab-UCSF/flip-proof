@@ -21,4 +21,11 @@ public class UInt8ImageTests() : OperatorsTests(23354)
 
    // TO DO: Bool operators
 
+   #region Wrapped
+
+
+   [TestMethod]
+   public void FFT_IFFT() => FFT_IFFT<ImageUInt8<TestSpace3D>, byte, TestSpace3D, UInt8Tensor>(() => GetRandom(out Tensor<byte> _));
+   #endregion
+
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using FlipProof.Base;
 using FlipProof.Image;
 using FlipProof.Image.Maths;
 using FlipProof.Image.Matrices;

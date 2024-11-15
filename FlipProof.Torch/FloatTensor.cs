@@ -4,7 +4,7 @@ using TorchSharp.Modules;
 
 namespace FlipProof.Torch;
 
-public class FloatTensor : SimpleNumericTensor<float, FloatTensor>
+public class FloatTensor : SimpleNumericTensor<float, FloatTensor>, IFloatingPointTensor
 {
 
    public FloatTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Float32))
@@ -32,6 +32,7 @@ public class FloatTensor : SimpleNumericTensor<float, FloatTensor>
    [CLSCompliant(false)]
    protected override float ToScalar(Tensor t) => t.ToSingle();
 
+
    #region Operators
    // Operators remove ambiguity between float and double operations specified in the base class
    public static DoubleTensor operator +(FloatTensor left, DoubleTensor right) => new(left.Storage + right.Storage);
@@ -40,6 +41,7 @@ public class FloatTensor : SimpleNumericTensor<float, FloatTensor>
    public static DoubleTensor operator -(DoubleTensor left, FloatTensor right) => new(left.Storage - right.Storage);
    public static DoubleTensor operator *(FloatTensor left, DoubleTensor right) => new(left.Storage * right.Storage);
    public static DoubleTensor operator *(DoubleTensor left, FloatTensor right) => new(left.Storage * right.Storage);
+   public static FloatTensor operator /(FloatTensor left, FloatTensor right) => new(left.Storage / right.Storage);
    public static DoubleTensor operator /(FloatTensor left, DoubleTensor right) => new(left.Storage / right.Storage);
    public static DoubleTensor operator /(DoubleTensor left, FloatTensor right) => new(left.Storage / right.Storage);
    #endregion

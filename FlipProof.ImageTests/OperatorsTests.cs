@@ -85,4 +85,25 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
       Assert.IsTrue(torch.nan_to_num(expected.Storage).equal(torch.nan_to_num(result.GetVoxelTensor().Storage)).all().ToBoolean());
    }
+
+
+   public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0)
+      where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
+      where TSpace : ISpace
+      where TVoxel : struct,INumber<TVoxel>
+      where TTensor : SimpleNumericTensor<TVoxel, TTensor>
+   {
+      using DisposeScope scope = torch.NewDisposeScope();
+
+      TImage orig = getIm0();
+
+      ImageComplex32<TSpace> forward = orig.FFT();
+
+      ImageFloat<TSpace> inverse = forward.IFFT();
+
+      var denominator = orig.ToFloat().AbsInPlace().ReplaceInPlace(0f, 1f);
+
+      ImageFloat<TSpace> differenceAsFraction = (orig.ToFloat() - inverse).AbsInPlace() / denominator;
+      Assert.IsTrue(differenceAsFraction.GetMaxIntensity() < 0.01f);
+   }
 }

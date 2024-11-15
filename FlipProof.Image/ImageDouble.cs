@@ -35,6 +35,14 @@ public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, Im
       _data.Storage.mul_(multiplyBy).add_(thenAdd);
    }
 
+
+   /// <summary>
+   /// Replaces NaNs with the new value, returning a new object
+   /// </summary>
+   /// <param name="replaceWith">The new value</param>
+   /// <returns>A new image without NaNs</returns>
+   public ImageDouble<TSpace> ReplaceNaN(double replaceWith) => UnsafeCreateStatic(Data.ReplaceNaN(replaceWith));
+
    #region Operators
 
    public static ImageDouble<TSpace> operator *(ImageDouble<TSpace> left, double right) => UnsafeCreateStatic(left.Data * right);

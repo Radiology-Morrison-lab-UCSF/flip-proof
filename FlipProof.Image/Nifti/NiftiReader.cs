@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using FlipProof.Base;
 using FlipProof.Image;
 using FlipProof.Image.IO;
 
@@ -30,7 +31,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	{
 		string[] filenames = FlipProof.Image.IO.Gen.GetNiftiFilesLoc(folder).ToArray();
 		NiftiFile<T>[] read = new NiftiFile<T>[filenames.Length];
-		GenMethods.Loop_Parallel(0, read.Length, delegate(int i)
+      Iteration.Loop_Parallel(0, read.Length, delegate(int i)
 		{
 			if (TryRead(filenames[i], lookForZippedVariantIfNotFound: false, out NiftiFile<T>? readAndConverted, out string err))
 			{
@@ -47,7 +48,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	{
 		string[] filenames = FlipProof.Image.IO.Gen.GetNiftiFilesLoc(folder).ToArray();
 		ImageFloat<TSpace>[] read = new ImageFloat<TSpace>[filenames.Length];
-		GenMethods.Loop_Parallel(0, read.Length, delegate(int i)
+      Iteration.Loop_Parallel(0, read.Length, delegate(int i)
 		{
 			read[i] = ReadToFloat<TSpace>(filenames[i]);
 		});
@@ -65,7 +66,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 		where TSpace:ISpace
 	{
 		ImageDouble<TSpace>[] read = new ImageDouble<TSpace>[filenames.Length];
-		GenMethods.Loop_Parallel(0, read.Length, delegate(int i)
+		Iteration.Loop_Parallel(0, read.Length, delegate(int i)
 		{
 			read[i] = ReadToDouble<TSpace>(filenames[i], lookForZippedVariantIfNotFound, out _);
 		});

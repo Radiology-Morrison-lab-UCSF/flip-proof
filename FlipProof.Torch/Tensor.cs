@@ -53,7 +53,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    {
       if (storage.dtype != DType)
       {
-         throw new ArgumentException("Bad dtype");
+         throw new ArgumentException($"Bad dtype: got {storage.dtype} but expected {DType}");
       }
       this._storage = storage;
    }
@@ -106,6 +106,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
          Int64 => new Int64Tensor(t),
          byte => new UInt8Tensor(t),
          bool => new BoolTensor(t),
+         Complex => new ComplexTensor(t),
+         Complex32 => new Complex32Tensor(t),
          _ => throw new NotSupportedException(typeof(T) + " is not supported")
       };
 
@@ -118,7 +120,6 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <param name="t">Internal data. Type must must match T.</param>
    /// <param name="wrapCopy">If true, a copy of the tensor is wrapped</param>
    /// <exception cref="NotSupportedException">The type of T is not supported</exception>
-   /// <remarks>Contents are copied to avoid the internal representation being altered in-place in an unexpected way</remarks>
    /// <returns></returns>
    [CLSCompliant(false)]
    public static Tensor<T> CreateTensor(Tensor t, bool wrapCopy)
@@ -220,7 +221,12 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    [CLSCompliant(false)]
    protected virtual T ToScalar(Tensor t) => throw new NotImplementedException("Must be overridden in non-abstract class");
 
-
+   /// <summary>
+   /// Converts this to a standard array
+   /// </summary>
+   /// <returns></returns>
+#warning will fail for complex32
+   public virtual T[] ToArray() => Storage.ToArray<T>();
    #region Cast
 
    /// <summary>
@@ -235,32 +241,32 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public DoubleTensor ToDouble() => Cast<DoubleTensor>(torch.DoubleTensor);
+   public DoubleTensor ToDouble() => Cast(torch.DoubleTensor, t=>DoubleTensor.CreateTensor(t,false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public FloatTensor ToFloat() => Cast<FloatTensor>(torch.FloatTensor);
+   public FloatTensor ToFloat() => Cast(torch.FloatTensor, t => FloatTensor.CreateTensor(t, false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public UInt8Tensor ToUInt8() => Cast<UInt8Tensor>(torch.ByteTensor);
+   public UInt8Tensor ToUInt8() => Cast(torch.ByteTensor, t => UInt8Tensor.CreateTensor(t, false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
    [CLSCompliant(false)]
-   public Int8Tensor ToInt8() => Cast<Int8Tensor>(a=>a.to(ScalarType.Int8));
+   public Int8Tensor ToInt8() => Cast(a=>a.to(ScalarType.Int8), t => Int8Tensor.CreateTensor(t, false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public Int16Tensor ToInt16() => Cast<Int16Tensor>(torch.ShortTensor);
+   public Int16Tensor ToInt16() => Cast(torch.ShortTensor, t => Int16Tensor.CreateTensor(t, false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public Int32Tensor ToInt32() => Cast<Int32Tensor>(torch.IntTensor);
+   public Int32Tensor ToInt32() => Cast(torch.IntTensor, t => Int32Tensor.CreateTensor(t, false));
    /// <summary>
    /// Casts the internal data. If this is already the requested type, a clone is returned
    /// </summary>
-   public Int64Tensor ToInt64() => Cast<Int64Tensor>(torch.LongTensor);
+   public Int64Tensor ToInt64() => Cast(torch.LongTensor, t => Int64Tensor.CreateTensor(t, false));
 
    /// <summary>
    /// Casts the internal data. If <typeparamref name="S"/> is <typeparamref name="TVoxel" /> a clone is returned
@@ -268,7 +274,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <typeparam name="S"></typeparam>
    /// <param name="conversion"></param>
    /// <returns></returns>
-   private TOut Cast<TOut>(Func<Tensor, Tensor> conversion) where TOut : class
+   private TOut Cast<TOut>(Func<Tensor, Tensor> conversion, Func<Tensor, TOut> createWrap) where TOut : class
    {
       Tensor t = conversion(_storage);
       if (ReferenceEquals(_storage, t))
@@ -277,7 +283,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
          t = _storage.clone();
       }
 
-      return CreateTensor(t) as TOut ?? throw new Exception("Cast failed");
+      return createWrap(t);
    }
 
    #endregion
@@ -310,6 +316,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
 
 
    #endregion
+
 
    public override bool Equals(object? obj) => obj is Tensor<T> objT && Equals(objT);
 

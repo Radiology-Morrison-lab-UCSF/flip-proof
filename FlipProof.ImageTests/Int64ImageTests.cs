@@ -147,4 +147,11 @@ public class Int64ImageTests() : OperatorsTests(876)
 
    // TO DO: Bool operators
 
+   #region Wrapped
+
+   [TestMethod]
+   public void FFT_IFFT() => FFT_IFFT<ImageInt64<TestSpace3D>, Int64, TestSpace3D, Int64Tensor>(() => GetRandom(out Tensor<Int64> _));
+
+   #endregion
+
 }

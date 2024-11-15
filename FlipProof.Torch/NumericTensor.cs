@@ -13,10 +13,21 @@ public abstract class NumericTensor<T,TSelf> : Tensor<T>
    }
 
    [CLSCompliant(false)]
-   protected sealed override Tensor<T> CreateFromTensor_Sub(Tensor t)
+   protected sealed override Tensor<T> CreateFromTensor_Sub(Tensor t) => CreateFromTensor(t);
+
+   /// <summary>
+   /// Creates a new <see cref="TSelf"/> by applying a torch operation
+   /// </summary>
+   /// <param name="func">Must return a new object</param>
+   /// <param name="doNotCast">when true, if the function returns the wrong type, an exception is thrown. When false, if the function returns the wrong type, the result is cast to <see cref="T"/> </param>
+   /// <returns></returns>
+   internal TSelf CreateFromTrustedOperation(Func<Tensor,Tensor> func, bool doNotCast = false)
    {
-      return CreateFromTensor(t);
+      Tensor t = func(Storage);
+      System.Diagnostics.Debug.Assert(!object.ReferenceEquals(t, Storage), "Functions must return a new tensor to avoid sharing");
+      return CreateFromTensor(func(Storage), doNotCast);
    }
+
    [CLSCompliant(false)]
    public new TSelf CreateFromTensor(Tensor t, bool doNotCast=false)
    {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace FlipProof.Image;
+namespace FlipProof.Base;
 
-internal class ArrayComparer_Int16 : IEqualityComparer<short[]>
+public class ArrayComparer_Int16 : IEqualityComparer<short[]>
 {
 
    bool IEqualityComparer<short[]>.Equals(short[]? x, short[]? y)

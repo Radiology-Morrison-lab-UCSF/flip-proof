@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FlipProof.Image;
+namespace FlipProof.Base;
 
 internal class ArrayComparer_Byte : IEqualityComparer<byte[]>
 {

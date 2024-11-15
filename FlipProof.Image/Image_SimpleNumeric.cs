@@ -69,12 +69,29 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
 
    #endregion
 
+   #region Wrapped
    public TSelf Abs() => UnsafeCreate(Data.Abs());
    public TSelf AbsInPlace()
    {
       Data.AbsInPlace();
       return (TSelf)this;
    }
+
+   public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN());
+
+   /// <summary>
+   /// Replaces all instances of a value with another. NaN is not supported
+   /// </summary>
+   /// <param name="replace">To replace. Must not be NaN</param>
+   /// <param name="with">The new value</param>
+   /// <returns>This object</returns>
+   public TSelf ReplaceInPlace(TVoxel replace, TVoxel with)
+   {
+      _data.ReplaceInPlace(replace, with);
+      return (TSelf)this;
+   }
+
+   #endregion
 
    #region Operators
 
@@ -86,6 +103,7 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    public static ImageBool<TSpace> operator <=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.less_equal);
    public static ImageBool<TSpace> operator >(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.greater);
    public static ImageBool<TSpace> operator >=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.greater_equal);
+   public static TSelf operator +(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data + right);
    public static TSelf operator +(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.UnsafeCreate(left.Data.Add(right.Data));
    public static TSelf operator -(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.UnsafeCreate(left.Data.Subtract(right.Data));
    public static TSelf operator *(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.UnsafeCreate(left.Data.Multiply(right.Data));

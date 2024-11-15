@@ -51,6 +51,8 @@ public static class VoxelArrayExtensionMethods
       default(int) => ScalarType.Int32,
       default(long) => ScalarType.Int64,
       default(bool) => ScalarType.Bool,
+      Complex32 => ScalarType.ComplexFloat32,
+      Complex => ScalarType.ComplexFloat64,
       _ => throw new NotSupportedException()
    };
 

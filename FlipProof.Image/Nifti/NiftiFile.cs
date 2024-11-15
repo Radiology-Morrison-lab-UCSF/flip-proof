@@ -25,7 +25,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	public NiftiFile(NiftiHeader nh, Stream vox) :base(nh, vox)
 		
 	{
-      _sizeOfT = GenMethods.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: false);
+      _sizeOfT = CollectionCreation.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: false);
 		if (base.Head.DataArrayDims[0] >= base.Head.DataArrayDims.Length)
 		{
 			throw new Exception("Header indicates more dimensions than can be supported by the nifti format");
@@ -505,7 +505,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		{
 			throw new ArgumentException("volume must be positive number");
 		}
-		int bytesPerVolume = base.VoxelsPerVolume * GenMethods.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: true);
+		int bytesPerVolume = base.VoxelsPerVolume * CollectionCreation.SizeOfType(Array.Empty<T>(), dotNetSizeForBoolean: true);
 		byte[] volData = new byte[bytesPerVolume];
 		_voxels.Position = vol * bytesPerVolume;
 		_voxels.Read(volData, 0, volData.Length);

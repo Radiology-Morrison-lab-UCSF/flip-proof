@@ -109,5 +109,11 @@ public class ImageDoubleTests() : OperatorsTests(876)
    // TO DO: Bool operators
 
 
+   #region Wrapped
+
+   [TestMethod]
+   public void FFT_IFFT() => FFT_IFFT<ImageDouble<TestSpace3D>, double, TestSpace3D, DoubleTensor>(() => GetRandom(out Tensor<double> _));
+
+   #endregion
 
 }

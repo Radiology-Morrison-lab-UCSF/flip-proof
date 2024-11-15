@@ -1,4 +1,5 @@
-﻿using TorchSharp;
+﻿using System.Numerics;
+using TorchSharp;
 using static TorchSharp.torch;
 
 namespace FlipProof.Torch;
@@ -42,6 +43,27 @@ public static class TensorExtensionMethods
       Tensor t1 = dim1s.ToTensor([dimSize]);
       return t1;
    }
+
+   /// <summary>
+   /// Replaces all instances of a value with another, in place, returning the original object
+   /// </summary>
+   /// <param name="replace">Must not be NaN</param>
+   /// <param name="with"></param>
+   /// <returns></returns>
+   public static TTensor ReplaceInPlace<T,TTensor>(this TTensor tensor, T replace, T with)
+      where T:struct,INumber<T>
+      where TTensor:Tensor<T>
+   {
+      if(T.IsNaN(replace))
+      {
+         throw new NotSupportedException($"Cannot replace NaNs with this method. See {nameof(FloatingPointTensorExtensionMethods.ReplaceNaN)}");
+      }
+      using Tensor indices = tensor.Storage.equal(tensor.ScalarToTensor(replace));
+      using Tensor val = tensor.ScalarToTensor(with);
+      tensor.Storage[indices] = val;
+      return tensor;
+   }
+
 
    /// <summary>
    /// Sets elements indicated by the mask and range for a 2D tensor

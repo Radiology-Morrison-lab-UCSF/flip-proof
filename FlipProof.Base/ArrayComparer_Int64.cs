@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace FlipProof.Image;
+namespace FlipProof.Base;
 
-internal class ArrayComparer_Int32 : IEqualityComparer<int[]>
+internal class ArrayComparer_Int64 : IEqualityComparer<long[]>
 {
-   bool IEqualityComparer<int[]>.Equals(int[]? x, int[]? y)
+   bool IEqualityComparer<Int64[]>.Equals(Int64[]? x, Int64[]? y)
    {
       if (x == null)
       {
@@ -16,12 +16,12 @@ internal class ArrayComparer_Int32 : IEqualityComparer<int[]>
       }
       return x.SequenceEqual(y);
    }
-   int IEqualityComparer<int[]>.GetHashCode(int[] array)
+   int IEqualityComparer<long[]>.GetHashCode(long[] array)
 	{
 		int hc = array.Length;
 		for (int i = 0; i < array.Length; i++)
 		{
-			hc = hc * 17 + array[i];
+			hc = hc * 17 + (int)array[i];
 		}
 		return hc;
 	}

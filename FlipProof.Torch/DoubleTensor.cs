@@ -4,7 +4,7 @@ using TorchSharp.Modules;
 
 namespace FlipProof.Torch;
 
-public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>
+public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>, IFloatingPointTensor
 {
 
    public DoubleTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Float64))
@@ -27,11 +27,18 @@ public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>
 
    [CLSCompliant(false)]
    public override Tensor ScalarToTensor(double arr) => torch.tensor(arr);
+
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(double[] arr) => torch.tensor(arr);
 
    [CLSCompliant(false)]
    protected override double ToScalar(Tensor t) => t.ToDouble();
+
+   /// <summary>
+   /// Forward fourier transform
+   /// </summary>
+   public new ComplexTensor FFTN() => ComplexTensor.CreateTensor(torch.fft.fftn(Storage), false);
+
 
    public static DoubleTensor operator *(DoubleTensor left, double right) => new(left.Storage.multiply(right));
    public static DoubleTensor operator *(double left, DoubleTensor right) => new(right.Storage.multiply(left));

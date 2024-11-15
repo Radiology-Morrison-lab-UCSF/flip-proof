@@ -2399,7 +2399,7 @@ public static class Gen
             throw new ArgumentOutOfRangeException("No items to sampled greater than that available");
         }
         r = r ?? new Random();
-        int[] indices = GenMethods.IncrementalArray(source.Length);
+        int[] indices = CollectionCreation.IncrementalArray(source.Length);
         GenMethods.ScrambleOrder(indices, r);
         T[] samples = new T[n];
         _ = source.Length;
@@ -2417,7 +2417,7 @@ public static class Gen
             throw new ArgumentOutOfRangeException("No items to sampled greater than that available");
         }
         r = r ?? new Random();
-        int[] indices = GenMethods.IncrementalArray(source.Length);
+        int[] indices = CollectionCreation.IncrementalArray(source.Length);
         GenMethods.ScrambleOrder(indices, r);
         T[] samples = new T[n];
         _ = source.Length;
@@ -2435,7 +2435,7 @@ public static class Gen
 
     public static (TKey[] sample_key, TValue[] sample_value, TKey[] inverse_key, TValue[] inverse_value) RandomSampleAndInverse<TKey, TValue>(TKey[] source_key, TValue[] source_value, int n, Random? r = null)
     {
-        (int[] sampleA, int[] inverse) tuple = RandomSampleAndInverse(GenMethods.IncrementalArray(source_key.Length), n, r);
+        (int[] sampleA, int[] inverse) tuple = RandomSampleAndInverse(CollectionCreation.IncrementalArray(source_key.Length), n, r);
         int[] indices_sample = tuple.sampleA;
         int[] indices_inverse = tuple.inverse;
         TKey[] sample_key = new TKey[indices_sample.Length];
@@ -2939,7 +2939,7 @@ public static class Gen
     {
         double max = vals.Max();
         double binIncrement = (max - minBinCeiling) / noBins;
-        binMaxes = (from a in GenMethods.IncrementalIEnum_F(1, noBins)
+        binMaxes = (from a in CollectionCreation.IncrementalIEnum_F(1, noBins)
                     select minBinCeiling + binIncrement * (double)a).ToArray();
         binMaxes[noBins - 1] += Number.EpsilonOf(max);
         int[] binCounts = new int[noBins];

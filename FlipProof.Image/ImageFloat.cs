@@ -39,7 +39,12 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
       _data.Storage.mul_(multiplyBy).add_(thenAdd);
    }
 
-
+   /// <summary>
+   /// Replaces NaNs with the new value, returning a new object
+   /// </summary>
+   /// <param name="replaceWith">The new value</param>
+   /// <returns>A new image without NaNs</returns>
+   public ImageFloat<TSpace> ReplaceNaN(float replaceWith) => UnsafeCreateStatic(Data.ReplaceNaN(replaceWith));
 
    #region Operators
 
@@ -50,6 +55,7 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
    public static ImageDouble<TSpace> operator -(ImageDouble<TSpace> left, ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data - right.Data);
    public static ImageDouble<TSpace> operator *(ImageFloat<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data * right.Data);
    public static ImageDouble<TSpace> operator *(ImageDouble<TSpace> left, ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data * right.Data);
+   public static ImageFloat<TSpace> operator /(ImageFloat<TSpace> left, ImageFloat<TSpace> right) => ImageFloat<TSpace>.UnsafeCreateStatic(left.Data / right.Data);
    public static ImageDouble<TSpace> operator /(ImageFloat<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data / right.Data);
    public static ImageDouble<TSpace> operator /(ImageDouble<TSpace> left, ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data / right.Data);
 

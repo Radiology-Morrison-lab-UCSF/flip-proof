@@ -959,7 +959,7 @@ public static class Gen
 
 	public static void ReadDataToFillArray<T>(this BinaryReader br, T[] fillMe, bool netSizeForBoolean, int count = -1)
 	{
-		int sizeOfT = GenMethods.SizeOfType(fillMe, netSizeForBoolean);
+		int sizeOfT = CollectionCreation.SizeOfType(fillMe, netSizeForBoolean);
 		if (count == -1)
 		{
 			count = fillMe.Length;
@@ -1208,7 +1208,7 @@ public static class Gen
 
 	public static void WriteFromArray<T>(this BinaryWriter br, T[] data, int length)
 	{
-		int sizeOfType = GenMethods.SizeOfType(data, dotNetSizeForBoolean: true);
+		int sizeOfType = CollectionCreation.SizeOfType(data, dotNetSizeForBoolean: true);
 		byte[] clone = new byte[length * sizeOfType];
 		Buffer.BlockCopy(data, 0, clone, 0, length * sizeOfType);
 		br.Write(clone);
