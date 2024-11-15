@@ -99,10 +99,18 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    {
      return TrustedOperatorToNew(right, (a, b) => new BoolTensor(comparison(a.Storage, b.Storage)), ImageBool<TSpace>.UnsafeCreate);
    }
+   private ImageBool<TSpace> Compare(TVoxel right, Func<Tensor, Tensor, Tensor> comparison)
+   {
+     return TrustedOperatorToNew(right, (a, b) => new BoolTensor(comparison(a.Storage, Data.ScalarToTensor(b))), ImageBool<TSpace>.UnsafeCreate);
+   }
    public static ImageBool<TSpace> operator <(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.less);
    public static ImageBool<TSpace> operator <=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.less_equal);
    public static ImageBool<TSpace> operator >(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.greater);
    public static ImageBool<TSpace> operator >=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.greater_equal);
+   public static ImageBool<TSpace> operator >(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.Compare(right, torch.greater);
+   public static ImageBool<TSpace> operator <(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.Compare(right, torch.less);
+   public static ImageBool<TSpace> operator >=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.Compare(right, torch.greater_equal);
+   public static ImageBool<TSpace> operator <=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.Compare(right, torch.less_equal);
    public static TSelf operator +(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data + right);
    public static TSelf operator +(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.UnsafeCreate(left.Data.Add(right.Data));
    public static TSelf operator -(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.UnsafeCreate(left.Data.Subtract(right.Data));
