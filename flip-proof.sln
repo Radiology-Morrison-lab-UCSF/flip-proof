@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlipProof.Image", "FlipProof.Image\FlipProof.Image.csproj", "{427A0A38-13BC-47C0-9C76-C54DD21EA322}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71} = {4F371B00-62A3-4A86-B20D-702E4BACCB71}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlipProof.ImageTests", "FlipProof.ImageTests\FlipProof.ImageTests.csproj", "{E181E0F0-838D-47FA-B66C-2468AF389453}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlipProof.Torch", "FlipProof.Torch\FlipProof.Torch.csproj", "{49DF0B19-F10C-4602-B584-61A8D855063F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71} = {4F371B00-62A3-4A86-B20D-702E4BACCB71}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlipProof.TorchTests", "FlipProof.TorchTests\FlipProof.TorchTests.csproj", "{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}"
 EndProject
@@ -20,25 +26,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{F0FF5B21-3F7D-4D2F-974C-6713A2D00743}"
-	ProjectSection(SolutionItems) = preProject
-		BuildTools\GenericNumericsPreprocessor.exe = BuildTools\GenericNumericsPreprocessor.exe
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpTemplates", "csharp-templates\CSharpTemplates\CSharpTemplates.csproj", "{4F371B00-62A3-4A86-B20D-702E4BACCB71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Linux-CPU-Debug|Any CPU = Linux-CPU-Debug|Any CPU
 		Linux-CPU-Release|Any CPU = Linux-CPU-Release|Any CPU
 		Linux-GPU-Debug|Any CPU = Linux-GPU-Debug|Any CPU
 		Linux-GPU-Release|Any CPU = Linux-GPU-Release|Any CPU
 		MacOS-CPU-Debug|Any CPU = MacOS-CPU-Debug|Any CPU
 		MacOS-CPU-Release|Any CPU = MacOS-CPU-Release|Any CPU
+		Release|Any CPU = Release|Any CPU
 		Win-CPU-Debug|Any CPU = Win-CPU-Debug|Any CPU
 		Win-CPU-Release|Any CPU = Win-CPU-Release|Any CPU
 		Win-GPU-Debug|Any CPU = Win-GPU-Debug|Any CPU
 		Win-GPU-Release|Any CPU = Win-GPU-Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Debug|Any CPU.ActiveCfg = Win-GPU-Debug|Any CPU
+		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Linux-CPU-Debug|Any CPU.ActiveCfg = Linux-CPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Linux-CPU-Debug|Any CPU.Build.0 = Linux-CPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Linux-CPU-Release|Any CPU.ActiveCfg = Linux-CPU-Release|Any CPU
@@ -51,6 +58,8 @@ Global
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.MacOS-CPU-Debug|Any CPU.Build.0 = MacOS-CPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.MacOS-CPU-Release|Any CPU.ActiveCfg = MacOS-CPU-Release|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.MacOS-CPU-Release|Any CPU.Build.0 = MacOS-CPU-Release|Any CPU
+		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
+		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-CPU-Debug|Any CPU.ActiveCfg = Win-CPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-CPU-Debug|Any CPU.Build.0 = Win-CPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-CPU-Release|Any CPU.ActiveCfg = Win-CPU-Release|Any CPU
@@ -59,6 +68,8 @@ Global
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-GPU-Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-GPU-Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
 		{427A0A38-13BC-47C0-9C76-C54DD21EA322}.Win-GPU-Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
+		{E181E0F0-838D-47FA-B66C-2468AF389453}.Debug|Any CPU.ActiveCfg = Win-GPU-Debug|Any CPU
+		{E181E0F0-838D-47FA-B66C-2468AF389453}.Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Linux-CPU-Debug|Any CPU.ActiveCfg = Linux-CPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Linux-CPU-Debug|Any CPU.Build.0 = Linux-CPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Linux-CPU-Release|Any CPU.ActiveCfg = Linux-CPU-Release|Any CPU
@@ -71,6 +82,8 @@ Global
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.MacOS-CPU-Debug|Any CPU.Build.0 = MacOS-CPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.MacOS-CPU-Release|Any CPU.ActiveCfg = MacOS-CPU-Release|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.MacOS-CPU-Release|Any CPU.Build.0 = MacOS-CPU-Release|Any CPU
+		{E181E0F0-838D-47FA-B66C-2468AF389453}.Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
+		{E181E0F0-838D-47FA-B66C-2468AF389453}.Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-CPU-Debug|Any CPU.ActiveCfg = Win-CPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-CPU-Debug|Any CPU.Build.0 = Win-CPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-CPU-Release|Any CPU.ActiveCfg = Win-CPU-Release|Any CPU
@@ -79,6 +92,8 @@ Global
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-GPU-Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-GPU-Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
 		{E181E0F0-838D-47FA-B66C-2468AF389453}.Win-GPU-Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
+		{49DF0B19-F10C-4602-B584-61A8D855063F}.Debug|Any CPU.ActiveCfg = Win-GPU-Debug|Any CPU
+		{49DF0B19-F10C-4602-B584-61A8D855063F}.Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Linux-CPU-Debug|Any CPU.ActiveCfg = Linux-CPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Linux-CPU-Debug|Any CPU.Build.0 = Linux-CPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Linux-CPU-Release|Any CPU.ActiveCfg = Linux-CPU-Release|Any CPU
@@ -91,6 +106,8 @@ Global
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.MacOS-CPU-Debug|Any CPU.Build.0 = MacOS-CPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.MacOS-CPU-Release|Any CPU.ActiveCfg = MacOS-CPU-Release|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.MacOS-CPU-Release|Any CPU.Build.0 = MacOS-CPU-Release|Any CPU
+		{49DF0B19-F10C-4602-B584-61A8D855063F}.Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
+		{49DF0B19-F10C-4602-B584-61A8D855063F}.Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-CPU-Debug|Any CPU.ActiveCfg = Win-CPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-CPU-Debug|Any CPU.Build.0 = Win-CPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-CPU-Release|Any CPU.ActiveCfg = Win-CPU-Release|Any CPU
@@ -99,6 +116,8 @@ Global
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-GPU-Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-GPU-Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
 		{49DF0B19-F10C-4602-B584-61A8D855063F}.Win-GPU-Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
+		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Debug|Any CPU.ActiveCfg = Win-GPU-Debug|Any CPU
+		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Linux-CPU-Debug|Any CPU.ActiveCfg = Linux-CPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Linux-CPU-Debug|Any CPU.Build.0 = Linux-CPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Linux-CPU-Release|Any CPU.ActiveCfg = Linux-CPU-Release|Any CPU
@@ -111,6 +130,8 @@ Global
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.MacOS-CPU-Debug|Any CPU.Build.0 = MacOS-CPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.MacOS-CPU-Release|Any CPU.ActiveCfg = MacOS-CPU-Release|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.MacOS-CPU-Release|Any CPU.Build.0 = MacOS-CPU-Release|Any CPU
+		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
+		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-CPU-Debug|Any CPU.ActiveCfg = Win-CPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-CPU-Debug|Any CPU.Build.0 = Win-CPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-CPU-Release|Any CPU.ActiveCfg = Win-CPU-Release|Any CPU
@@ -119,6 +140,8 @@ Global
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-GPU-Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-GPU-Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
 		{ECE1BC92-BA04-4A0E-826B-7E71158B1F2B}.Win-GPU-Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
+		{09742F3B-13F3-4590-B108-1ACFFA408592}.Debug|Any CPU.ActiveCfg = Win-GPU-Debug|Any CPU
+		{09742F3B-13F3-4590-B108-1ACFFA408592}.Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Linux-CPU-Debug|Any CPU.ActiveCfg = Linux-CPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Linux-CPU-Debug|Any CPU.Build.0 = Linux-CPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Linux-CPU-Release|Any CPU.ActiveCfg = Linux-CPU-Release|Any CPU
@@ -131,6 +154,8 @@ Global
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.MacOS-CPU-Debug|Any CPU.Build.0 = MacOS-CPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.MacOS-CPU-Release|Any CPU.ActiveCfg = MacOS-CPU-Release|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.MacOS-CPU-Release|Any CPU.Build.0 = MacOS-CPU-Release|Any CPU
+		{09742F3B-13F3-4590-B108-1ACFFA408592}.Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
+		{09742F3B-13F3-4590-B108-1ACFFA408592}.Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-CPU-Debug|Any CPU.ActiveCfg = Win-CPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-CPU-Debug|Any CPU.Build.0 = Win-CPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-CPU-Release|Any CPU.ActiveCfg = Win-CPU-Release|Any CPU
@@ -139,12 +164,33 @@ Global
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-GPU-Debug|Any CPU.Build.0 = Win-GPU-Debug|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-GPU-Release|Any CPU.ActiveCfg = Win-GPU-Release|Any CPU
 		{09742F3B-13F3-4590-B108-1ACFFA408592}.Win-GPU-Release|Any CPU.Build.0 = Win-GPU-Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-GPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-GPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Linux-GPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.MacOS-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.MacOS-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.MacOS-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.MacOS-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{F0FF5B21-3F7D-4D2F-974C-6713A2D00743} = {80D21E34-2A14-4D0E-9F8E-7AB34A12A719}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32315B05-6061-41AF-987A-F687C30C50C5}

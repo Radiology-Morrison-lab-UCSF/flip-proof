@@ -1,5 +1,5 @@
-#pragma expandgeneric Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
-#pragma expandGeneric typeToReplace=DoubleTensor
+#pragma expandtemplate Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
+#pragma expandtemplate typeToReplace=DoubleTensor
 
 using static TorchSharp.torch;
 using TorchSharp.Modules;
@@ -8,6 +8,7 @@ using Int8 = System.SByte;
 using UInt8 = System.Byte;
 
 namespace FlipProof.Torch;
+
 public static partial class TensorExtensionMethods
 {
    public static DoubleTensor DeepClone(this DoubleTensor toClone) => new(toClone.Storage.clone());
@@ -39,8 +40,11 @@ public static partial class TensorExtensionMethods
    public static DoubleTensor Blank(this DoubleTensor me) => new (torch.zeros_like(me.Storage));
 }
 
-#region GENERIC EXPANSION
-public static partial class TensorExtensionMethods_Int8Tensor{
+
+
+#region TEMPLATE EXPANSION
+public static partial class TensorExtensionMethods_Int8Tensor
+{
    public static Int8Tensor DeepClone(this Int8Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -70,7 +74,8 @@ public static partial class TensorExtensionMethods_Int8Tensor{
    public static Int8Tensor Blank(this Int8Tensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_UInt8Tensor{
+public static partial class TensorExtensionMethods_UInt8Tensor
+{
    public static UInt8Tensor DeepClone(this UInt8Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -100,7 +105,8 @@ public static partial class TensorExtensionMethods_UInt8Tensor{
    public static UInt8Tensor Blank(this UInt8Tensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_Int16Tensor{
+public static partial class TensorExtensionMethods_Int16Tensor
+{
    public static Int16Tensor DeepClone(this Int16Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -130,7 +136,8 @@ public static partial class TensorExtensionMethods_Int16Tensor{
    public static Int16Tensor Blank(this Int16Tensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_Int32Tensor{
+public static partial class TensorExtensionMethods_Int32Tensor
+{
    public static Int32Tensor DeepClone(this Int32Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -160,7 +167,8 @@ public static partial class TensorExtensionMethods_Int32Tensor{
    public static Int32Tensor Blank(this Int32Tensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_Int64Tensor{
+public static partial class TensorExtensionMethods_Int64Tensor
+{
    public static Int64Tensor DeepClone(this Int64Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -190,7 +198,8 @@ public static partial class TensorExtensionMethods_Int64Tensor{
    public static Int64Tensor Blank(this Int64Tensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_FloatTensor{
+public static partial class TensorExtensionMethods_FloatTensor
+{
    public static FloatTensor DeepClone(this FloatTensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -220,7 +229,8 @@ public static partial class TensorExtensionMethods_FloatTensor{
    public static FloatTensor Blank(this FloatTensor me) => new (torch.zeros_like(me.Storage));
 }
 
-public static partial class TensorExtensionMethods_BoolTensor{
+public static partial class TensorExtensionMethods_BoolTensor
+{
    public static BoolTensor DeepClone(this BoolTensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -250,4 +260,4 @@ public static partial class TensorExtensionMethods_BoolTensor{
    public static BoolTensor Blank(this BoolTensor me) => new (torch.zeros_like(me.Storage));
 }
 
-#endregion GENERIC EXPANSION
+#endregion TEMPLATE EXPANSION

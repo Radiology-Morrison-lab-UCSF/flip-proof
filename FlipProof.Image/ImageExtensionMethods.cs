@@ -1,11 +1,12 @@
-#pragma expandgeneric ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
-#pragma expandGeneric typeToReplace=ImageDouble
+#pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
+#pragma expandtemplate typeToReplace=ImageDouble
 
 
 using FlipProof.Torch;
 using static TorchSharp.torch;
 
 namespace FlipProof.Image;
+
 public static partial class ImageExtensionMethods
 {
    /// <summary>
@@ -68,8 +69,10 @@ public static partial class ImageExtensionMethods
    }
 }
 
-#region GENERIC EXPANSION
-public static partial class ImageExtensionMethods_ImageInt8{
+
+#region TEMPLATE EXPANSION
+public static partial class ImageExtensionMethods_ImageInt8
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -130,7 +133,8 @@ public static partial class ImageExtensionMethods_ImageInt8{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageUInt8{
+public static partial class ImageExtensionMethods_ImageUInt8
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -191,7 +195,8 @@ public static partial class ImageExtensionMethods_ImageUInt8{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageInt16{
+public static partial class ImageExtensionMethods_ImageInt16
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -252,7 +257,8 @@ public static partial class ImageExtensionMethods_ImageInt16{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageInt32{
+public static partial class ImageExtensionMethods_ImageInt32
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -313,7 +319,8 @@ public static partial class ImageExtensionMethods_ImageInt32{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageInt64{
+public static partial class ImageExtensionMethods_ImageInt64
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -374,7 +381,8 @@ public static partial class ImageExtensionMethods_ImageInt64{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageFloat{
+public static partial class ImageExtensionMethods_ImageFloat
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -435,7 +443,8 @@ public static partial class ImageExtensionMethods_ImageFloat{
    }
 }
 
-public static partial class ImageExtensionMethods_ImageBool{
+public static partial class ImageExtensionMethods_ImageBool
+{
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -496,4 +505,4 @@ public static partial class ImageExtensionMethods_ImageBool{
    }
 }
 
-#endregion GENERIC EXPANSION
+#endregion TEMPLATE EXPANSION

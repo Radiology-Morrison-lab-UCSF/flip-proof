@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="$(SolutionDir)\BuildTools\GenericNumericsPreprocessor.exe $(ProjectDir)" />
+    <Exec Command="$(SolutionDir)\csharp-templates\CSharpTemplates\bin\Release\net8.0-windows\CSharpTemplates.exe $(ProjectDir)" />
   </Target>
 
 </Project>
