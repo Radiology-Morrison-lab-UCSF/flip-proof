@@ -28,6 +28,16 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: PreBuild
+      run: dotnet build --configuration Release csharp-templates/CSharpTemplates/
+    - name: Then
+      run: dir .\csharp-templates\CSharpTemplates\
+    - name: Then
+      run: dir .\csharp-templates\CSharpTemplates\
+    - name: Then
+      run: dir .\csharp-templates\CSharpTemplates\bin\Release\
+    - name: Then
+      run: dir .\csharp-templates\CSharpTemplates\bin\Release\net8.0-windows
     - name: Build
       run: dotnet build --configuration Win-CPU-Debug
     - name: Test

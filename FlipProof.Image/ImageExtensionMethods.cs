@@ -71,6 +71,8 @@ public static partial class ImageExtensionMethods
 
 
 
+
+
 #region TEMPLATE EXPANSION
 public static partial class ImageExtensionMethods_ImageInt8
 {
