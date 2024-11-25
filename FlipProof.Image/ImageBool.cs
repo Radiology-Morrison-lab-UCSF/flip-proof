@@ -13,6 +13,12 @@ public class ImageBool<TSpace> : Image<bool, TSpace>
    #region Constructors
 
 #pragma warning disable CS0618 // Type or member is obsolete
+   /// <summary>
+   /// Creates an object like this with the provided voxels
+   /// </summary>
+   /// <param name="voxels"></param>
+   /// <returns></returns>
+   internal ImageBool<TSpace> UnsafeCreate(BoolTensor voxels) => new(voxels, false);
    internal static ImageBool<TSpace> UnsafeCreateStatic(BoolTensor voxels) => new(voxels, false);
 #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -29,7 +35,7 @@ public class ImageBool<TSpace> : Image<bool, TSpace>
    }
 
    #endregion
-   BoolTensor Data { get; }
+   internal BoolTensor Data { get; }
 
    private new ImageBool<TSpace> ToBool() => this;
 

@@ -1,12 +1,9 @@
-#pragma expandgeneric ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat
+#pragma expandgeneric ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
 #pragma expandGeneric typeToReplace=ImageDouble
 
 
 using FlipProof.Torch;
-using static TorchSharp.torch.utils;
 using static TorchSharp.torch;
-using System.Runtime.CompilerServices;
-using TorchSharp.Modules;
 
 namespace FlipProof.Image;
 public static partial class ImageExtensionMethods
@@ -432,6 +429,67 @@ public static partial class ImageExtensionMethods_ImageFloat{
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageFloat<TSpace> TrustedOperatorToNew<TSpace>(this ImageFloat<TSpace> im, Func<Tensor,Tensor> torchOperation)
+      where TSpace : ISpace
+   {
+      return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+}
+
+public static partial class ImageExtensionMethods_ImageBool{
+   /// <summary>
+   /// Creates a blank image with shape and orientation matching this
+   /// </summary>
+   /// <returns></returns>
+   public static ImageBool<TSpace> Blank<TSpace>(this ImageBool<TSpace> im)
+      where TSpace : ISpace
+   {
+      return im.UnsafeCreate(im.Data.Blank());
+   }
+   public static ImageBool<TSpace> DeepClone<TSpace>(this ImageBool<TSpace> im)
+      where TSpace : ISpace
+   {
+      return im.UnsafeCreate(im.Data.DeepClone());
+   }
+
+   /// <summary>
+   /// Concatenates images in the volumes dimension
+   /// </summary>
+   /// <typeparam name="TVoxel">Voxel data type</typeparam>
+   /// <typeparam name="TSpaceIn">The Space being concatenated, which has fewer volumes than <typeparamref name="TSpaceResult"/>. It does not necessarily need to be 3D</typeparam>
+   /// <typeparam name="TSelf">The image type</typeparam>
+   /// <typeparam name="TTensor">The tensor type held in the image</typeparam>
+   /// <typeparam name="TSpaceResult">The Space that results, which has more volumes</typeparam>
+   /// <typeparam name="TReturnType">The resulting image type</typeparam>
+   /// <param name="items"></param>
+   /// <returns></returns>
+   public static ImageBool<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageBool<TSpaceIn>> items)
+   where TSpaceIn : ISpace<TSpaceResult>
+   where TSpaceResult : ISpace
+   {
+      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageBool<TSpaceResult>(tensor, false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+   public static ImageBool<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageBool<TSpaceIn> me, int index)
+   where TSpaceIn : ISpace<TSpaceResult>
+   where TSpaceResult : ISpace
+   {
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageBool<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+
+   /// <summary>
+   /// Creates a new image presumed to be the same size and shape without checking from a torch operation
+   /// </summary>
+   /// <typeparam name="TSpace">Image space</typeparam>
+   /// <param name="im">Source image</param>
+   /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
+   /// <returns></returns>
+   internal static ImageBool<TSpace> TrustedOperatorToNew<TSpace>(this ImageBool<TSpace> im, Func<Tensor,Tensor> torchOperation)
       where TSpace : ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));

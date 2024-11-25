@@ -1,4 +1,4 @@
-#pragma expandgeneric Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor
+#pragma expandgeneric Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
 #pragma expandGeneric typeToReplace=DoubleTensor
 
 using static TorchSharp.torch;
@@ -218,6 +218,36 @@ public static partial class TensorExtensionMethods_FloatTensor{
    /// </summary>
    /// <returns></returns>
    public static FloatTensor Blank(this FloatTensor me) => new (torch.zeros_like(me.Storage));
+}
+
+public static partial class TensorExtensionMethods_BoolTensor{
+   public static BoolTensor DeepClone(this BoolTensor toClone) => new(toClone.Storage.clone());
+   /// <summary>
+   /// Returns a new tensor that is this with the additional row added
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public static BoolTensor RowStack(this BoolTensor me, BoolTensor other) => new(torch.row_stack([me.Storage, other.Storage]));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional column added
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public static BoolTensor ColumnStack(this BoolTensor me, BoolTensor other) =>new(torch.column_stack([me.Storage, other.Storage]));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public static BoolTensor Stack(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+
+   /// <summary>
+   /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
+   /// </summary>
+   /// <returns></returns>
+   public static BoolTensor Blank(this BoolTensor me) => new (torch.zeros_like(me.Storage));
 }
 
 #endregion GENERIC EXPANSION

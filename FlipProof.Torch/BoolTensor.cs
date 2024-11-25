@@ -1,10 +1,11 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
 using System.Diagnostics.CodeAnalysis;
+using TorchSharp.Modules;
 
 namespace FlipProof.Torch;
 
-public sealed class BoolTensor : Tensor<bool>
+public sealed class BoolTensor : Tensor<bool,BoolTensor>
 {
 
    [SetsRequiredMembers]
@@ -21,10 +22,6 @@ public sealed class BoolTensor : Tensor<bool>
 
 
    protected override void Set(bool value, params long[] indices) => Storage[indices] = value;
-
-
-   [CLSCompliant(false)]
-   protected override Tensor<bool> CreateFromTensor_Sub(Tensor t) => new BoolTensor(t);
 
 
    [CLSCompliant(false)]
