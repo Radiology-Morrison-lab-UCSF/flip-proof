@@ -1,0 +1,3 @@
+[submodule "csharp-templates"]
+	path = csharp-templates
+	url = git@gitlab.com:contact636/csharp-templates.git
