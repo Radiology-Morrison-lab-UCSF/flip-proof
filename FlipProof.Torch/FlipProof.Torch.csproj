@@ -53,4 +53,9 @@
     <ProjectReference Include="..\FlipProof.Base\FlipProof.Base.csproj" />
   </ItemGroup>
 
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(SolutionDir)\BuildTools\GenericNumericsPreprocessor.exe $(ProjectDir)" />
+  </Target>
+
 </Project>

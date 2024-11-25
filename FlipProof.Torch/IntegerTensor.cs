@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Security.AccessControl;
 using TorchSharp;
 
@@ -9,6 +10,7 @@ public abstract class IntegerTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>
   where TSelf : NumericTensor<T, TSelf>
 {
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public IntegerTensor(torch.Tensor t) : base(t)
    {
    }

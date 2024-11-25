@@ -3,9 +3,19 @@ using TorchSharp;
 using static TorchSharp.torch;
 
 namespace FlipProof.Torch;
-public static class TensorExtensionMethods
-{
 
+public static partial class TensorExtensionMethods
+{
+   /// <summary>
+   /// Deep clones a Tensor
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
+   /// <param name="tensor"></param>
+   /// <returns></returns>
+   public static Tensor<T> DeepClone<T>(this Tensor<T> tensor) where T:struct
+   {
+      return tensor.CreateFromTensor(tensor.Storage.clone(), true);
+   }
 
    /// <summary>
    /// Gets elements indicated by the mask and range for a 2D tensor

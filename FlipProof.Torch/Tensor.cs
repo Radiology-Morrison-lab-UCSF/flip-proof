@@ -20,10 +20,9 @@ namespace FlipProof.Torch;
 public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    where T : struct
 {
+
    [CLSCompliant(false)]
-   protected readonly Tensor _storage;
-   [CLSCompliant(false)]
-   public Tensor Storage => _storage;
+   public required Tensor Storage { get; init; }
 
    /// <summary>
    /// Returns the total number of datapoints in the tensor
@@ -34,7 +33,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       {
          bool any =false;
          long count = 1;
-         foreach (var item in _storage.shape.Where(a => a != 0L))
+         foreach (var item in Storage.shape.Where(a => a != 0L))
          {
             count *= item;
             any = true;
@@ -49,13 +48,14 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <param name="storage"></param>
    /// <exception cref="ArgumentException">The dtype of the tensor does not match Dtype </exception>
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    protected Tensor(Tensor storage) 
    {
       if (storage.dtype != DType)
       {
          throw new ArgumentException($"Bad dtype: got {storage.dtype} but expected {DType}");
       }
-      this._storage = storage;
+      this.Storage = storage;
    }
 
    [CLSCompliant(false)]
@@ -65,7 +65,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    {
       get
       {
-         using Tensor t = _storage[indices];
+         using Tensor t = Storage[indices];
          return ToScalar(t);
       }
       set
@@ -131,14 +131,6 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       return CreateTensor(wrapCopy ? t.clone() : t);
    }
 
-   public Tensor<T> DeepClone()
-   {
-      var clone = CreateSameSizeBlank();
-      clone.Storage.copy_(Storage);
-      return clone;
-   }
-
-   protected abstract Tensor<T> CreateSameSizeBlank();
    /// <summary>
    /// Creates a new <see cref="Tensor<typeparamref name="T"/>" from a given torch Tensor. If the type does not match, a copy cast to <typeparamref name="T"/> is used
    /// </summary>
@@ -225,7 +217,6 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// Converts this to a standard array
    /// </summary>
    /// <returns></returns>
-#warning will fail for complex32
    public virtual T[] ToArray() => Storage.ToArray<T>();
    #region Cast
 
@@ -235,7 +226,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <returns></returns>
    public BoolTensor ToBool()
    {
-      Tensor asBool = _storage.not_equal(CreateScalar(default).Storage);
+      Tensor asBool = Storage.not_equal(CreateScalar(default).Storage);
       return new BoolTensor(asBool);
    }
    /// <summary>
@@ -276,11 +267,11 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <returns></returns>
    private TOut Cast<TOut>(Func<Tensor, Tensor> conversion, Func<Tensor, TOut> createWrap) where TOut : class
    {
-      Tensor t = conversion(_storage);
-      if (ReferenceEquals(_storage, t))
+      Tensor t = conversion(Storage);
+      if (ReferenceEquals(Storage, t))
       {
          // can happen when the requested type matches the value type of the tensor
-         t = _storage.clone();
+         t = Storage.clone();
       }
 
       return createWrap(t);
@@ -298,22 +289,9 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    public Tensor<T> RowStack(T[] other)
    {
       using Tensor<T> row = this.Create1D(other);
-      return RowStack(row);
+      
+      return CreateFromTensor(torch.row_stack(Storage, row.Storage), doNotCast: true);
    }
-   /// <summary>
-   /// Returns a new tensor that is this with the additional row added
-   /// </summary>
-   /// <param name="other"></param>
-   /// <returns></returns>
-   public Tensor<T> RowStack(Tensor<T> other) => CreateFromTensor(torch.row_stack([Storage, other.Storage]), true);
-
-   /// <summary>
-   /// Returns a new tensor that is this with the additional column added
-   /// </summary>
-   /// <param name="other"></param>
-   /// <returns></returns>
-   public Tensor<T> ColumnStack(Tensor<T> other) => CreateFromTensor(torch.column_stack([Storage, other.Storage]), true);
-
 
    #endregion
 
@@ -351,9 +329,9 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// </summary>
    public void Dispose()
    {
-      _storage.Dispose();
+      Storage.Dispose();
       GC.SuppressFinalize(this);
    }
 
-   public void WriteBytesToStream(Stream voxels) => _storage.WriteBytesToStream(voxels);
+   public void WriteBytesToStream(Stream voxels) => Storage.WriteBytesToStream(voxels);
 }

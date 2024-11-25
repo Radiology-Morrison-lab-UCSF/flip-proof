@@ -1,28 +1,29 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
 using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
 public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
 {
-
+   [SetsRequiredMembers]
    public ComplexTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.ComplexFloat64))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public ComplexTensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.ComplexFloat64;
 
 
-   protected override void Set(Complex value, params long[] indices) => _storage[indices] = value;
+   protected override void Set(Complex value, params long[] indices) => Storage[indices] = value;
 
    [CLSCompliant(false)]
    public new static ComplexTensor CreateTensor(Tensor t, bool wrapCopy) => (ComplexTensor)NumericTensor<Complex, ComplexTensor>.CreateTensor(t, wrapCopy);
-   protected override ComplexTensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
    protected override ComplexTensor CreateFromTensorSub(Tensor t) => new(t);

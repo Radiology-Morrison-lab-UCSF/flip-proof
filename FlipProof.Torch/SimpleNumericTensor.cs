@@ -1,4 +1,5 @@
-﻿using TorchSharp;
+﻿using System.Diagnostics.CodeAnalysis;
+using TorchSharp;
 using static TorchSharp.torch;
 
 namespace FlipProof.Torch;
@@ -13,6 +14,7 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
   where TSelf : NumericTensor<T, TSelf>
 {
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public SimpleNumericTensor(torch.Tensor t) : base(t)
    {
    }

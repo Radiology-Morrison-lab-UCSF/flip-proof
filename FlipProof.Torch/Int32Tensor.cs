@@ -1,26 +1,27 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
 public class Int32Tensor : IntegerTensor<Int32, Int32Tensor>
 {
-
+   [SetsRequiredMembers]
    public Int32Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Int32))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public Int32Tensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Int32;
 
 
-   protected override void Set(Int32 value, params long[] indices) => _storage[indices] = value;
+   protected override void Set(Int32 value, params long[] indices) => Storage[indices] = value;
 
 
-   protected override Int32Tensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
    protected override Int32Tensor CreateFromTensorSub(Tensor t) => new(t);

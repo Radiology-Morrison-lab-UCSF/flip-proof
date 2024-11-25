@@ -22,6 +22,7 @@ public readonly record struct ImageSize : IEnumerable<long>
    public int NDims => Volumes == 1 ? 3 : 4;
 
    public long VoxelCount => X * Y * Z * Volumes;
+   public long VoxelCountPerVolume => X * Y * Z;
 
    /// <summary>
    /// Yields X, Y, Z, Volumes

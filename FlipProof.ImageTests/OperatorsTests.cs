@@ -80,10 +80,10 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
    where TTensor : SimpleNumericTensor<TVoxel, TTensor>
    {
       // NaN != NaN
-      var res = result.GetVoxelTensor().Storage;
+      var res = result.Data.Storage;
       Assert.IsTrue(torch.isnan(expected.Storage).equal(torch.isnan(res)).all().ToBoolean());
 
-      Assert.IsTrue(torch.nan_to_num(expected.Storage).equal(torch.nan_to_num(result.GetVoxelTensor().Storage)).all().ToBoolean());
+      Assert.IsTrue(torch.nan_to_num(expected.Storage).equal(torch.nan_to_num(result.Data.Storage)).all().ToBoolean());
    }
 
 

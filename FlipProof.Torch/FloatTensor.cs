@@ -1,26 +1,30 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
 using TorchSharp.Modules;
+using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
 public class FloatTensor : SimpleNumericTensor<float, FloatTensor>, IFloatingPointTensor
 {
 
+   [SetsRequiredMembers]
    public FloatTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Float32))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public FloatTensor(Tensor t) : base(t) { }
+
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Float32;
 
 
-   protected override void Set(float value, params long[] indices) => _storage[indices] = value;
+   protected override void Set(float value, params long[] indices) => Storage[indices] = value;
 
 
-   protected override FloatTensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
    protected override FloatTensor CreateFromTensorSub(Tensor t) => new(t);

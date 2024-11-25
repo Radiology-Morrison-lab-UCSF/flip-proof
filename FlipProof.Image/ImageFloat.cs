@@ -7,6 +7,8 @@ namespace FlipProof.Image;
 public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, ImageFloat<TSpace>, FloatTensor>
       where TSpace : ISpace
 {
+   #region Constructors
+
 #pragma warning disable CS0618 // Type or member is obsolete
    internal static ImageFloat<TSpace> UnsafeCreateStatic(FloatTensor voxels) => new(voxels, false);
    /// <summary>
@@ -26,8 +28,8 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
    {
    }
 
-   protected override ImageFloat<TSpace> UnsafeCreate(FloatTensor voxels) => UnsafeCreateStatic(voxels);
-
+   internal override ImageFloat<TSpace> UnsafeCreate(FloatTensor voxels) => UnsafeCreateStatic(voxels);
+   #endregion
    /// <summary>
    /// Multiplies the first factor then adds the second, in place.
    /// </summary>
@@ -45,6 +47,7 @@ public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, Image
    /// <param name="replaceWith">The new value</param>
    /// <returns>A new image without NaNs</returns>
    public ImageFloat<TSpace> ReplaceNaN(float replaceWith) => UnsafeCreateStatic(Data.ReplaceNaN(replaceWith));
+
 
    #region Operators
 

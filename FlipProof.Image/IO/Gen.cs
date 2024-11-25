@@ -1129,28 +1129,27 @@ public static class Gen
 		}
 	}
 
-	public static IOrderedEnumerable<string> GetNiftiFilesLoc(string dir, string? filenameContains = null)
+	public static IOrderedEnumerable<FilePath> GetNiftiFilesLoc(FilePath dir, string? filenameContains = null)
 	{
 		return GetFilesWithExtension_NotCaseSensitive(dir, [".nii", ".nii.gz"], filenameContains);
 	}
 
-	public static IOrderedEnumerable<string> GetNiftiFilesLoc_UnzippedOnly(string dir, string? filenameContains = null)
+	public static IOrderedEnumerable<FilePath> GetNiftiFilesLoc_UnzippedOnly(FilePath dir, string? filenameContains = null)
 	{
 		return GetFilesWithExtension_NotCaseSensitive(dir, [".nii"], filenameContains);
 	}
 
-	public static IOrderedEnumerable<string> GetFilesWithExtension_NotCaseSensitive(string dir, string[] extensions, string? filenameContains = null, string? filenameStartsWith = null)
+	public static IOrderedEnumerable<FilePath> GetFilesWithExtension_NotCaseSensitive(FilePath dir, string[] extensions, string? filenameContains = null, string? filenameStartsWith = null)
 	{
 		filenameContains = ((filenameContains == null) ? null : filenameContains.ToLowerInvariant());
 		extensions = (from a in extensions
 			select a.ToLowerInvariant() into a
 			select (!a[0].Equals('.')) ? ("." + a) : a).ToArray();
-		return from a in Directory.GetFiles(dir)
+		return (from a in Directory.GetFiles(dir.AbsolutePath)
 			where filenameContains == null || Path.GetFileNameWithoutExtension(a).ToLowerInvariant().Contains(filenameContains)
 			where filenameStartsWith == null || Path.GetFileNameWithoutExtension(a).ToLowerInvariant().StartsWith(filenameStartsWith)
 			where extensions.Any((string ext) => a.ToLowerInvariant().EndsWith(ext))
-			orderby a
-			select a;
+			select new FilePath(a)).OrderBy(a=>a.AbsolutePathWithoutFileExtension);
 	}
 
 

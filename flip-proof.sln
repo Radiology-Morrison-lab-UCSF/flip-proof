@@ -15,8 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlipProof.Base", "FlipProof
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80D21E34-2A14-4D0E-9F8E-7AB34A12A719}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.github\workflows\linux-cpu.yml = .github\workflows\linux-cpu.yml
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{F0FF5B21-3F7D-4D2F-974C-6713A2D00743}"
+	ProjectSection(SolutionItems) = preProject
+		BuildTools\GenericNumericsPreprocessor.exe = BuildTools\GenericNumericsPreprocessor.exe
 	EndProjectSection
 EndProject
 Global
@@ -136,6 +142,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F0FF5B21-3F7D-4D2F-974C-6713A2D00743} = {80D21E34-2A14-4D0E-9F8E-7AB34A12A719}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {32315B05-6061-41AF-987A-F687C30C50C5}

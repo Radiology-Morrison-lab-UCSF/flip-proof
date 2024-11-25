@@ -52,6 +52,7 @@ public abstract class Image_Integer<TVoxel, TSpace, TSelf, TTensor> : Image_Simp
    {
    }
 
+
    public static ImageFloat<TSpace> operator +(Image_Integer<TVoxel, TSpace, TSelf, TTensor> left, ImageFloat<TSpace> right) => ImageFloat<TSpace>.UnsafeCreateStatic(left.Data + right.Data);
    public static ImageFloat<TSpace> operator +(ImageFloat<TSpace> left, Image_Integer<TVoxel, TSpace, TSelf, TTensor> right) => ImageFloat<TSpace>.UnsafeCreateStatic(left.Data + right.Data);
    public static ImageFloat<TSpace> operator -(Image_Integer<TVoxel, TSpace, TSelf, TTensor> left, ImageFloat<TSpace> right) => ImageFloat<TSpace>.UnsafeCreateStatic(left.Data - right.Data);

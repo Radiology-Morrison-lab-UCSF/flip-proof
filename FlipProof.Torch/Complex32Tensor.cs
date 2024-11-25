@@ -1,27 +1,27 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
-using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
+public sealed class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
 {
-
+   [SetsRequiredMembers]
    public Complex32Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.ComplexFloat32))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public Complex32Tensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.ComplexFloat32;
 
 
-   protected override void Set(Complex32 value, params long[] indices) => _storage[indices] = (value.Real, value.Imaginary);
+   protected override void Set(Complex32 value, params long[] indices) => Storage[indices] = (value.Real, value.Imaginary);
 
 
-   protected override Complex32Tensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
    protected override Complex32Tensor CreateFromTensorSub(Tensor t) => new(t);
@@ -36,6 +36,20 @@ public class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
 
    [CLSCompliant(false)]
    protected override Complex32 ToScalar(Tensor t) => new Complex32(t.ToComplex32());
+
+   public override Complex32[] ToArray()
+   {
+      var real = Storage.real.ToArray<float>();
+      var imag = Storage.imag.ToArray<float>();
+
+      Complex32[] complexes = new Complex32[real.Length];
+      for (int i = 0; i < real.Length; i++) 
+      {
+         complexes[i] = new(real[i], imag[i]);
+      }
+      return complexes;
+
+   }
 
    /// <summary>
    /// Inverse fourier transform

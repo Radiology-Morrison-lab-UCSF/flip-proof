@@ -1,7 +1,7 @@
 ﻿using FlipProof.Base;
 using FlipProof.Image.IO;
 using FlipProof.Torch;
-using System.Runtime.InteropServices.ObjectiveC;
+using System.Numerics;
 using TorchSharp;
 using static TorchSharp.torch;
 using static TorchSharp.torch.utils;
@@ -27,7 +27,7 @@ public abstract class Image<TSpace> : IDisposable
 
    [CLSCompliant(false)]
    protected Tensor RawData { get; }
-   public ImageHeader Header => TSpace.Orientation!;
+   public ImageHeader Header => ISpace.GetOrientation<TSpace>()!;
 
 
    /// <summary>
@@ -135,7 +135,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       _data = voxels;
       if(verifyShape)
       {
-         VerifyVoxelArrayShape(TSpace.Orientation!);
+         VerifyVoxelArrayShape(ISpace.GetOrientation<TSpace>()!);
       }
    }
 
@@ -229,7 +229,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// Any non zero becomes true
    /// </summary>
    /// <returns></returns>
-   public override ImageBool<TSpace> ToBool() => ImageBool<TSpace>.UnsafeCreate(_data.ToBool());
+   public override ImageBool<TSpace> ToBool() => ImageBool<TSpace>.UnsafeCreateStatic(_data.ToBool());
 
 #pragma warning disable CS0618 // Type or member is obsolete
    [CLSCompliant(false)]
@@ -256,6 +256,22 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
    #region Get / Calc
 
+   public TVoxel this[int x, int y, int z, int volume]
+   {
+      get => _data[x, y, z, volume];
+      set => _data[x, y, z, volume] = value;
+   }
+   public TVoxel this[XYZA<int> index]
+   {
+      get => this[index.X, index.Y, index.Z, index.A];
+      set => this[index.X, index.Y, index.Z, index.A] = value;
+   }
+   public TVoxel this[XYZ<int> index, int volume = 0]
+   {
+      get => this[index.X, index.Y, index.Z, volume];
+      set => this[index.X, index.Y, index.Z, volume] = value;
+   }
+
    public TVoxel GetMaxIntensity() => _data.GetScalarFromResult(torch.max);
    public TVoxel GetMinIntensity() => _data.GetScalarFromResult(torch.min);
 
@@ -279,11 +295,6 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       GC.SuppressFinalize(this);
    }
 
-   /// <summary>
-   /// Returns a copy of the internal voxel data
-   /// </summary>
-   /// <returns></returns>
-   internal Tensor<TVoxel> GetVoxelTensor() => _data.DeepClone();
    internal LargeMemoryStream GetVoxelBytes()
    {
       long totalSize = _data.Count * CollectionCreation.SizeOfType(Array.Empty<TVoxel>(), true);
@@ -298,3 +309,4 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
    #endregion
 }
+

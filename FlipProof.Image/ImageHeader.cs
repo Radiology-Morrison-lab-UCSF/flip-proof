@@ -35,4 +35,10 @@ public record ImageHeader(ImageSize Size,
              Orientation.M31 * x + Orientation.M32 * y + Orientation.M33 * z + Orientation.M34
          );
    }
+
+   /// <summary>
+   /// Returns the same header but with the 4th dimension only 1 deep
+   /// </summary>
+   /// <returns></returns>
+   public ImageHeader As3D() => this with { Size = new ImageSize(1, Size.X, Size.Y, Size.Z) };
 }

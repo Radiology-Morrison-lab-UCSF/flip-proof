@@ -17,7 +17,9 @@ public abstract class ImageTestsBase(int seed)
    public virtual void Initialise()
    {
 #if DEBUG
+#pragma warning disable CS0618 // Type or member is obsolete
       ISpace.Debug_Clear<TestSpace3D>();
+#pragma warning restore CS0618 // Type or member is obsolete
 #else
       throw new Exception("Tests require clearing the space, which is not availabe in Release mode");
 #endif
@@ -31,7 +33,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageDouble<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
    protected ImageDouble<TestSpace3D> GetRandom(ImageHeader head, out double[] data)
@@ -48,7 +50,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageFloat<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
    
@@ -66,7 +68,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageInt64<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
    
@@ -85,7 +87,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageInt32<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
 
@@ -103,7 +105,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageInt16<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
 
@@ -121,7 +123,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageInt8<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
 
@@ -139,7 +141,7 @@ public abstract class ImageTestsBase(int seed)
 #pragma warning disable CS0618 // Type or member is obsolete
       var im = new ImageUInt8<TestSpace3D>(head, data);
 #pragma warning restore CS0618 // Type or member is obsolete
-      voxels = im.GetVoxelTensor();
+      voxels = im.Data;
       return im;
    }
    protected ImageUInt8<TestSpace3D> GetRandom(ImageHeader head, out byte[] data)
@@ -249,7 +251,7 @@ public abstract class ImageTestsBase(int seed)
    {
 
       return new ImageHeader(new ImageSize(1, (uint)r.NextInt64(100), (uint)r.NextInt64(100), (uint)r.NextInt64(100)),
-                             GetRandomMatrix4x4(r),
+                             GetRandomMatrix4x4(),
                              CoordinateSystem.RAS,
                              NextEncodingDir(),
                              NextEncodingDir(),
@@ -265,6 +267,7 @@ public abstract class ImageTestsBase(int seed)
 
    }
 
+   protected Matrix4x4 GetRandomMatrix4x4() => GetRandomMatrix4x4(r);
    protected static Matrix4x4 GetRandomMatrix4x4(Random r)
    {
       return new Matrix4x4(r.NextSingle(), r.NextSingle(), r.NextSingle(), r.NextSingle(),

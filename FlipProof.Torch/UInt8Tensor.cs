@@ -1,5 +1,6 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
@@ -8,24 +9,21 @@ namespace FlipProof.Torch;
 /// </summary>
 public class UInt8Tensor : IntegerTensor<byte, UInt8Tensor>
 {
-
+   [SetsRequiredMembers]
    public UInt8Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Byte))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public UInt8Tensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Byte;
 
 
-   protected override void Set(byte value, params long[] indices)
-   {
-      _storage[indices] = value;
-   }
+   protected override void Set(byte value, params long[] indices) => Storage[indices] = value;
 
-   protected override Tensor<byte> CreateSameSizeBlank() => new UInt8Tensor(_storage.shape);
 
    [CLSCompliant(false)]
    protected override UInt8Tensor CreateFromTensorSub(Tensor t) => new UInt8Tensor(t);

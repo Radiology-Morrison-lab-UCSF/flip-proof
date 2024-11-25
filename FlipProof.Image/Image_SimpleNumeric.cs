@@ -2,9 +2,9 @@
 using System.Numerics;
 using TorchSharp;
 using static TorchSharp.torch;
-using static TorchSharp.torch.utils;
 
 namespace FlipProof.Image;
+
 /// <summary>
 /// Number types like double, but not Complex
 /// </summary>
@@ -64,7 +64,7 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    /// </summary>
    /// <param name="voxels"></param>
    /// <returns></returns>
-   protected abstract TSelf UnsafeCreate(TTensor voxels);
+   internal abstract TSelf UnsafeCreate(TTensor voxels);
 
 
    #endregion
@@ -91,17 +91,46 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
       return (TSelf)this;
    }
 
+
+   /// <summary>
+   /// Applies a <see cref="TTensor"/> operator to create a new object from the resulting <see cref="TTensor"/>
+   /// </summary>
+   /// <remarks>Operators are only applied to voxels. As the header will remain unchanged - do not use operations such as rotate or the header will be incorrect</remarks>
+   /// <typeparam name="TOut">The expected output datatype from the operation</typeparam>
+   /// <param name="other">The second image</param>
+   /// <param name="operation">The operation to apply to the two images</param>
+   /// <returns></returns>
+   internal TSelf TrustedOperatorToNew(TSelf other, Func<TTensor, TTensor, TTensor> operation)
+   {
+      return UnsafeCreate(operation(this.Data, other.Data));
+   }
+
+
+   /// <summary>
+   /// Applies a tensor operator to create a new object from the resulting Tensor
+   /// </summary>
+   /// <remarks>Operators are only applied to voxels. As the header will remain unchanged - do not use operations such as rotate or the header will be incorrect</remarks>
+   /// <typeparam name="TOut">The expected output datatype from the operation</typeparam>
+   /// <param name="other">The second image</param>
+   /// <param name="operation">The operation to apply to the two images</param>
+   /// <returns></returns>
+   internal TSelf TrustedOperatorToNew(Func<TTensor, TTensor> operation)
+   {
+      return UnsafeCreate(operation(Data));
+   }
+
    #endregion
+
 
    #region Operators
 
    private ImageBool<TSpace> Compare(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right, Func<Tensor, Tensor, Tensor> comparison)
    {
-     return TrustedOperatorToNew(right, (a, b) => new BoolTensor(comparison(a.Storage, b.Storage)), ImageBool<TSpace>.UnsafeCreate);
+      return ImageBool<TSpace>.UnsafeCreateStatic(new BoolTensor(comparison(this._data.Storage, right._data.Storage)));
    }
    private ImageBool<TSpace> Compare(TVoxel right, Func<Tensor, Tensor, Tensor> comparison)
    {
-     return TrustedOperatorToNew(right, (a, b) => new BoolTensor(comparison(a.Storage, Data.ScalarToTensor(b))), ImageBool<TSpace>.UnsafeCreate);
+      return ImageBool<TSpace>.UnsafeCreateStatic(new BoolTensor(comparison(this._data.Storage, Data.ScalarToTensor(right))));
    }
    public static ImageBool<TSpace> operator <(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.less);
    public static ImageBool<TSpace> operator <=(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> left, Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> right) => left.Compare(right, torch.less_equal);
@@ -126,7 +155,5 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
 
 
    #endregion
-
-
 
 }

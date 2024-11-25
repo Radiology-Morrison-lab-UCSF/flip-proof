@@ -1,26 +1,29 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class Int16Tensor : IntegerTensor<Int16, Int16Tensor>
+public sealed class Int16Tensor : IntegerTensor<Int16, Int16Tensor>
 {
 
+   [SetsRequiredMembers]
    public Int16Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Int16))
    {
    }
 
+
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public Int16Tensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Int16;
 
 
-   protected override void Set(Int16 value, params long[] indices) => _storage[indices] = value;
+   protected override void Set(Int16 value, params long[] indices) => Storage[indices] = value;
 
 
-   protected override Int16Tensor CreateSameSizeBlank() => new(_storage.shape);
 
    [CLSCompliant(false)]
    protected override Int16Tensor CreateFromTensorSub(Tensor t) => new(t);
@@ -32,6 +35,8 @@ public class Int16Tensor : IntegerTensor<Int16, Int16Tensor>
 
    [CLSCompliant(false)]
    protected override Int16 ToScalar(Tensor t) => t.ToInt16();
+
+   
 
    #region Operators
    [CLSCompliant(false)]

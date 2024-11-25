@@ -9,6 +9,8 @@ public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, Im
       where TSpace : ISpace
 {
 
+   #region Constructors
+
 #pragma warning disable CS0618 // Type or member is obsolete
    internal static ImageDouble<TSpace> UnsafeCreateStatic(DoubleTensor voxels) => new(voxels, false);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -22,7 +24,13 @@ public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, Im
    {
    }
 
-   protected override ImageDouble<TSpace> UnsafeCreate(DoubleTensor voxels) => ImageDouble<TSpace>.UnsafeCreateStatic(voxels);
+   internal override ImageDouble<TSpace> UnsafeCreate(DoubleTensor voxels) => ImageDouble<TSpace>.UnsafeCreateStatic(voxels);
+
+   #endregion
+
+   #region Parameters
+
+   #endregion
 
    /// <summary>
    /// Multiplies the first factor then adds the second, in place.
@@ -42,6 +50,8 @@ public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, Im
    /// <param name="replaceWith">The new value</param>
    /// <returns>A new image without NaNs</returns>
    public ImageDouble<TSpace> ReplaceNaN(double replaceWith) => UnsafeCreateStatic(Data.ReplaceNaN(replaceWith));
+
+
 
    #region Operators
 

@@ -7,8 +7,14 @@ namespace FlipProof.Image;
 public sealed class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, ImageInt8<TSpace>, Int8Tensor>
    where TSpace : ISpace
 {
+   #region Constructors
 #pragma warning disable CS0618 // Type or member is obsolete
-   protected override ImageInt8<TSpace> UnsafeCreate(Int8Tensor voxels) => new(voxels, false);
+   internal override ImageInt8<TSpace> UnsafeCreate(Int8Tensor voxels) => new(voxels, false);
+
+   internal static ImageInt8<TSpace> UnsafeCreateStatic(Int8Tensor voxels)
+   {
+      return new(voxels, false);
+   }
 #pragma warning restore CS0618 // Type or member is obsolete
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
@@ -21,7 +27,7 @@ public sealed class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, ImageInt8<TS
    {
 
    }
-
+   #endregion
 
    #region Operators
 

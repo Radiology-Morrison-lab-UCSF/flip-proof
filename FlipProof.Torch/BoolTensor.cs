@@ -1,25 +1,27 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class BoolTensor : Tensor<bool>
+public sealed class BoolTensor : Tensor<bool>
 {
 
+   [SetsRequiredMembers]
    public BoolTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Bool))
    {
    }
 
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
    public BoolTensor(Tensor t) : base(t) { }
 
    [CLSCompliant(false)]
    public override ScalarType DType => ScalarType.Bool;
 
 
-   protected override void Set(bool value, params long[] indices) => _storage[indices] = value;
+   protected override void Set(bool value, params long[] indices) => Storage[indices] = value;
 
-   protected override Tensor<bool> CreateSameSizeBlank() => new BoolTensor(_storage.shape);
 
    [CLSCompliant(false)]
    protected override Tensor<bool> CreateFromTensor_Sub(Tensor t) => new BoolTensor(t);
@@ -37,6 +39,8 @@ public class BoolTensor : Tensor<bool>
    /// True if all elements are true
    /// </summary>
    /// <returns></returns>
-   public bool All() => _storage.all().ToBoolean();
+   public bool All() => Storage.all().ToBoolean();
+
+   
 
 }

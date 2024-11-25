@@ -1,5 +1,6 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
@@ -8,6 +9,8 @@ public abstract class NumericTensor<T,TSelf> : Tensor<T>
    where TSelf:NumericTensor<T,TSelf>
 {
    [CLSCompliant(false)]
+   [SetsRequiredMembers]
+
    public NumericTensor(torch.Tensor t) : base(t)
    {
    }
@@ -57,4 +60,17 @@ public abstract class NumericTensor<T,TSelf> : Tensor<T>
    public TSelf Multiply(NumericTensor<T, TSelf> other) => Create(other.Storage, torch.multiply);
 
    // Divide is complicated in that it returns float for integer types
+
+   /// <summary>
+   /// Concatenates all along the provided dimension
+   /// </summary>
+   /// <exception cref="ArgumentException">Empty collection provided</exception>
+   public static TSelf Concat(IReadOnlyList<NumericTensor<T, TSelf>> other, int dimension)
+   {
+      if(other.Count == 0)
+      {
+         throw new ArgumentException("No tensors provided");
+      }
+      return other[0].CreateFromTensor(torch.stack(other.Select(a => a.Storage), dimension), doNotCast:true);
+   }
 }

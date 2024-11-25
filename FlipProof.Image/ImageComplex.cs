@@ -4,14 +4,14 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
-public class ImageComplex<TSpace> : Image<Complex,TSpace>
+public class ImageComplex<TSpace> : Image<Complex, TSpace>
    where TSpace : ISpace
 {
+   #region Constructors
 #pragma warning disable CS0618 // Type or member is obsolete
    internal static ImageComplex<TSpace> UnsafeCreateStatic(ComplexTensor voxels) => new(voxels, false);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-   ComplexTensor Data { get; }
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageComplex(ImageHeader header, Complex[] voxels) : base(header,
@@ -24,9 +24,25 @@ public class ImageComplex<TSpace> : Image<Complex,TSpace>
    {
       Data = voxels;
    }
+   #endregion
 
+   #region Properties
+   ComplexTensor Data { get; }
 
+   #endregion
 
+   /// <summary>
+   /// Applies a tensor operator to create a new object from the resulting Tensor
+   /// </summary>
+   /// <remarks>Operators are only applied to voxels. As the header will remain unchanged - do not use operations such as rotate or the header will be incorrect</remarks>
+   /// <typeparam name="TOut">The expected output datatype from the operation</typeparam>
+   /// <param name="other">The second image</param>
+   /// <param name="operation">The operation to apply to the two images</param>
+   /// <returns></returns>
+   internal ImageComplex<TSpace> TrustedOperatorToNew(Func<ComplexTensor, ComplexTensor> operation)
+   {
+      return UnsafeCreateStatic(operation(this.Data));
+   }
 
    #region Operators
 
