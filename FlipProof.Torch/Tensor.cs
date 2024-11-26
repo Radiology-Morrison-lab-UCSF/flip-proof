@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using static TorchSharp.torch;
 using TorchSharp;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using static TorchSharp.torch.utils;
 
 namespace FlipProof.Torch;
 
@@ -75,6 +68,69 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    }
 
    protected abstract void Set(T value, params long[] indices);
+
+   /// <summary>
+   /// Sorts this, in place, along the provided dimension using the provided keys
+   /// </summary>
+   /// <typeparam name="TKey">The key type</typeparam>
+   /// <param name="keys">A 1D tensor Used to sort</param>
+   /// <param name="dimension">The dimension to sort along</param>
+   /// <exception cref="ArgumentException">Input is bad size or shape</exception>
+   public void SortInPlace<TKey>(TKey[] keys, int dimension) where TKey:struct,IComparable<TKey>
+   {
+      using var keysT = Tensor<TKey>.CreateTensor(keys.ToTensor1D());
+      SortInPlace(keysT, dimension);
+   }
+   /// <summary>
+   /// Sorts this, in place, along the provided dimension using the provided keys
+   /// </summary>
+   /// <typeparam name="TKey">The key type</typeparam>
+   /// <param name="keys">A 1D tensor Used to sort</param>
+   /// <param name="dimension">The dimension to sort along</param>
+   /// <exception cref="ArgumentException">Input is bad size or shape</exception>
+   public void SortInPlace<TKey>(Tensor<TKey> keys, int dimension) where TKey:struct,IComparable<TKey>
+   {
+      if (keys.Storage.shape.Length != 1)
+      {
+         throw new ArgumentException("Keys should be a 1D tensor");
+      }
+      if (dimension >= Storage.shape.Length)
+      {
+         throw new ArgumentOutOfRangeException(nameof(dimension));
+      }
+      if (keys.Storage.shape[0] != Storage.shape[dimension])
+      {
+         throw new ArgumentException("Keys are not the same size as the tensor to sort");
+      }
+
+      using Tensor indices = torch.argsort(keys.Storage);
+
+      TensorIndex[] nDimIndices = new TensorIndex[Storage.shape.Length];
+      for (int i = 0; i < Storage.shape.Length; i++)
+      {
+         if(i == dimension)
+         {
+            nDimIndices[i] = TensorIndex.Tensor( indices);
+         }
+         else
+         {
+            nDimIndices[i] = TensorIndex.Colon;
+         }
+      }
+
+      using Tensor sorted = Storage[nDimIndices];
+      Storage.copy_(sorted);
+   }
+
+   public void CopyInto(Tensor<T> destination, bool checkSize)
+   {
+      if(checkSize && !destination.ShapesEqual(destination))
+      {
+         throw new ArgumentException("Destination size must match source");
+      }
+      Storage.copy_(destination.Storage);
+   }
+
 
    public static Tensor<T> CreateTensor(params long[] size)
    {

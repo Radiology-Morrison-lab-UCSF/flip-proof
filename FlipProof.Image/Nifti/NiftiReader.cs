@@ -74,8 +74,8 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 		return read;
 	}
 	public static ImageDouble<TSpace4D> Read3DSeriesTo4DDouble<TSpace3D, TSpace4D>(FilePath[] filenames, bool lookForZippedVariantIfNotFound = true)
-      where TSpace3D:ISpace<TSpace4D>
-      where TSpace4D:ISpace
+      where TSpace3D:ISpace
+      where TSpace4D:ISpace<TSpace3D>
 
    {
 		ImageDouble<TSpace3D>[] read = new ImageDouble<TSpace3D>[filenames.Length];

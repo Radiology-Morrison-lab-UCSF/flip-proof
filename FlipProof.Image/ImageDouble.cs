@@ -1,11 +1,11 @@
 ﻿using FlipProof.Torch;
-using System.Numerics;
 using TorchSharp;
-using static TorchSharp.torch;
+using TorchSharp.Modules;
 using TensorExtensionMethods = FlipProof.Torch.TensorExtensionMethods;
 
 namespace FlipProof.Image;
-public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, ImageDouble<TSpace>, DoubleTensor>
+
+public sealed class ImageDouble<TSpace> : Image_FloatingPoint<double, TSpace, ImageDouble<TSpace>, DoubleTensor>
       where TSpace : ISpace
 {
 
@@ -54,6 +54,14 @@ public sealed class ImageDouble<TSpace> : Image_SimpleNumeric<double, TSpace, Im
 
 
    #region Operators
+
+   // Many of these are to remove ambiguousity the compiler trips over
+   public static ImageDouble<TSpace> operator +(ImageDouble<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data + right.Data);
+   public static ImageDouble<TSpace> operator -(ImageDouble<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data - right.Data);
+   public static ImageDouble<TSpace> operator *(ImageDouble<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data * right.Data);
+   public static ImageDouble<TSpace> operator /(ImageDouble<TSpace> left, ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(left.Data / right.Data);
+
+
 
    public static ImageDouble<TSpace> operator *(ImageDouble<TSpace> left, double right) => UnsafeCreateStatic(left.Data * right);
    public static ImageDouble<TSpace> operator *(double left, ImageDouble<TSpace> right) => UnsafeCreateStatic(right.Data * left);

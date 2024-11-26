@@ -4,7 +4,7 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
-public sealed class ImageFloat<TSpace> : Image_SimpleNumeric<float,TSpace, ImageFloat<TSpace>, FloatTensor>
+public sealed class ImageFloat<TSpace> : Image_FloatingPoint<float,TSpace, ImageFloat<TSpace>, FloatTensor>
       where TSpace : ISpace
 {
    #region Constructors

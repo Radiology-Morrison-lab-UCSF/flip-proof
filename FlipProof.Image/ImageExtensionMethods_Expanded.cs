@@ -18,6 +18,17 @@ public static partial class ImageExtensionMethods
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageDouble<TSpace> src, ImageDouble<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageDouble<TSpace> DeepClone<TSpace>(this ImageDouble<TSpace> im)
       where TSpace : ISpace
    {
@@ -36,8 +47,8 @@ public static partial class ImageExtensionMethods
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageDouble<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageDouble<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -73,6 +84,15 @@ public static partial class ImageExtensionMethods
 
 
 
+
+
+
+
+
+
+
+
+
 #region TEMPLATE EXPANSION
 public static partial class ImageExtensionMethods_ImageInt8
 {
@@ -85,6 +105,17 @@ public static partial class ImageExtensionMethods_ImageInt8
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageInt8<TSpace> src, ImageInt8<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageInt8<TSpace> DeepClone<TSpace>(this ImageInt8<TSpace> im)
       where TSpace : ISpace
    {
@@ -103,8 +134,8 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageInt8<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt8<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -147,6 +178,17 @@ public static partial class ImageExtensionMethods_ImageUInt8
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageUInt8<TSpace> src, ImageUInt8<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageUInt8<TSpace> DeepClone<TSpace>(this ImageUInt8<TSpace> im)
       where TSpace : ISpace
    {
@@ -165,8 +207,8 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageUInt8<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageUInt8<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -209,6 +251,17 @@ public static partial class ImageExtensionMethods_ImageInt16
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageInt16<TSpace> src, ImageInt16<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageInt16<TSpace> DeepClone<TSpace>(this ImageInt16<TSpace> im)
       where TSpace : ISpace
    {
@@ -227,8 +280,8 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageInt16<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt16<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -271,6 +324,17 @@ public static partial class ImageExtensionMethods_ImageInt32
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageInt32<TSpace> src, ImageInt32<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageInt32<TSpace> DeepClone<TSpace>(this ImageInt32<TSpace> im)
       where TSpace : ISpace
    {
@@ -289,8 +353,8 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageInt32<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt32<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -333,6 +397,17 @@ public static partial class ImageExtensionMethods_ImageInt64
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageInt64<TSpace> src, ImageInt64<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageInt64<TSpace> DeepClone<TSpace>(this ImageInt64<TSpace> im)
       where TSpace : ISpace
    {
@@ -351,8 +426,8 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageInt64<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt64<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -395,6 +470,17 @@ public static partial class ImageExtensionMethods_ImageFloat
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageFloat<TSpace> src, ImageFloat<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageFloat<TSpace> DeepClone<TSpace>(this ImageFloat<TSpace> im)
       where TSpace : ISpace
    {
@@ -413,8 +499,8 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageFloat<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageFloat<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -457,6 +543,17 @@ public static partial class ImageExtensionMethods_ImageBool
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageBool<TSpace> src, ImageBool<TSpace> destination)
+      where TSpace : ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
    public static ImageBool<TSpace> DeepClone<TSpace>(this ImageBool<TSpace> im)
       where TSpace : ISpace
    {
@@ -475,8 +572,8 @@ public static partial class ImageExtensionMethods_ImageBool
    /// <param name="items"></param>
    /// <returns></returns>
    public static ImageBool<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageBool<TSpaceIn>> items)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : ISpace
+   where TSpaceResult : ISpace<TSpaceIn>
    {
       var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
 #pragma warning disable CS0618 // Type or member is obsolete

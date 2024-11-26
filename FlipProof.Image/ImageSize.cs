@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using FlipProof.Base;
+using System.Collections;
 
 namespace FlipProof.Image;
 
@@ -23,6 +24,34 @@ public readonly record struct ImageSize : IEnumerable<long>
 
    public long VoxelCount => X * Y * Z * Volumes;
    public long VoxelCountPerVolume => X * Y * Z;
+
+   /// <summary>
+   /// Yields all voxel indices
+   /// </summary>
+   /// <returns></returns>
+   public IEnumerable<XYZA<long>> GetAllVoxelIndices()
+   {
+      for (long a = 0; a < Volumes; a++)
+      {
+         for (long z = 0; z < Z; z++)
+         {
+            for (long y = 0; y < Y; y++)
+            {
+               for (long x = 0; x < X; x++)
+               {
+                  yield return new(x, y, z, a);
+               }
+            }
+         }
+      }
+   }
+
+   public bool InBounds(XYZ<int> k)
+   {
+      return k.X >= 0 && k.X < X &&
+         k.Y >= 0 && k.Y < Y &&
+         k.Z >= 0 && k.Z < Z;
+   }
 
    /// <summary>
    /// Yields X, Y, Z, Volumes

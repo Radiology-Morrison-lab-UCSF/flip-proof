@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using FlipProof.Base;
 using FlipProof.Image.IO;
 
 namespace FlipProof.Image.Nifti;
@@ -178,7 +179,7 @@ public static class NiftiWriter
 public static class NiftiWriter<T> where T : struct, INumber<T>
 {
 
-	public static void Write<TSpace>(Image<T, TSpace> file, NiftiHeader nh, string loc, FileMode fm)
+	public static void Write<TSpace>(Image<T, TSpace> file, FilePath loc, FileMode fm)
 	where TSpace : ISpace
 	{
 		using var nii = NiftiFile<T>.FromImage(file);

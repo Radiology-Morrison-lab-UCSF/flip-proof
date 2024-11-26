@@ -251,12 +251,24 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    public void MultiplyInPlace(Image<TVoxel, TSpace> other) => _data.Storage.mul_(other._data.Storage);
    public void DivideInPlace(Image<TVoxel, TSpace> other) => _data.Storage.divide_(other._data.Storage);
 
+   /// <summary>
+   /// Sorts the volumes of this image, in place, using the keys provided
+   /// </summary>
+   /// <typeparam name="TKey">Data type of key</typeparam>
+   /// <param name="keys">Used to sort this' volumes</param>
+   public void SortVolumesInPlace<TKey>(TKey[] keys) where TKey:struct,IComparable<TKey> => _data.SortInPlace(keys, 3);
 
    #endregion
 
    #region Get / Calc
 
    public TVoxel this[int x, int y, int z, int volume]
+   {
+      get => _data[x, y, z, volume];
+      set => _data[x, y, z, volume] = value;
+   }
+   
+   public TVoxel this[long x, long y, long z, long volume]
    {
       get => _data[x, y, z, volume];
       set => _data[x, y, z, volume] = value;
@@ -271,9 +283,100 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       get => this[index.X, index.Y, index.Z, volume];
       set => this[index.X, index.Y, index.Z, volume] = value;
    }
+   
+   public TVoxel this[XYZA<long> index]
+   {
+      get => this[index.X, index.Y, index.Z, index.A];
+      set => this[index.X, index.Y, index.Z, index.A] = value;
+   }
+   public TVoxel this[XYZ<long> index, long volume = 0]
+   {
+      get => this[index.X, index.Y, index.Z, volume];
+      set => this[index.X, index.Y, index.Z, volume] = value;
+   }
+
+   public IEnumerable<XYZA<long>> GetAllVoxelIndices() => Header.Size.GetAllVoxelIndices();
 
    public TVoxel GetMaxIntensity() => _data.GetScalarFromResult(torch.max);
    public TVoxel GetMinIntensity() => _data.GetScalarFromResult(torch.min);
+
+   /// <summary>
+   /// Gets voxel indices connected with a full face that are larger in one dimension than this (i.e. voxel.X+1, voxel.Y+1, or voxel.Z+1)
+   /// </summary>
+   /// <param name="voxel"></param>
+   /// <returns></returns>
+   public IEnumerable<XYZ<int>> GetConnectedVoxels_3Wise(XYZ<int> voxel)
+   {
+      ImageSize size = Header.Size;
+      if (voxel.X + 1 < size.X)
+      {
+         yield return voxel with { X = voxel.X + 1 };
+      }
+      if (voxel.Y + 1 < size.Y)
+      {
+         yield return voxel with { Y = voxel.Y + 1 };
+      }
+      if (voxel.Z + 1 < size.Z)
+      {
+         yield return voxel with { Z = voxel.Z + 1 };
+      }
+   }
+   /// <summary>
+   /// Gets voxel indices connected with a full face that are larger in one dimension than this (i.e. voxel.X+1, voxel.Y+1, or voxel.Z+1)
+   /// </summary>
+   /// <param name="voxel"></param>
+   /// <returns></returns>
+   public IEnumerable<XYZ<long>> GetConnectedVoxels_3Wise(XYZ<long> voxel)
+   {
+      ImageSize size = Header.Size;
+      if (voxel.X + 1 < size.X)
+      {
+         yield return voxel with { X = voxel.X + 1 };
+      }
+      if (voxel.Y + 1 < size.Y)
+      {
+         yield return voxel with { Y = voxel.Y + 1 };
+      }
+      if (voxel.Z + 1 < size.Z)
+      {
+         yield return voxel with { Z = voxel.Z + 1 };
+      }
+   }
+   /// <summary>
+   /// Gets voxel indices connected with a full face (i.e. no diagonals)
+   /// </summary>
+   /// <param name="voxel"></param>
+   /// <returns></returns>
+   internal IEnumerable<XYZ<int>> GetConnectedVoxels_6Wise(XYZ<int> voxel)
+   {
+      ImageSize size = Header.Size;
+      if (voxel.X > 0)
+      {
+         yield return voxel with { X = voxel.X - 1 };
+      }
+      if (voxel.Y > 0)
+      {
+         yield return voxel with { Y = voxel.Y - 1 };
+      }
+      if (voxel.Z > 0)
+      {
+         yield return voxel with { Z = voxel.Z - 1 };
+      }
+      if (voxel.X + 1 < size.X)
+      {
+         yield return voxel with { X = voxel.X + 1 };
+      }
+      if (voxel.Y + 1 < size.Y)
+      {
+         yield return voxel with { Y = voxel.Y + 1 };
+      }
+      if (voxel.Z + 1 < size.Z)
+      {
+         yield return voxel with { Z = voxel.Z + 1 };
+      }
+   }
+
+
 
    #endregion
 
