@@ -55,7 +55,7 @@
 
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="$(SolutionDir)\csharp-templates\CSharpTemplates\bin\Release\net8.0-windows\CSharpTemplates.exe $(ProjectDir)" />
+    <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0-windows\CSharpTemplates.exe $(ProjectDir)" />
   </Target>
 
 </Project>
