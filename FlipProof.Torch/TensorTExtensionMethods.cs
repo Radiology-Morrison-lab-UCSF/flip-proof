@@ -30,8 +30,15 @@ public static partial class TensorExtensionMethods
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static DoubleTensor Stack(this DoubleTensor me, int dim, params DoubleTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static DoubleTensor Concat(this DoubleTensor me, int dim, params DoubleTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static DoubleTensor Stack(this DoubleTensor me, int dim, params DoubleTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -39,6 +46,42 @@ public static partial class TensorExtensionMethods
    /// <returns></returns>
    public static DoubleTensor Blank(this DoubleTensor me) => new (torch.zeros_like(me.Storage));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -95,8 +138,15 @@ public static partial class TensorExtensionMethods_Int8Tensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static Int8Tensor Stack(this Int8Tensor me, int dim, params Int8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int8Tensor Concat(this Int8Tensor me, int dim, params Int8Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int8Tensor Stack(this Int8Tensor me, int dim, params Int8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -126,8 +176,15 @@ public static partial class TensorExtensionMethods_UInt8Tensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static UInt8Tensor Stack(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static UInt8Tensor Concat(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static UInt8Tensor Stack(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -157,8 +214,15 @@ public static partial class TensorExtensionMethods_Int16Tensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static Int16Tensor Stack(this Int16Tensor me, int dim, params Int16Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int16Tensor Concat(this Int16Tensor me, int dim, params Int16Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int16Tensor Stack(this Int16Tensor me, int dim, params Int16Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -188,8 +252,15 @@ public static partial class TensorExtensionMethods_Int32Tensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static Int32Tensor Stack(this Int32Tensor me, int dim, params Int32Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int32Tensor Concat(this Int32Tensor me, int dim, params Int32Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int32Tensor Stack(this Int32Tensor me, int dim, params Int32Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -219,8 +290,15 @@ public static partial class TensorExtensionMethods_Int64Tensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static Int64Tensor Stack(this Int64Tensor me, int dim, params Int64Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int64Tensor Concat(this Int64Tensor me, int dim, params Int64Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int64Tensor Stack(this Int64Tensor me, int dim, params Int64Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -250,8 +328,15 @@ public static partial class TensorExtensionMethods_FloatTensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static FloatTensor Stack(this FloatTensor me, int dim, params FloatTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static FloatTensor Concat(this FloatTensor me, int dim, params FloatTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static FloatTensor Stack(this FloatTensor me, int dim, params FloatTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -281,8 +366,15 @@ public static partial class TensorExtensionMethods_BoolTensor
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
-   /// <returns></returns>
-   public static BoolTensor Stack(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage), dim: dim));
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static BoolTensor Concat(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static BoolTensor Stack(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this

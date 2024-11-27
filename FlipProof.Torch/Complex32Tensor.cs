@@ -1,10 +1,11 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace FlipProof.Torch;
 
-public sealed class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
+public sealed class Complex32Tensor : ComplexNumericTensor<Complex32, Complex32Tensor>
 {
    [SetsRequiredMembers]
    public Complex32Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.ComplexFloat32))
@@ -35,7 +36,7 @@ public sealed class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
    public override Tensor ArrayToTensor(Complex32[] arr) => torch.tensor(arr.Select(a=>(a.Real, a.Imaginary)).ToArray());
 
    [CLSCompliant(false)]
-   protected override Complex32 ToScalar(Tensor t) => new Complex32(t.ToComplex32());
+   protected override Complex32 ToScalar(Tensor t) => new(t.ToComplex32());
 
    public override Complex32[] ToArray()
    {
@@ -59,5 +60,6 @@ public sealed class Complex32Tensor : NumericTensor<Complex32, Complex32Tensor>
       using var realImag = torch.fft.ifftn(Storage);
       return FloatTensor.CreateTensor(realImag.real, true);
    }
+
 
 }

@@ -66,7 +66,7 @@ public static partial class TensorExtensionMethods
    {
       if(T.IsNaN(replace))
       {
-         throw new NotSupportedException($"Cannot replace NaNs with this method. See {nameof(FloatingPointTensorExtensionMethods.ReplaceNaN)}");
+         throw new NotSupportedException($"Cannot replace NaNs with this method. See {nameof(FloatTensor.ReplaceNaN)}");
       }
       using Tensor indices = tensor.Storage.equal(tensor.ScalarToTensor(replace));
       using Tensor val = tensor.ScalarToTensor(with);

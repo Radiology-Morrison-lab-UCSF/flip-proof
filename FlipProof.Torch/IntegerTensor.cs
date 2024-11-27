@@ -6,7 +6,7 @@ using TorchSharp;
 namespace FlipProof.Torch;
 
 public abstract class IntegerTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>
-  where T : struct, IBinaryInteger<T>
+  where T : struct, IBinaryInteger<T>, IMinMaxValue<T>
   where TSelf : NumericTensor<T, TSelf>
 {
    [CLSCompliant(false)]
@@ -41,9 +41,15 @@ public abstract class IntegerTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>
    /// <param name="right"></param>
    /// <returns></returns>
    internal FloatTensor DivideToF<S, SSelf>(IntegerTensor<S, SSelf> right)
-      where S : struct, IBinaryInteger<S>
+      where S : struct, IBinaryInteger<S>, IMinMaxValue<S>
       where SSelf : NumericTensor<S, SSelf>
    {
       return new(this.Storage / right.Storage);
+   }
+
+   public override void FillWithRandom()
+   {
+      using torch.Tensor rand = torch.randint(Convert.ToInt64(T.MinValue), Convert.ToInt64(T.MaxValue), Storage.shape, DType);
+      Storage.copy_(rand);
    }
 }

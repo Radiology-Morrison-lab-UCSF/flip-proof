@@ -5,10 +5,10 @@ using static TorchSharp.torch;
 namespace FlipProof.Image;
 
 public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
-   where TVoxel : struct, IFloatingPointIeee754<TVoxel>
+   where TVoxel : struct, IFloatingPointIeee754<TVoxel>, IMinMaxValue<TVoxel>
    where TSpace : ISpace
-   where TTensor : SimpleNumericTensor<TVoxel, TTensor>, IFloatingPointTensor
-   where TSelf : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
+   where TTensor : FloatingPointTensor<TVoxel, TTensor>, IFloatingPointTensor
+   where TSelf : Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor>
 {
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    internal Image_FloatingPoint(ImageHeader header, Tensor voxels):base(header, voxels)
@@ -21,11 +21,22 @@ public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Imag
    {
 
    }
-
-   public TSelf Round() => TrustedOperatorToNew(FloatingPointTensorExtensionMethods.Round<TVoxel, TTensor>);
+   /// <summary>
+   /// Creates a new <see cref="TSelf"/> with rounded voxel values
+   /// </summary>
+   /// <returns></returns>
+   public TSelf Round() => UnsafeCreate(Data.Round());
+   /// <summary>
+   /// Rounds voxel values in place
+   /// </summary>
+   /// <returns></returns>
    public TSelf RoundInPlace()
    {
-      Data.RoundInPlace<TVoxel,TTensor>();
+      Data.RoundInPlace();
       return (this as TSelf)!;
    }
+
+   public static TSelf operator -(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data - right);
+   public static TSelf operator +(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data + right);
+
 }

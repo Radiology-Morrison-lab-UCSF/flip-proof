@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class ComplexTensor : NumericTensor<Complex, ComplexTensor>
+public class ComplexTensor : ComplexNumericTensor<Complex, ComplexTensor>
 {
    [SetsRequiredMembers]
    public ComplexTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.ComplexFloat64))

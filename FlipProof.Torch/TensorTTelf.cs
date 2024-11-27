@@ -75,4 +75,10 @@ public abstract class Tensor<T, TSelf> : Tensor<T>
       }
       return other[0].CreateFromTensor(torch.stack(other.Select(a => a.Storage), dimension), doNotCast: true);
    }
+
+   /// <summary>
+   /// Fills this tensor with random values
+   /// </summary>
+   public abstract void FillWithRandom();
+
 }

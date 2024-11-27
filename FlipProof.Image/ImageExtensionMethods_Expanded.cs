@@ -46,20 +46,30 @@ public static partial class ImageExtensionMethods
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageDouble<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageDouble<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageDouble<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageDouble<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageDouble<TSpaceResult>(tensor, false);
+      return new ImageDouble<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageDouble<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageDouble<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageDouble<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -79,6 +89,29 @@ public static partial class ImageExtensionMethods
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -133,20 +166,30 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageInt8<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt8<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageInt8<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt8<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt8<TSpaceResult>(tensor, false);
+      return new ImageInt8<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt8<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt8<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -206,20 +249,30 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageUInt8<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageUInt8<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageUInt8<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageUInt8<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageUInt8<TSpaceResult>(tensor, false);
+      return new ImageUInt8<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageUInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageUInt8<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageUInt8<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -279,20 +332,30 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageInt16<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt16<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageInt16<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt16<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt16<TSpaceResult>(tensor, false);
+      return new ImageInt16<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageInt16<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt16<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt16<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -352,20 +415,30 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageInt32<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt32<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageInt32<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt32<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt32<TSpaceResult>(tensor, false);
+      return new ImageInt32<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageInt32<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt32<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt32<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -425,20 +498,30 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageInt64<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt64<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageInt64<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt64<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpaceResult>(tensor, false);
+      return new ImageInt64<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageInt64<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt64<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt64<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -498,20 +581,30 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageFloat<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageFloat<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageFloat<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageFloat<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageFloat<TSpaceResult>(tensor, false);
+      return new ImageFloat<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageFloat<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageFloat<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageFloat<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -571,20 +664,30 @@ public static partial class ImageExtensionMethods_ImageBool
    /// <typeparam name="TReturnType">The resulting image type</typeparam>
    /// <param name="items"></param>
    /// <returns></returns>
-   public static ImageBool<TSpaceResult> ConcatIImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageBool<TSpaceIn>> items)
+   [OrientationCheckedAtRuntime]
+   public static ImageBool<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageBool<TSpaceIn>> items)
    where TSpaceIn : ISpace
    where TSpaceResult : ISpace<TSpaceIn>
    {
-      var tensor = items[0].Data.Stack(3, items.Select(a => a.Data).Skip(1).ToArray());
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      items.Select(a => a.Data).ToArray().Stack(3);
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageBool<TSpaceResult>(tensor, false);
+      return new ImageBool<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
+   [OrientationCheckedAtRuntime]
    public static ImageBool<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageBool<TSpaceIn> me, int index)
    where TSpaceIn : ISpace<TSpaceResult>
    where TSpaceResult : ISpace
    {
-      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index]);
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageBool<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete

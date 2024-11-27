@@ -1,12 +1,9 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
-using TorchSharp.Modules;
-using System.Numerics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
-
-public class FloatTensor : SimpleNumericTensor<float, FloatTensor>, IFloatingPointTensor
+public class FloatTensor : FloatingPointTensor<float, FloatTensor>, IFloatingPointTensor
 {
 
    [SetsRequiredMembers]
@@ -35,6 +32,7 @@ public class FloatTensor : SimpleNumericTensor<float, FloatTensor>, IFloatingPoi
    public override Tensor ArrayToTensor(float[] arr) => torch.tensor(arr);
    [CLSCompliant(false)]
    protected override float ToScalar(Tensor t) => t.ToSingle();
+
 
 
    #region Operators

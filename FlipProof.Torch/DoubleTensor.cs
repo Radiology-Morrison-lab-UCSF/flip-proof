@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>, IFloatingPointTensor
+public class DoubleTensor : FloatingPointTensor<double, DoubleTensor>, IFloatingPointTensor
 {
    [SetsRequiredMembers]
    public DoubleTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Float64))
@@ -40,6 +40,7 @@ public class DoubleTensor : SimpleNumericTensor<double, DoubleTensor>, IFloating
    /// Forward fourier transform
    /// </summary>
    public new ComplexTensor FFTN() => ComplexTensor.CreateTensor(torch.fft.fftn(Storage), false);
+
 
    #region Operators
    // First three are to remove ambiguity the compiler trips over

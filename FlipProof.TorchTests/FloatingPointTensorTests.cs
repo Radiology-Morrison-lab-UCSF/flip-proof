@@ -6,8 +6,8 @@ using TorchSharp;
 namespace FlipProof.TorchTests;
 
 public abstract class FloatingPointTensorTests<T,TTensor>
-   where T : struct, IFloatingPoint<T>, IFloatingPointIeee754<T>
-   where TTensor : SimpleNumericTensor<T, TTensor>, IFloatingPointTensor
+   where T : struct, IFloatingPoint<T>, IFloatingPointIeee754<T>, IMinMaxValue<T>
+   where TTensor : FloatingPointTensor<T, TTensor>, IFloatingPointTensor
 {
    protected abstract TTensor ToTensor(T[] inputs);
    static T Cast(int t) => (T)Convert.ChangeType(t, typeof(T));

@@ -169,7 +169,7 @@ public interface ISpace
    /// <remarks>Do not use for other purposes. Will allow images of bad orientations to mix</remarks>
    /// <typeparam name="T"></typeparam>
    [Obsolete("Unsafe and not available in release")]
-   internal static void Debug_Clear<T>() where T : ISpace
+   public static void Debug_Clear<T>() where T : ISpace
    {
       lock (LockObj)
       {
@@ -183,7 +183,7 @@ public interface ISpace
    /// <remarks>Do not use for other purposes. Will allow images of bad orientations to mix</remarks>
    /// <typeparam name="T"></typeparam>
    [Obsolete("Unsafe and not available in release")]
-   internal static void Debug_ClearAll()
+   public static void Debug_ClearAll()
    {
       lock (LockObj)
       {

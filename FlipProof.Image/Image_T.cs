@@ -19,7 +19,7 @@ public abstract class Image<TSpace> : IDisposable
    {
       if(_rawData.ndim != 4)
       {
-         throw new ArgumentException("Tensor must be 4D, ordered x,y,z,volume");
+         throw new ArgumentException($"Tensor must be 4D, ordered x,y,z,volume. Got {_rawData.ndim} dimensions");
       }
       RawData = _rawData;
       
@@ -296,6 +296,8 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    }
 
    public IEnumerable<XYZA<long>> GetAllVoxelIndices() => Header.Size.GetAllVoxelIndices();
+
+   public TVoxel[] GetAllVoxels() => _data.ToArray();
 
    public TVoxel GetMaxIntensity() => _data.GetScalarFromResult(torch.max);
    public TVoxel GetMinIntensity() => _data.GetScalarFromResult(torch.min);

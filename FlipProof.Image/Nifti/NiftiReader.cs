@@ -84,7 +84,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 			read[i] = ReadToDouble<TSpace3D>(filenames[i], lookForZippedVariantIfNotFound, out _);
 		});
 
-		return read.ConcatIImage<TSpace3D, TSpace4D>();
+		return read.ConcatImage<TSpace3D, TSpace4D>();
 	}
 
 	public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true)
