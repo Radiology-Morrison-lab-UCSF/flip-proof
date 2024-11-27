@@ -273,7 +273,12 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// Converts this to a standard array
    /// </summary>
    /// <returns></returns>
-   public virtual T[] ToArray() => Storage.ToArray<T>();
+   public virtual T[] ToArray()
+   {
+      using Tensor flat = Storage.flatten();
+      return flat.ToArray<T>();
+   }
+
    #region Cast
 
    /// <summary>

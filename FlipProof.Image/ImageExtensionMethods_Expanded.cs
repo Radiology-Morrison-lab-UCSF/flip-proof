@@ -55,7 +55,6 @@ public static partial class ImageExtensionMethods
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -89,6 +88,10 @@ public static partial class ImageExtensionMethods
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
 }
+
+
+
+
 
 
 
@@ -175,7 +178,6 @@ public static partial class ImageExtensionMethods_ImageInt8
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -258,7 +260,6 @@ public static partial class ImageExtensionMethods_ImageUInt8
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -341,7 +342,6 @@ public static partial class ImageExtensionMethods_ImageInt16
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -424,7 +424,6 @@ public static partial class ImageExtensionMethods_ImageInt32
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -507,7 +506,6 @@ public static partial class ImageExtensionMethods_ImageInt64
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -590,7 +588,6 @@ public static partial class ImageExtensionMethods_ImageFloat
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -673,7 +670,6 @@ public static partial class ImageExtensionMethods_ImageBool
       {
          throw new ArgumentException("No images provided");
       }
-      items.Select(a => a.Data).ToArray().Stack(3);
       var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
 
 #pragma warning disable CS0618 // Type or member is obsolete

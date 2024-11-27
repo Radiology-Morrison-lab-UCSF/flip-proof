@@ -20,7 +20,7 @@ sealed class OrientationCheckedAtRuntime : Attribute
       get; 
    }
 
-   public override bool IsDefaultAttribute() => Message == DefaultMessage;;
+   public override bool IsDefaultAttribute() => Message == DefaultMessage;
 
    public override string ToString() => Message;
 }
