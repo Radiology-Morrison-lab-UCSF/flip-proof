@@ -13,7 +13,7 @@ namespace FlipProof.Image;
 [CLSCompliant(true)]
 public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpace>
    where TVoxel : struct, INumber<TVoxel>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    where TTensor: SimpleNumericTensor<TVoxel, TTensor>
    where TSelf : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
 {

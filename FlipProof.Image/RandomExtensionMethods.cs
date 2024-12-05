@@ -6,7 +6,7 @@ public static class RandomExtensionMethods
 {
    [Obsolete("Header is checked at run time. Use DeepClone and FillWithRandom on an existing image instead to use compile-time-checks where possible")]
    public static ImageDouble<TSpace> GetRandomImage<TSpace>(this Random r, ImageHeader head)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       double[] voxels = r.GetRandomDoubleVoxels(head);
       return new ImageDouble<TSpace>(head, voxels);

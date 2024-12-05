@@ -9,7 +9,7 @@ public static class IImageOnFileProviderExtensionMethods
    /// Gets the file as an image. If this object is or holds an image, that may be returned without an IO operation
    /// </summary>
    public static Image<TSpace> GetImage<TSpace>(this IImageOnFileProvider provider, bool lookForGzNiftiIfNotFound=false)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return NiftiReader.ReadToVolume<TSpace>(provider.GetImagePath(null), lookForGzNiftiIfNotFound);
    }

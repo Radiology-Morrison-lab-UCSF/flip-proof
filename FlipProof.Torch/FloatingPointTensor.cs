@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>
+public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSelf>, IFloatingPointTensor
   where T : struct, IFloatingPointIeee754<T>, IMinMaxValue<T>
   where TSelf : NumericTensor<T, TSelf>
 {

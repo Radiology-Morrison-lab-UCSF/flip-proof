@@ -26,8 +26,8 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
    protected static void OperatorsSameTypeTestInt<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, Func<ImageHeader, TImage> getIm1)
       where TImage : Image_Integer<TVoxel, TSpace, TImage, TTensor>
-      where TSpace : ISpace
-      where TVoxel : struct, INumber<TVoxel>, IBinaryInteger<TVoxel>
+      where TSpace : struct, ISpace
+      where TVoxel : struct, INumber<TVoxel>, IBinaryInteger<TVoxel>,IMinMaxValue<TVoxel>
       where TTensor : IntegerTensor<TVoxel, TTensor>
    {
       TImage im0 = OperatorsSameTypeTest<TImage, TVoxel, TSpace, TTensor>(getIm0, getIm1);
@@ -45,7 +45,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
    }
    protected static TImage OperatorsSameTypeTest<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, Func<ImageHeader, TImage> getIm1) 
       where TImage : Image_SimpleNumeric<TVoxel,TSpace, TImage, TTensor>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
       where TVoxel : struct, INumber<TVoxel>
       where TTensor : SimpleNumericTensor<TVoxel,TTensor>
    {
@@ -75,7 +75,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
    protected static void AssertImagesMatch<TImage, TVoxel, TSpace, TTensor>(TTensor expected, TImage result)
    where TVoxel : struct, INumber<TVoxel>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
    where TTensor : SimpleNumericTensor<TVoxel, TTensor>
    {
@@ -89,7 +89,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
    public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0)
       where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
       where TVoxel : struct,INumber<TVoxel>
       where TTensor : SimpleNumericTensor<TVoxel, TTensor>
    {

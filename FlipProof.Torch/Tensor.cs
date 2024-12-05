@@ -14,26 +14,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    where T : struct
 {
 
-   [CLSCompliant(false)]
-   public required Tensor Storage { get; init; }
 
-   /// <summary>
-   /// Returns the total number of datapoints in the tensor
-   /// </summary>
-   public long Count
-   {
-      get
-      {
-         bool any =false;
-         long count = 1;
-         foreach (var item in Storage.shape.Where(a => a != 0L))
-         {
-            count *= item;
-            any = true;
-         }
-         return any ? count : 0L;
-      }
-   }
 
    /// <summary>
    /// 
@@ -51,6 +32,29 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       this.Storage = storage;
    }
 
+   /// <summary>
+   /// The unwrapped internal tensor
+   /// </summary>
+   [CLSCompliant(false)]
+   public required Tensor Storage { get; init; }
+
+   /// <summary>
+   /// Returns the total number of datapoints in the tensor
+   /// </summary>
+   public long Count
+   {
+      get
+      {
+         bool any = false;
+         long count = 1;
+         foreach (var item in Storage.shape.Where(a => a != 0L))
+         {
+            count *= item;
+            any = true;
+         }
+         return any ? count : 0L;
+      }
+   }
    [CLSCompliant(false)]
    public virtual torch.ScalarType DType => throw new NotImplementedException("Must be overridden in non-abstract class");
 

@@ -67,7 +67,7 @@ public abstract class NiftiFile_Base(NiftiHeader head, Stream voxels) : IDisposa
 	/// <returns></returns>
    public static NiftiFile<TVoxel> FromImage<TVoxel,TSpace>(Image<TVoxel, TSpace> vols, float TR = 1f)
 		where TVoxel: struct, INumber<TVoxel>
-		where TSpace : ISpace
+		where TSpace : struct, ISpace
    {
       var head = NiftiHeader.Create(vols.Header);
       head.PixDim[4] = TR;
@@ -79,7 +79,7 @@ public abstract class NiftiFile_Base(NiftiHeader head, Stream voxels) : IDisposa
    public abstract NiftiFile_Base To3DNiiBase(int fourthDim);
 
 	public abstract Image<TSpace> ToImage<TSpace>(bool applyScalingFactors = true)
-		where TSpace : ISpace;
+		where TSpace : struct, ISpace;
 
 
    public abstract float[] GetDataAsFloat();

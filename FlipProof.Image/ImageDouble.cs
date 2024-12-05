@@ -6,7 +6,7 @@ using TensorExtensionMethods = FlipProof.Torch.TensorExtensionMethods;
 namespace FlipProof.Image;
 
 public sealed class ImageDouble<TSpace> : Image_FloatingPoint<double, TSpace, ImageDouble<TSpace>, DoubleTensor>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
 {
 
    #region Constructors
@@ -15,7 +15,7 @@ public sealed class ImageDouble<TSpace> : Image_FloatingPoint<double, TSpace, Im
    internal static ImageDouble<TSpace> UnsafeCreateStatic(DoubleTensor voxels) => new(voxels, false);
 #pragma warning restore CS0618 // Type or member is obsolete
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageDouble(ImageHeader header, double[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes))
+   public ImageDouble(ImageHeader header, double[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
    {
    }
 

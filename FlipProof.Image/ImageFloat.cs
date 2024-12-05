@@ -5,7 +5,7 @@ using TorchSharp;
 namespace FlipProof.Image;
 
 public sealed class ImageFloat<TSpace> : Image_FloatingPoint<float,TSpace, ImageFloat<TSpace>, FloatTensor>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
 {
    #region Constructors
 
@@ -19,7 +19,7 @@ public sealed class ImageFloat<TSpace> : Image_FloatingPoint<float,TSpace, Image
    /// <param name="voxels">Order data strides volume(fastest), z, y, x (slowest)</param>
 #pragma warning restore CS0618 // Type or member is obsolete
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageFloat(ImageHeader header, float[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes))
+   public ImageFloat(ImageHeader header, float[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
    {
    }
 

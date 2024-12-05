@@ -75,6 +75,8 @@ public readonly record struct XYZ<T>(T X, T Y, T Z) : IReadOnlyList<T>
       return new XYZ<uint>(x, y, z);
    }
 
+   public double Norm() => Math.Sqrt(Convert.ToDouble( X * X + Y * Y + Z * Z));
+
    public static XYZ<T> operator +(XYZ<T> a, XYZ<T> b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static XYZ<T> operator -(XYZ<T> a, XYZ<T> b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
     public static XYZ<T> operator *(XYZ<T> a, XYZ<T> b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z);

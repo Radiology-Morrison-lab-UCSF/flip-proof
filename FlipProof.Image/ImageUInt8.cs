@@ -4,7 +4,7 @@ using TorchSharp;
 namespace FlipProof.Image;
 
 public sealed class ImageUInt8<TSpace> : Image_Integer<byte, TSpace, ImageUInt8<TSpace>, UInt8Tensor>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
 {
    #region Constructors
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -17,7 +17,7 @@ public sealed class ImageUInt8<TSpace> : Image_Integer<byte, TSpace, ImageUInt8<
 #pragma warning restore CS0618 // Type or member is obsolete
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageUInt8(ImageHeader header, byte[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes))
+   public ImageUInt8(ImageHeader header, byte[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
    {
    }
 

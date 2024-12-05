@@ -22,7 +22,7 @@ public class OtsuThreshold
    /// <returns>A mask of voxels exceeding the threshold</returns>
    public static ImageBool<TSpace> Apply<TVoxel, TSpace, TSelf, TTensor>(Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> im, bool inverse=false)
       where TVoxel : struct, INumber<TVoxel>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
       where TSelf : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
       where TTensor : SimpleNumericTensor<TVoxel, TTensor>
    {

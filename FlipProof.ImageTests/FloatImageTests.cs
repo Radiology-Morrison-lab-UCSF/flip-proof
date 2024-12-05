@@ -13,8 +13,8 @@ public class FloatImageTests() : OperatorsTests(876)
    #region Operators
    private static void OperatorsDifferentTypeTest<TImage, TVoxel, TSpace, TTensor>(Func<ImageFloat<TSpace>> getIm0, Func<ImageHeader, TImage> getIm1) 
       where TImage : Image_Integer<TVoxel,TSpace, TImage, TTensor>
-      where TSpace : ISpace
-      where TVoxel : struct, INumber<TVoxel>, IBinaryInteger<TVoxel>
+      where TSpace : struct, ISpace
+      where TVoxel : struct, INumber<TVoxel>, IBinaryInteger<TVoxel>, IMinMaxValue<TVoxel>
       where TTensor : IntegerTensor<TVoxel,TTensor>
    {
       using DisposeScope scope = torch.NewDisposeScope();

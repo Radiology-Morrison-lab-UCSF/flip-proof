@@ -180,7 +180,7 @@ public static class NiftiWriter<T> where T : struct, INumber<T>
 {
 
 	public static void Write<TSpace>(Image<T, TSpace> file, FilePath loc, FileMode fm)
-	where TSpace : ISpace
+	where TSpace : struct, ISpace
 	{
 		using var nii = NiftiFile<T>.FromImage(file);
       NiftiWriter.Write(nii, loc, fm);

@@ -11,7 +11,7 @@ public class ImageDoubleTests() : OperatorsTests(876)
    
    private static void OperatorsDifferentTypeTest<TImage, TVoxel, TSpace, TTensor>(Func<ImageDouble<TSpace>> getIm0, Func<ImageHeader, TImage> getIm1) 
       where TImage : Image_SimpleNumeric<TVoxel,TSpace, TImage, TTensor>
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
       where TVoxel : struct, INumber<TVoxel>
       where TTensor : SimpleNumericTensor<TVoxel,TTensor>
    {

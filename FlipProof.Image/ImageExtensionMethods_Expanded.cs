@@ -14,7 +14,7 @@ public static partial class ImageExtensionMethods
    /// </summary>
    /// <returns></returns>
    public static ImageDouble<TSpace> Blank<TSpace>(this ImageDouble<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -24,13 +24,13 @@ public static partial class ImageExtensionMethods
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageDouble<TSpace> src, ImageDouble<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageDouble<TSpace> DeepClone<TSpace>(this ImageDouble<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -48,8 +48,8 @@ public static partial class ImageExtensionMethods
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageDouble<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageDouble<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -64,13 +64,27 @@ public static partial class ImageExtensionMethods
 
    [OrientationCheckedAtRuntime]
    public static ImageDouble<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageDouble<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageDouble<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageDouble<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageDouble<TSpace4d> me, int index, ImageDouble<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageDouble<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -83,11 +97,44 @@ public static partial class ImageExtensionMethods
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageDouble<TSpace> TrustedOperatorToNew<TSpace>(this ImageDouble<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -137,7 +184,7 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// </summary>
    /// <returns></returns>
    public static ImageInt8<TSpace> Blank<TSpace>(this ImageInt8<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -147,13 +194,13 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageInt8<TSpace> src, ImageInt8<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageInt8<TSpace> DeepClone<TSpace>(this ImageInt8<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -171,8 +218,8 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageInt8<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt8<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -187,13 +234,27 @@ public static partial class ImageExtensionMethods_ImageInt8
 
    [OrientationCheckedAtRuntime]
    public static ImageInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt8<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt8<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageInt8<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt8<TSpace4d> me, int index, ImageInt8<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt8<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -206,7 +267,7 @@ public static partial class ImageExtensionMethods_ImageInt8
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageInt8<TSpace> TrustedOperatorToNew<TSpace>(this ImageInt8<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -219,7 +280,7 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// </summary>
    /// <returns></returns>
    public static ImageUInt8<TSpace> Blank<TSpace>(this ImageUInt8<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -229,13 +290,13 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageUInt8<TSpace> src, ImageUInt8<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageUInt8<TSpace> DeepClone<TSpace>(this ImageUInt8<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -253,8 +314,8 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageUInt8<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageUInt8<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -269,13 +330,27 @@ public static partial class ImageExtensionMethods_ImageUInt8
 
    [OrientationCheckedAtRuntime]
    public static ImageUInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageUInt8<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageUInt8<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageUInt8<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageUInt8<TSpace4d> me, int index, ImageUInt8<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageUInt8<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -288,7 +363,7 @@ public static partial class ImageExtensionMethods_ImageUInt8
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageUInt8<TSpace> TrustedOperatorToNew<TSpace>(this ImageUInt8<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -301,7 +376,7 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// </summary>
    /// <returns></returns>
    public static ImageInt16<TSpace> Blank<TSpace>(this ImageInt16<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -311,13 +386,13 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageInt16<TSpace> src, ImageInt16<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageInt16<TSpace> DeepClone<TSpace>(this ImageInt16<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -335,8 +410,8 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageInt16<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt16<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -351,13 +426,27 @@ public static partial class ImageExtensionMethods_ImageInt16
 
    [OrientationCheckedAtRuntime]
    public static ImageInt16<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt16<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt16<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageInt16<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt16<TSpace4d> me, int index, ImageInt16<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt16<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -370,7 +459,7 @@ public static partial class ImageExtensionMethods_ImageInt16
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageInt16<TSpace> TrustedOperatorToNew<TSpace>(this ImageInt16<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -383,7 +472,7 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// </summary>
    /// <returns></returns>
    public static ImageInt32<TSpace> Blank<TSpace>(this ImageInt32<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -393,13 +482,13 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageInt32<TSpace> src, ImageInt32<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageInt32<TSpace> DeepClone<TSpace>(this ImageInt32<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -417,8 +506,8 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageInt32<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt32<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -433,13 +522,27 @@ public static partial class ImageExtensionMethods_ImageInt32
 
    [OrientationCheckedAtRuntime]
    public static ImageInt32<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt32<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt32<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageInt32<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt32<TSpace4d> me, int index, ImageInt32<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt32<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -452,7 +555,7 @@ public static partial class ImageExtensionMethods_ImageInt32
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageInt32<TSpace> TrustedOperatorToNew<TSpace>(this ImageInt32<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -465,7 +568,7 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// </summary>
    /// <returns></returns>
    public static ImageInt64<TSpace> Blank<TSpace>(this ImageInt64<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -475,13 +578,13 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageInt64<TSpace> src, ImageInt64<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageInt64<TSpace> DeepClone<TSpace>(this ImageInt64<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -499,8 +602,8 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageInt64<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageInt64<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -515,13 +618,27 @@ public static partial class ImageExtensionMethods_ImageInt64
 
    [OrientationCheckedAtRuntime]
    public static ImageInt64<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt64<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageInt64<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageInt64<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt64<TSpace4d> me, int index, ImageInt64<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -534,7 +651,7 @@ public static partial class ImageExtensionMethods_ImageInt64
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageInt64<TSpace> TrustedOperatorToNew<TSpace>(this ImageInt64<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -547,7 +664,7 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// </summary>
    /// <returns></returns>
    public static ImageFloat<TSpace> Blank<TSpace>(this ImageFloat<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -557,13 +674,13 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageFloat<TSpace> src, ImageFloat<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageFloat<TSpace> DeepClone<TSpace>(this ImageFloat<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -581,8 +698,8 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageFloat<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageFloat<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -597,13 +714,27 @@ public static partial class ImageExtensionMethods_ImageFloat
 
    [OrientationCheckedAtRuntime]
    public static ImageFloat<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageFloat<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageFloat<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageFloat<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageFloat<TSpace4d> me, int index, ImageFloat<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageFloat<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -616,7 +747,7 @@ public static partial class ImageExtensionMethods_ImageFloat
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageFloat<TSpace> TrustedOperatorToNew<TSpace>(this ImageFloat<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
@@ -629,7 +760,7 @@ public static partial class ImageExtensionMethods_ImageBool
    /// </summary>
    /// <returns></returns>
    public static ImageBool<TSpace> Blank<TSpace>(this ImageBool<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.Blank());
    }
@@ -639,13 +770,13 @@ public static partial class ImageExtensionMethods_ImageBool
    /// </summary>
    /// <returns></returns>
    public static void CopyInto<TSpace>(this ImageBool<TSpace> src, ImageBool<TSpace> destination)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       src.Data.CopyInto(destination.Data, false);
    }
 
    public static ImageBool<TSpace> DeepClone<TSpace>(this ImageBool<TSpace> im)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.DeepClone());
    }
@@ -663,8 +794,8 @@ public static partial class ImageExtensionMethods_ImageBool
    /// <returns></returns>
    [OrientationCheckedAtRuntime]
    public static ImageBool<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageBool<TSpaceIn>> items)
-   where TSpaceIn : ISpace
-   where TSpaceResult : ISpace<TSpaceIn>
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
    {
       if(items.Count == 0 )
       {
@@ -679,13 +810,27 @@ public static partial class ImageExtensionMethods_ImageBool
 
    [OrientationCheckedAtRuntime]
    public static ImageBool<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageBool<TSpaceIn> me, int index)
-   where TSpaceIn : ISpace<TSpaceResult>
-   where TSpaceResult : ISpace
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
    {
       var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
 
 #pragma warning disable CS0618 // Type or member is obsolete
       return new ImageBool<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageBool<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageBool<TSpace4d> me, int index, ImageBool<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageBool<TSpace3d>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -698,7 +843,7 @@ public static partial class ImageExtensionMethods_ImageBool
    /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
    /// <returns></returns>
    internal static ImageBool<TSpace> TrustedOperatorToNew<TSpace>(this ImageBool<TSpace> im, Func<Tensor,Tensor> torchOperation)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }

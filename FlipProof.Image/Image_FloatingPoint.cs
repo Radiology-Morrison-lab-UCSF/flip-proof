@@ -6,7 +6,7 @@ namespace FlipProof.Image;
 
 public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
    where TVoxel : struct, IFloatingPointIeee754<TVoxel>, IMinMaxValue<TVoxel>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    where TTensor : FloatingPointTensor<TVoxel, TTensor>, IFloatingPointTensor
    where TSelf : Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor>
 {

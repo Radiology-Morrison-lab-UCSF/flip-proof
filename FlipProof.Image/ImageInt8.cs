@@ -5,7 +5,7 @@ namespace FlipProof.Image;
 
 [CLSCompliant(false)]
 public sealed class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, ImageInt8<TSpace>, Int8Tensor>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
 {
    #region Constructors
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -18,7 +18,7 @@ public sealed class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, ImageInt8<TS
 #pragma warning restore CS0618 // Type or member is obsolete
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageInt8(ImageHeader header, sbyte[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes))
+   public ImageInt8(ImageHeader header, sbyte[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
    {
    }
 

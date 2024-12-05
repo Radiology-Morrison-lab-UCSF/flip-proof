@@ -22,7 +22,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
    /// <param name="folder"></param>
    /// <returns></returns>
    public static Image<TSpace>[] ReadSeriesToVolume<TVoxel,TSpace>(FilePath folder) where TVoxel : struct, IComparable<TVoxel>, IComparable, IEquatable<TVoxel>
-		where TSpace:ISpace
+		where TSpace : struct, ISpace
 	{
 		return (from a in ReadSeries<TVoxel>(folder)
 			select a.ToImage<TSpace>(applyScalingFactors: true)).ToArray();
@@ -45,7 +45,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	}
 
 	public static ImageFloat<TSpace>[] ReadSeriesToFloat<TSpace>(FilePath folder)
-		where TSpace:ISpace
+		where TSpace : struct, ISpace
 	{
       FilePath[] filenames = FlipProof.Image.IO.Gen.GetNiftiFilesLoc(folder).ToArray();
 		ImageFloat<TSpace>[] read = new ImageFloat<TSpace>[filenames.Length];
@@ -57,15 +57,15 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	}
 
 	public static ImageDouble<TSpace>[] ReadSeriesToDouble<TSpace>(FilePath folder, bool alsoLookForZippedFiles = false)
-		where TSpace:ISpace
-	{
+where TSpace : struct, ISpace
+   {
 		FilePath[] filenames = ((!alsoLookForZippedFiles) ? FlipProof.Image.IO.Gen.GetNiftiFilesLoc_UnzippedOnly(folder).ToArray() : FlipProof.Image.IO.Gen.GetNiftiFilesLoc(folder).ToArray());
 		return ReadSeriesToDouble<TSpace>(filenames, lookForZippedVariantIfNotFound: false);
 	}
 
 	public static ImageDouble<TSpace>[] ReadSeriesToDouble<TSpace>(FilePath[] filenames, bool lookForZippedVariantIfNotFound = true)
-		where TSpace:ISpace
-	{
+where TSpace : struct, ISpace
+   {
 		ImageDouble<TSpace>[] read = new ImageDouble<TSpace>[filenames.Length];
 		Iteration.Loop_Parallel(0, read.Length, delegate(int i)
 		{
@@ -74,8 +74,8 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 		return read;
 	}
 	public static ImageDouble<TSpace4D> Read3DSeriesTo4DDouble<TSpace3D, TSpace4D>(FilePath[] filenames, bool lookForZippedVariantIfNotFound = true)
-      where TSpace3D:ISpace
-      where TSpace4D:ISpace<TSpace3D>
+      where TSpace3D:struct,ISpace
+      where TSpace4D: struct, ISpace<TSpace3D>
 
    {
 		ImageDouble<TSpace3D>[] read = new ImageDouble<TSpace3D>[filenames.Length];
@@ -88,19 +88,19 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	}
 
 	public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true)
-		where TSpace :ISpace
+		where TSpace : struct, ISpace
 	{
 		NiftiFile_Base origNifti;
 		return ReadToFloat<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out origNifti);
 	}
 
 	public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, out NiftiFile_Base origNifti)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
       return ReadToFloat<TSpace>(fileLoc, lookForZippedVariantIfNotFound: false, out origNifti);
 	}
    public static ImageBool<TSpace> ReadToBool<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
 
       origNifti = Read(fileLoc, lookForZippedVariantIfNotFound);
@@ -115,7 +115,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
    }
 
    public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
 
       origNifti = Read(fileLoc, lookForZippedVariantIfNotFound);
@@ -130,7 +130,7 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	}
 
    public static ImageDouble<TSpace> ReadToDouble<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
-		where TSpace : ISpace
+		where TSpace : struct, ISpace
    {
       origNifti = Read(fileLoc, lookForZippedVariantIfNotFound);
       var im = origNifti.ToImage<TSpace>();
@@ -171,14 +171,14 @@ public class NiftiReader(Stream unzippedStream) : NiftiReaderBase(new BinaryRead
 	
 
 	public static Image<TSpace> ReadToVolume<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound)
-	where TSpace : ISpace
+	where TSpace : struct, ISpace
 	{
       return ReadToVolume<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
    }
 
 
 	public static Image<TSpace> ReadToVolume<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base? origNifti)
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    {
       Checkfilename(ref fileLoc, lookForZippedVariantIfNotFound);
 		using NiftiReader nr = new NiftiReader(fileLoc);

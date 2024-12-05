@@ -5,7 +5,7 @@ using TorchSharp;
 namespace FlipProof.Image;
 
 public class ImageComplex<TSpace> : Image<Complex, TSpace>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
 {
    #region Constructors
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -15,7 +15,7 @@ public class ImageComplex<TSpace> : Image<Complex, TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageComplex(ImageHeader header, Complex[] voxels) : base(header,
-     torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes))
+     torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
    {
       Data = ComplexTensor.CreateTensor(RawData, false);
    }

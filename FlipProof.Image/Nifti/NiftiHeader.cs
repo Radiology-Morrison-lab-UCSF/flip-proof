@@ -268,7 +268,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 	public static NiftiHeader FromVolume<TSpace,TVoxel>(Image<TVoxel, TSpace> v0) 
 		where TVoxel : struct, INumber<TVoxel>
-		where TSpace: ISpace
+		where TSpace: struct, ISpace
 	{
 		float calMax = Convert.ToSingle(v0.GetMaxIntensity());
 		float calMin = Convert.ToSingle(v0.GetMinIntensity());

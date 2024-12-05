@@ -11,7 +11,7 @@ namespace FlipProof.Image;
 /// <typeparam name="TSpace"></typeparam>
 public abstract class Image_Integer<TVoxel, TSpace, TSelf, TTensor> : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
    where TVoxel : struct, IBinaryInteger<TVoxel>, IMinMaxValue<TVoxel>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    where TTensor: IntegerTensor<TVoxel, TTensor>
    where TSelf : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
 {

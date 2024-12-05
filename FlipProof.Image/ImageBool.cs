@@ -7,7 +7,7 @@ using static TorchSharp.torch;
 namespace FlipProof.Image;
 
 public class ImageBool<TSpace> : Image<bool, TSpace>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
 {
 
    #region Constructors
@@ -23,7 +23,7 @@ public class ImageBool<TSpace> : Image<bool, TSpace>
 #pragma warning restore CS0618 // Type or member is obsolete
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageBool(ImageHeader header, bool[] voxels) : base(header, new BoolTensor(torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.Volumes)))
+   public ImageBool(ImageHeader header, bool[] voxels) : base(header, new BoolTensor(torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount)))
    {
       Data = (BoolTensor)_data;
    }

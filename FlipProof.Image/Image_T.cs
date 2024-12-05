@@ -12,7 +12,7 @@ namespace FlipProof.Image;
 /// Base class for images with an known and enforced orientation
 /// </summary>
 public abstract class Image<TSpace> : IDisposable
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
 {
 
    internal Image(Tensor _rawData) 
@@ -87,7 +87,7 @@ public abstract class Image<TSpace> : IDisposable
 /// <typeparam name="TVoxel">The voxel type, such as <see cref="double"/> </typeparam>
 /// <typeparam name="TSpace">The physical space this is oriented to</typeparam>
 public abstract class Image<TVoxel, TSpace> : Image<TSpace>
-   where TSpace : ISpace
+   where TSpace : struct, ISpace
    where TVoxel : struct
 {
    [CLSCompliant(false)]
@@ -298,6 +298,11 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    public IEnumerable<XYZA<long>> GetAllVoxelIndices() => Header.Size.GetAllVoxelIndices();
 
    public TVoxel[] GetAllVoxels() => _data.ToArray();
+   /// <summary>
+   /// Returns a copy of the voxels as a wrapped tensor
+   /// </summary>
+   /// <returns></returns>
+   public Tensor<TVoxel> GetAllVoxelsAsTensor() => _data.DeepClone();
 
    public TVoxel GetMaxIntensity() => _data.GetScalarFromResult(torch.max);
    public TVoxel GetMinIntensity() => _data.GetScalarFromResult(torch.min);

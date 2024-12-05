@@ -149,15 +149,12 @@ var unmasked = myImage / myMask; // compilation error - cannot divide ImageDoubl
 
 ## Getting Started
 
-Start by defining one or more space you need to use, by inheriting from `ISpace` and implementing its required members.
-For example:
+Start by defining one or more spaces you need to use, by inheriting from `ISpace`.
 
 ```csharp
-public sealed class NativeCT : ISpace
+public struct NativeCT : ISpace
 {
-   public static object LockObj { get; } = new object();
 
-   static ImageHeader? ISpace.Orientation { get; set; }
 }
 ```
 
@@ -182,6 +179,38 @@ Image<float, TSpace> AbsDifference<TSpace>(ImageFloat<TSpace> im1, ImageFloat<TS
 }
 ```
 
+## Special Spaces
+
+To enforce that an image must be 3d, implement `ISpace3D` instead of `ISpace`
+
+When there is a 4D series and a 3D space representing singular volumes within that series, the 4D Space interface should 'derive' from the 3D Space:
+
+```csharp
+// 3D volume in a 4D series
+public struct FMRIVolume : ISpace3D
+{
+}
+
+// Multiple 3d volumes making up a 4D series
+public struct FMRISeries : ISpace<FMRIVolume>
+{
+}
+
+```
+
+If no 3D space is declared but two 4D series of different lengths exists, it's best to 'derive' the larger series from the shorter.
+
+```csharp
+// Partial series
+public struct TwoVolumeFMRISeries : ISpace
+{
+}
+
+// Longer series
+public struct FullFMRISeries : ISpace<TwoVolumeFMRISeries>
+{
+}
+```
 
 ## Memory Management
 

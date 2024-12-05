@@ -101,7 +101,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
    }
 
 	private static ImageFloat<TSpace> ToFloatImage<TVox,TSpace>(NiftiHeader head, TVox[] unscaledVoxels, Func<TVox, float> convert)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
 		float[] scaledVoxels = ScaleData(unscaledVoxels, convert, head.sclSlope, head.scl_inter);
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -109,7 +109,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 	private static ImageDouble<TSpace> ToDoubleImage<TVox,TSpace>(NiftiHeader head, TVox[] unscaledVoxels, Func<TVox, double> convert)
-      where TSpace : ISpace
+      where TSpace : struct, ISpace
    {
 		double[] scaledVoxels = ScaleData(unscaledVoxels, convert, head.sclSlope, head.scl_inter);
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -118,7 +118,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
    }
 
    private static ImageDouble<TSpace> ToDoubleImage<TSpace>(NiftiHeader head, double[] unscaledVoxels, bool scaleVoxels)
-		where TSpace : ISpace
+		where TSpace : struct, ISpace
    {
 		double[] scaledVoxels = scaleVoxels ? ScaleVoxels(head, unscaledVoxels) : unscaledVoxels;
 
@@ -151,7 +151,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
   // }
 	
 	private static TIm ToImage<TIm, TVoxel, TSpace>(NiftiHeader head, Tensor<TVoxel> scaledVoxels, Func<ImageHeader, Torch.Tensor<TVoxel>, TIm> createIm)
-		where TSpace : ISpace
+		where TSpace : struct, ISpace
 		where TVoxel : struct
 		where TIm : Image<TVoxel, TSpace>
    {
@@ -161,7 +161,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
    }
 	
 	private static TIm ToImage<TIm, TVoxel, TSpace>(NiftiHeader head, TVoxel[] scaledVoxels, Func<ImageHeader, TVoxel[], TIm> createIm)
-		where TSpace : ISpace
+		where TSpace : struct, ISpace
 		where TVoxel : struct
 		where TIm : Image<TVoxel, TSpace>
    {

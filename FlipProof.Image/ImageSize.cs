@@ -10,19 +10,21 @@ public readonly record struct ImageSize : IEnumerable<long>
       X = x > 0 ? x : throw new ArgumentException("Dimensions must be 1 or greater", nameof(x));
       Y = y > 0 ? y : throw new ArgumentException("Dimensions must be 1 or greater", nameof(y));
       Z = z > 0 ? z : throw new ArgumentException("Dimensions must be 1 or greater", nameof(z));
-      Volumes = volumeCount > 0 ? volumeCount : throw new ArgumentException("Dimensions must be 1 or greater", nameof(volumeCount));
+      VolumeCount = volumeCount > 0 ? volumeCount : throw new ArgumentException("Dimensions must be 1 or greater", nameof(volumeCount));
    }
    public long X { get; }
    public long Y { get; }
    public long Z { get; }
-   public long Volumes { get; }
+   public long VolumeCount { get; }
+
+   public XYZ<long> EachVolumeSize => new(X, Y, Z);
 
    /// <summary>
    /// 4 if volumes is > 1, else 3
    /// </summary>
-   public int NDims => Volumes == 1 ? 3 : 4;
+   public int NDims => VolumeCount == 1 ? 3 : 4;
 
-   public long VoxelCount => X * Y * Z * Volumes;
+   public long VoxelCount => X * Y * Z * VolumeCount;
    public long VoxelCountPerVolume => X * Y * Z;
 
    /// <summary>
@@ -31,7 +33,7 @@ public readonly record struct ImageSize : IEnumerable<long>
    /// <returns></returns>
    public IEnumerable<XYZA<long>> GetAllVoxelIndices()
    {
-      for (long a = 0; a < Volumes; a++)
+      for (long a = 0; a < VolumeCount; a++)
       {
          for (long z = 0; z < Z; z++)
          {
@@ -71,7 +73,7 @@ public readonly record struct ImageSize : IEnumerable<long>
       yield return X;
       yield return Y;
       yield return Z;
-      yield return Volumes;
+      yield return VolumeCount;
    }
 
 

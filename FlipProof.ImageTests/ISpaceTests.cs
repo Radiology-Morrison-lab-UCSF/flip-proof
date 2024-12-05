@@ -10,13 +10,15 @@ namespace FlipProof.ImageTests;
 public  class ISpaceTests() : ImageTestsBase(55)
 {
 
-      class MySpace : ISpace { }
-      class MySpace2 : ISpace<MySpace> { }
-      class MySpace3 : ISpace<MySpace2> { }
-      class MySpace4 : ISpace<MySpace2>, ISpace<MySpace3> { } // bad idea but for coding robustness
-      class RecursiveSpace1 : ISpace<RecursiveSpace2> { }
-      class RecursiveSpace2 : ISpace<RecursiveSpace3> { }
-      class RecursiveSpace3 : ISpace<RecursiveSpace1> { }
+      struct MySpace : ISpace { }
+   struct MySpace2 : ISpace<MySpace> { }
+   struct MySpace3 : ISpace<MySpace2> { }
+   struct MySpace4 : ISpace<MySpace2>, ISpace<MySpace3> { } // bad idea but for coding robustness
+   struct RecursiveSpace1 : ISpace<RecursiveSpace2> { }
+   struct RecursiveSpace2 : ISpace<RecursiveSpace3> { }
+   struct RecursiveSpace3 : ISpace<RecursiveSpace1> { }
+
+   struct My3DSpace : ISpace3D { }
 
    [TestInitialize]
    public override void Initialise()
@@ -47,6 +49,20 @@ public  class ISpaceTests() : ImageTestsBase(55)
       CollectionAssert.AreEquivalent(new Type[] { typeof(MySpace), typeof(MySpace2) }, ISpace.GetAncestorSpaces(typeof(MySpace3)).ToArray());
       CollectionAssert.AreEquivalent(new Type[] { typeof(MySpace), typeof(MySpace2), typeof(MySpace3) }, ISpace.GetAncestorSpaces(typeof(MySpace4)).ToArray());
       CollectionAssert.AreEquivalent(new Type[] { typeof(RecursiveSpace2), typeof(RecursiveSpace3) }, ISpace.GetAncestorSpaces(typeof(RecursiveSpace1)).ToArray());
+   }
+
+   [TestMethod]
+   public void Initialise3dAs3D()
+   {
+      ImageHeader head = GetRandomHeader() with { Size = new(1, 11, 17, 15) };
+     ISpace.Initialise<My3DSpace>(head);
+     Assert.IsTrue(ISpace.Matches<My3DSpace>(head));
+   }
+   [TestMethod]
+   public void Initialise3dAs4D()
+   {
+      ImageHeader head = GetRandomHeader() with { Size = new(2, 11, 17, 15) };
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<My3DSpace>(head));
    }
 
    [TestMethod]
@@ -81,9 +97,9 @@ public  class ISpaceTests() : ImageTestsBase(55)
       Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { CoordinateSystem = header.CoordinateSystem == CoordinateSystem.SRP ? CoordinateSystem.RAS : CoordinateSystem.SRP }));
 
       // Size changes are not allowed unless they are volume
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.Volumes, header.Size.X + 1, header.Size.Y, header.Size.Z) }));
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.Volumes, header.Size.X , header.Size.Y + 1, header.Size.Z) }));
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.Volumes, header.Size.X, header.Size.Y, header.Size.Z + 1) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.VolumeCount, header.Size.X + 1, header.Size.Y, header.Size.Z) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.VolumeCount, header.Size.X , header.Size.Y + 1, header.Size.Z) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Size = new(header.Size.VolumeCount, header.Size.X, header.Size.Y, header.Size.Z + 1) }));
    }
    
 
@@ -95,16 +111,16 @@ public  class ISpaceTests() : ImageTestsBase(55)
 
       Assert.ThrowsException<OrientationException>(()=> ISpace.Initialise<MySpace3>(GetRandomHeader()));
 
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.Volumes, header.Size.X + 1, header.Size.Y, header.Size.Z) }));
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.Volumes, header.Size.X, header.Size.Y + 1, header.Size.Z) }));
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.Volumes, header.Size.X, header.Size.Y, header.Size.Z + 1) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.VolumeCount, header.Size.X + 1, header.Size.Y, header.Size.Z) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.VolumeCount, header.Size.X, header.Size.Y + 1, header.Size.Z) }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace3>(header with { Size = new(header.Size.VolumeCount, header.Size.X, header.Size.Y, header.Size.Z + 1) }));
    }
    
    [TestMethod]
    public void CompatibleDerivedSpace()
    {
       var header = GetRandomHeader();
-      ISpace.Initialise<MySpace>(header with { Size = new(header.Size.Volumes+1, header.Size.X, header.Size.Y, header.Size.Z) });
+      ISpace.Initialise<MySpace>(header with { Size = new(header.Size.VolumeCount+1, header.Size.X, header.Size.Y, header.Size.Z) });
       ISpace.Initialise<MySpace2>(header);
    }
    
@@ -112,7 +128,7 @@ public  class ISpaceTests() : ImageTestsBase(55)
    public void CompatibleDerivedSpace_IndirectDescendent()
    {
       var header = GetRandomHeader();
-      ISpace.Initialise<MySpace>(header with { Size = new(header.Size.Volumes + 1, header.Size.X, header.Size.Y, header.Size.Z) });
+      ISpace.Initialise<MySpace>(header with { Size = new(header.Size.VolumeCount + 1, header.Size.X, header.Size.Y, header.Size.Z) });
       ISpace.Initialise<MySpace3>(header);
    }
 }

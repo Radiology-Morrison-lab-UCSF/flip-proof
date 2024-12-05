@@ -5,6 +5,14 @@ using System.Diagnostics.CodeAnalysis;
 namespace FlipProof.Image;
 
 /// <summary>
+/// Describes the orientation and dimensionality of an image. Attempts to register a 4D image will result in a runtime exception
+/// </summary>
+public interface ISpace3D : ISpace
+{
+
+}
+
+/// <summary>
 /// Describes the orientation and dimensionality of an image
 /// </summary>
 /// <typeparam name="TMatches">Any other space that this must align to. May differ by number of volumes only.</typeparam>
@@ -23,7 +31,7 @@ public interface ISpace
 
 
    
-   internal static ImageHeader? GetOrientation<T>() where T : ISpace
+   internal static ImageHeader? GetOrientation<T>() where T : struct, ISpace
    {
       lock (LockObj)
       {
@@ -43,7 +51,8 @@ public interface ISpace
    /// <param name="orientation">The desired orientation</param>
    /// <exception cref="ArgumentException">An empty orientation is provided or one with an unexpected number of dimensions</exception>
    /// <exception cref="OrientationException">This is already initialised and mismatches that provided</exception>
-   public static void Initialise<T>(ImageHeader orientation) where T: ISpace
+   /// <remarks>ISpace must be a value type to avoid complicated scenarios where they derive from other space objects, and allows more efficient checks internally</remarks>
+   public static void Initialise<T>(ImageHeader orientation) where T: struct, ISpace
    {
       if(orientation == null)
       {
@@ -55,6 +64,7 @@ public interface ISpace
 
       lock (LockObj)
       {
+         CheckIfSpace3DIsLegal();
          CheckAlignsWithParentSpace();
          CheckAlignsWithChildSpaces();
 
@@ -103,16 +113,24 @@ public interface ISpace
             ThrowIfOrientationMismatchesIgnoringVolumeCount(child, orientation);
          }
       }
+
+      void CheckIfSpace3DIsLegal()
+      {
+         if(orientation.Size.VolumeCount > 1 && default(T) is ISpace3D)
+         {
+            throw new OrientationException($"{t.FullName} implements {nameof(ISpace3D)} but contains more than one fourth dimension");
+         }
+      }
    }
 
    public static bool Matches<S, T>()
-      where S : ISpace
-      where T : ISpace
+      where S : struct, ISpace
+      where T : struct, ISpace
    {
       return Matches<T>(GetOrientation<S>());
    }
    static bool Matches<T>(ImageHeader? orientation) 
-      where T:ISpace
+      where T: struct, ISpace
    {
       var existing = ISpace.GetOrientation<T>();
       return existing != null && existing.Equals(orientation);
