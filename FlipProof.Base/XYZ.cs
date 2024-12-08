@@ -6,7 +6,7 @@ namespace FlipProof.Base;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Unicode)] // for span
 public readonly record struct XYZ<T>(T X, T Y, T Z) : IReadOnlyList<T>
-   where T : INumber<T>
+   where T : INumber<T>, IMultiplicativeIdentity<T,T>
 {
    /// <summary>
    /// 
@@ -75,11 +75,35 @@ public readonly record struct XYZ<T>(T X, T Y, T Z) : IReadOnlyList<T>
       return new XYZ<uint>(x, y, z);
    }
 
+   /// <summary>
+   /// Distance from (0,0,0) to (1,1,1)
+   /// </summary>
+   /// <returns></returns>
    public double Norm() => Math.Sqrt(Convert.ToDouble( X * X + Y * Y + Z * Z));
 
-   public static XYZ<T> operator +(XYZ<T> a, XYZ<T> b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
-    public static XYZ<T> operator -(XYZ<T> a, XYZ<T> b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static XYZ<T> operator *(XYZ<T> a, XYZ<T> b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
 
+   public double DistanceTo(XYZ<T> p1) => (this - p1).Norm();
+
+
+
+
+
+   /// <summary>
+   /// Normalises to length of 1
+   /// </summary>
+   /// <returns></returns>
+   public XYZ<double> ToNormalised()
+   {
+      XYZ<double> asD = (XYZ<double>)this;
+      return asD / asD.Norm();
+   }
+   public static XYZ<T> operator *(XYZ<T> a, T b) => new(a.X * b, a.Y * b, a.Z * b);
+   public static XYZ<T> operator *(XYZ<T> a, XYZ<T> b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+   public static XYZ<T> operator +(XYZ<T> a, XYZ<T> b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+   public static XYZ<T> operator -(XYZ<T> a, XYZ<T> b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+   public static XYZ<T> operator /(XYZ<T> a, T b) => new(a.X / b, a.Y / b, a.Z / b);
+   public static explicit operator XYZ<int>(XYZ<T> a) => new XYZ<int>(Convert.ToInt32(a.X), Convert.ToInt32(a.Y), Convert.ToInt32(a.Z));
+   public static explicit operator XYZ<long>(XYZ<T> a) => new XYZ<long>(Convert.ToInt64(a.X), Convert.ToInt64(a.Y), Convert.ToInt64(a.Z));
+   public static explicit operator XYZ<double>(XYZ<T> a) => new XYZ<double>(Convert.ToDouble(a.X), Convert.ToDouble(a.Y), Convert.ToDouble(a.Z));
 
 }

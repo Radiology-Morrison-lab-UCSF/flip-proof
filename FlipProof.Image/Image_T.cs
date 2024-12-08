@@ -2,6 +2,7 @@
 using FlipProof.Image.IO;
 using FlipProof.Torch;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using TorchSharp;
 using static TorchSharp.torch;
 using static TorchSharp.torch.utils;
@@ -76,6 +77,10 @@ public abstract class Image<TSpace> : IDisposable
    /// <returns>True if images are the same object</returns>
    public override bool Equals(object? obj) => obj is not null && ReferenceEquals(this, obj);
 
+   /// <summary>
+   /// Returns a hash code based on the storage
+   /// </summary>
+   /// <returns></returns>
    public override int GetHashCode() => RawData.GetHashCode();
    public abstract void Dispose();
 
@@ -139,14 +144,15 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       }
    }
 
-   private void VerifyVoxelArrayShape(ImageHeader header)
+   private void VerifyVoxelArrayShape(ImageHeader header) => VerifyVoxelArrayShape(header, _data);
+   private static void VerifyVoxelArrayShape(ImageHeader header, Tensor<TVoxel> voxels)
    {
       // Base class enforces 4D tensor
-      if (header.NDims == 3 && _data.Storage.shape[3] != 1)
+      if (header.NDims == 3 && voxels.Storage.shape[3] != 1)
       {
-         throw new ArgumentException($"The image is 3D and so the fourth dimension of the voxel data should be size 1 but it is {_data.Storage.shape[3]}");
+         throw new ArgumentException($"The image is 3D and so the fourth dimension of the voxel data should be size 1 but it is {voxels.Storage.shape[3]}");
       }
-      if (!_data.Storage.shape.Zip(header.Size, (a, b) => a == b).All(a => a))
+      if (!voxels.Storage.shape.Zip(header.Size, (a, b) => a == b).All(a => a))
       {
          throw new ArgumentException("Voxel data is wrong size");
       }
@@ -245,6 +251,8 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    #endregion
 
    #region Operations
+
+
 
    public void AddInPlace(Image<TVoxel,TSpace> other) => _data.Storage.add_(other._data.Storage);
    public void SubtractInPlace(Image<TVoxel, TSpace> other) => _data.Storage.subtract_(other._data.Storage);
@@ -387,7 +395,31 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
    #endregion
 
+   /// <summary>
+   /// Set voxels for a given 3D volume. 
+   /// </summary>
+   /// <remarks>Orientation unsafe. Use of this method should be reserved for situations where Image level operations were not supported and tensor operations were the only option</remarks>
+   /// <param name="index"></param>
+   /// <param name="newData"></param>
+   [OrientationCheckedAtRuntime]
+   [Obsolete("Orientation unsafe")]
+   public void SetVolume(int index, Tensor<TVoxel> newData)
+   {
+      VerifyVoxelArrayShape(Header, newData);
+      _data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Storage;
+   }
 
+   
+
+   /// <summary>
+   /// Copies all values from the provided image that are true in the mask into this image
+   /// </summary>
+   /// <param name="values"></param>
+   /// <param name="mask"></param>
+   public void Set(Image<TVoxel, TSpace> values, ImageBool<TSpace> mask)
+   {
+      this._data.Storage[mask._data.Storage] = values._data.Storage[mask._data.Storage];   
+   }
 
    #region Dispose
 
@@ -420,3 +452,63 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    #endregion
 }
 
+
+[CLSCompliant(true)]
+public abstract class Image<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpace>
+   where TVoxel : struct
+   where TSpace : struct, ISpace
+   where TTensor : Tensor<TVoxel, TTensor>
+   where TSelf : Image<TVoxel, TSpace, TSelf, TTensor>
+{
+   internal TTensor Data { get; }
+
+   #region Construction
+
+   /// <summary>
+   /// Creates a new image, explicitly stating the orientation. Appropriate 
+   /// for use in I/O operations or when first stating the orientation of 
+   /// this type. Provided voxels are cloned, not used directly.
+   /// </summary>
+   /// <param name="header"></param>
+   /// <param name="voxels">Voxel data - a copy of the provided object is made</param>
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   internal Image(ImageHeader header, Tensor voxels) : base(header, voxels)
+   {
+      Data = (TTensor)_data;
+   }
+
+   /// <summary>
+   /// Creates a new image, explicitly stating the orientation. Appropriate 
+   /// for use in I/O operations or when first stating the orientation of 
+   /// this type. Provided voxels are cloned, not used directly.
+   /// </summary>
+   /// <param name="header"></param>
+   /// <param name="voxels">Voxel data - a copy of the provided object is made</param>
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   internal Image(ImageHeader header, TTensor voxels) : base(header, voxels)
+   {
+      Data = voxels;
+   }
+
+
+   /// <summary>
+   /// Creates a new Image from an operation known to not affect the shape or data-order of the tensor
+   /// </summary>
+   /// <param name="voxels">Voxel data. Data are used directly. Do not feed in a tensor accessible outside this object</param>
+   /// <param name="verifyShape">Verify that the voxel array shape should be verified against the header. True if the operation is not trusted</param>
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal Image(TTensor voxels, bool verifyShape) : base(voxels, verifyShape)
+   {
+      Data = voxels;
+   }
+
+   /// <summary>
+   /// Creates an object like this with the provided voxels
+   /// </summary>
+   /// <param name="voxels"></param>
+   /// <returns></returns>
+   internal abstract TSelf UnsafeCreate(TTensor voxels);
+
+
+   #endregion
+}

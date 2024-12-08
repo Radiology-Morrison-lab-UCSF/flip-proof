@@ -462,9 +462,9 @@ public sealed class Matrix4x4_Optimised<T> where T:struct,IFloatingPoint<T>
    {
       Matrix4x4_Optimised<double> rotMat = me.DeepClone();
       translations = new XYZ<double>(me.M0_3, me.M1_3, me.M2_3);
-      double scaleX = new XYZ<double>(me.M0_0, me.M1_0, me.M2_0).LengthFrom000();
-      double scaleY = new XYZ<double>(me.M0_1, me.M1_1, me.M2_1).LengthFrom000();
-      double scaleZ = new XYZ<double>(me.M0_2, me.M1_2, me.M2_2).LengthFrom000();
+      double scaleX = new XYZ<double>(me.M0_0, me.M1_0, me.M2_0).Norm();
+      double scaleY = new XYZ<double>(me.M0_1, me.M1_1, me.M2_1).Norm();
+      double scaleZ = new XYZ<double>(me.M0_2, me.M1_2, me.M2_2).Norm();
       scale = new XYZ<double>(scaleX, scaleY, scaleZ);
       rotMat.M0_3 = 0d;
       rotMat.M1_3 = 0d;

@@ -1,8 +1,8 @@
 ﻿namespace FlipProof.Base.Geometry;
 
-public class Sphere(XYZf position, float radius)
+public class Sphere(XYZ<float> position, float radius)
 {
-   public XYZf p = position;
+   public XYZ<float> p = position;
    public float r = radius;
 
    public double GetVolume()
@@ -10,16 +10,16 @@ public class Sphere(XYZf position, float radius)
       return Math.PI * 4.0 * (double)(r * r * r) / 3.0;
    }
 
-   public bool Contains(XYZf pt)
+   public bool Contains(XYZ<float> pt)
    {
       return pt.DistanceTo(p) < r;
    }
 
 
 
-   public XYZf Seed(Random rng)
+   public XYZ<float> Seed(Random rng)
    {
-      return new XYZf(p.X + r * ((float)rng.NextDouble() * 2f - 1f), p.Y + r * ((float)rng.NextDouble() * 2f - 1f), p.Z + r * ((float)rng.NextDouble() * 2f - 1f));
+      return new XYZ<float>(p.X + r * ((float)rng.NextDouble() * 2f - 1f), p.Y + r * ((float)rng.NextDouble() * 2f - 1f), p.Z + r * ((float)rng.NextDouble() * 2f - 1f));
    }
 
 
@@ -34,7 +34,7 @@ public class Sphere(XYZf position, float radius)
 
    public bool Intersects(Sphere cur)
    {
-      float dist = (cur.p - p).LengthFrom000();
+      float dist = (cur.p - p).NormF();
       if (!(dist <= r))
       {
          return dist <= cur.r;

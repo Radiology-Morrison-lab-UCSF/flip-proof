@@ -6,36 +6,9 @@ using static TorchSharp.torch;
 
 namespace FlipProof.Image;
 
-public class ImageBool<TSpace> : Image<bool, TSpace>
+public partial class ImageBool<TSpace> : Image<bool, TSpace, ImageBool<TSpace>, BoolTensor>
    where TSpace : struct, ISpace
 {
-
-   #region Constructors
-
-#pragma warning disable CS0618 // Type or member is obsolete
-   /// <summary>
-   /// Creates an object like this with the provided voxels
-   /// </summary>
-   /// <param name="voxels"></param>
-   /// <returns></returns>
-   internal ImageBool<TSpace> UnsafeCreate(BoolTensor voxels) => new(voxels, false);
-   internal static ImageBool<TSpace> UnsafeCreateStatic(BoolTensor voxels) => new(voxels, false);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageBool(ImageHeader header, bool[] voxels) : base(header, new BoolTensor(torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount)))
-   {
-      Data = (BoolTensor)_data;
-   }
-
-   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
-   internal ImageBool(BoolTensor voxels, bool verifyShape) : base(voxels, verifyShape)
-   {
-      Data = voxels;
-   }
-
-   #endregion
-   internal BoolTensor Data { get; }
 
    private new ImageBool<TSpace> ToBool() => this;
 

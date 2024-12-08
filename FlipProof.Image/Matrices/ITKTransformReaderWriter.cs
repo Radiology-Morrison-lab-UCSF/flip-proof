@@ -4,7 +4,7 @@ namespace FlipProof.Image.Matrices;
 
 internal class ITKTransformReaderWriter
 {
-   public static Matrix4x4_Optimised<float> FromITKAffineTransform_f(string loc, out XYZf fixedParameters)
+   public static Matrix4x4_Optimised<float> FromITKAffineTransform_f(string loc, out XYZ<float> fixedParameters)
    {
       using BinaryReader br = new(new FileStream(loc, FileMode.Open, FileAccess.Read, FileShare.Read));
       for (char read = '\0'; read != "AffineTransform_float_3_3"[0]; read = (char)br.ReadByte())
@@ -58,7 +58,7 @@ internal class ITKTransformReaderWriter
       mat.M0_3 = offset[0];
       mat.M1_3 = offset[1];
       mat.M2_3 = offset[2];
-      fixedParameters = new XYZf(fixedX, fixedY, fixedZ);
+      fixedParameters = new XYZ<float>(fixedX, fixedY, fixedZ);
       return mat;
    }
 

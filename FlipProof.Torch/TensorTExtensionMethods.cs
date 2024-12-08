@@ -1,5 +1,5 @@
-#pragma expandtemplate Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
 #pragma expandtemplate typeToReplace=DoubleTensor
+#pragma expandtemplate Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
 
 using static TorchSharp.torch;
 using TorchSharp.Modules;
@@ -11,6 +11,45 @@ namespace FlipProof.Torch;
 
 public static partial class TensorExtensionMethods
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<DoubleTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<DoubleTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static DoubleTensor DeepClone(this DoubleTensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -32,13 +71,26 @@ public static partial class TensorExtensionMethods
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static DoubleTensor Concat(this DoubleTensor me, int dim, params DoubleTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static DoubleTensor Concat(this DoubleTensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static DoubleTensor Stack(this DoubleTensor me, int dim, params DoubleTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static DoubleTensor Stack(this DoubleTensor me, int dim, params DoubleTensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static DoubleTensor Stack(this IList<DoubleTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -47,116 +99,48 @@ public static partial class TensorExtensionMethods
    public static DoubleTensor Blank(this DoubleTensor me) => new (torch.zeros_like(me.Storage));
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #region TEMPLATE EXPANSION
 public static partial class TensorExtensionMethods_Int8Tensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<Int8Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<Int8Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static Int8Tensor DeepClone(this Int8Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -178,13 +162,26 @@ public static partial class TensorExtensionMethods_Int8Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static Int8Tensor Concat(this Int8Tensor me, int dim, params Int8Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int8Tensor Concat(this Int8Tensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static Int8Tensor Stack(this Int8Tensor me, int dim, params Int8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static Int8Tensor Stack(this Int8Tensor me, int dim, params Int8Tensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int8Tensor Stack(this IList<Int8Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -195,6 +192,45 @@ public static partial class TensorExtensionMethods_Int8Tensor
 
 public static partial class TensorExtensionMethods_UInt8Tensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<UInt8Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<UInt8Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static UInt8Tensor DeepClone(this UInt8Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -216,13 +252,26 @@ public static partial class TensorExtensionMethods_UInt8Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static UInt8Tensor Concat(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static UInt8Tensor Concat(this UInt8Tensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static UInt8Tensor Stack(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static UInt8Tensor Stack(this UInt8Tensor me, int dim, params UInt8Tensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static UInt8Tensor Stack(this IList<UInt8Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -233,6 +282,45 @@ public static partial class TensorExtensionMethods_UInt8Tensor
 
 public static partial class TensorExtensionMethods_Int16Tensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<Int16Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<Int16Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static Int16Tensor DeepClone(this Int16Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -254,13 +342,26 @@ public static partial class TensorExtensionMethods_Int16Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static Int16Tensor Concat(this Int16Tensor me, int dim, params Int16Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int16Tensor Concat(this Int16Tensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static Int16Tensor Stack(this Int16Tensor me, int dim, params Int16Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static Int16Tensor Stack(this Int16Tensor me, int dim, params Int16Tensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int16Tensor Stack(this IList<Int16Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -271,6 +372,45 @@ public static partial class TensorExtensionMethods_Int16Tensor
 
 public static partial class TensorExtensionMethods_Int32Tensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<Int32Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<Int32Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static Int32Tensor DeepClone(this Int32Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -292,13 +432,26 @@ public static partial class TensorExtensionMethods_Int32Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static Int32Tensor Concat(this Int32Tensor me, int dim, params Int32Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int32Tensor Concat(this Int32Tensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static Int32Tensor Stack(this Int32Tensor me, int dim, params Int32Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static Int32Tensor Stack(this Int32Tensor me, int dim, params Int32Tensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int32Tensor Stack(this IList<Int32Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -309,6 +462,45 @@ public static partial class TensorExtensionMethods_Int32Tensor
 
 public static partial class TensorExtensionMethods_Int64Tensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<Int64Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<Int64Tensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static Int64Tensor DeepClone(this Int64Tensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -330,13 +522,26 @@ public static partial class TensorExtensionMethods_Int64Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static Int64Tensor Concat(this Int64Tensor me, int dim, params Int64Tensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static Int64Tensor Concat(this Int64Tensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static Int64Tensor Stack(this Int64Tensor me, int dim, params Int64Tensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static Int64Tensor Stack(this Int64Tensor me, int dim, params Int64Tensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static Int64Tensor Stack(this IList<Int64Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -347,6 +552,45 @@ public static partial class TensorExtensionMethods_Int64Tensor
 
 public static partial class TensorExtensionMethods_FloatTensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<FloatTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<FloatTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static FloatTensor DeepClone(this FloatTensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -368,13 +612,26 @@ public static partial class TensorExtensionMethods_FloatTensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static FloatTensor Concat(this FloatTensor me, int dim, params FloatTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static FloatTensor Concat(this FloatTensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static FloatTensor Stack(this FloatTensor me, int dim, params FloatTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static FloatTensor Stack(this FloatTensor me, int dim, params FloatTensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static FloatTensor Stack(this IList<FloatTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -385,6 +642,45 @@ public static partial class TensorExtensionMethods_FloatTensor
 
 public static partial class TensorExtensionMethods_BoolTensor
 {
+   /// <summary>
+   /// Returns the index of tensor containing the maximum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMax(this IList<BoolTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
+   }   
+   
+   /// <summary>
+   /// Returns the index of tensor containing the minimum value for each entry
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public static Int64Tensor ArgMin(this IList<BoolTensor> others)
+   {
+      for (int i = 0;i < others.Count;i++)
+      {
+         if(!others[i].ShapesEqual(others[0]))
+         {
+            throw new ArgumentException("Tensors must be same size and shape");
+         }
+      }
+      using var concatenated = Stack(others, 0);
+      return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
+   }
    public static BoolTensor DeepClone(this BoolTensor toClone) => new(toClone.Storage.clone());
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
@@ -406,13 +702,26 @@ public static partial class TensorExtensionMethods_BoolTensor
    /// <param name="other"></param>
    /// <returns>A tensor with a new shape but the same dimensionality</returns>
    public static BoolTensor Concat(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.concat(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with a new shape but the same dimensionality</returns>
+   public static BoolTensor Concat(this BoolTensor[] toStack, int dim) =>new (torch.concat(toStack.Select(a=>a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
    /// </summary>
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
-   public static BoolTensor Stack(this BoolTensor me, int dim, params BoolTensor[] toStack) =>new (torch.stack(toStack.Select(a => a.Storage).Prepend(me.Storage).ToList(), dim: dim));
+   public static BoolTensor Stack(this BoolTensor me, int dim, params BoolTensor[] toStack) => Stack(toStack.Select(a => a).Prepend(me).ToList(), dim: dim);
+
+   /// <summary>
+   /// Returns a new tensor that is this with the additional tensors stacked in the dimension specified
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns>A tensor with n+1 dimensions</returns>
+   public static BoolTensor Stack(this IList<BoolTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this

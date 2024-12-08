@@ -1,10 +1,12 @@
 ﻿using FlipProof.Torch;
 using System.Numerics;
 using TorchSharp;
+using TorchSharp.Modules;
+using static TorchSharp.torch.utils;
 
 namespace FlipProof.Image;
 
-public class ImageComplex<TSpace> : Image<Complex, TSpace>
+public class ImageComplex<TSpace> : ImageComplexType<Complex, TSpace, ImageComplex<TSpace>, ComplexTensor>
    where TSpace : struct, ISpace
 {
    #region Constructors
@@ -15,34 +17,22 @@ public class ImageComplex<TSpace> : Image<Complex, TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageComplex(ImageHeader header, Complex[] voxels) : base(header,
-     torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
+     ComplexTensor.CreateTensor(torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount), false))
    {
-      Data = ComplexTensor.CreateTensor(RawData, false);
    }
+
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageComplex(ComplexTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
-      Data = voxels;
    }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+   internal override ImageComplex<TSpace> UnsafeCreate(ComplexTensor voxels) => new(voxels, false);
+#pragma warning restore CS0618 // Type or member is obsolete
+
    #endregion
 
-   #region Properties
-   ComplexTensor Data { get; }
-
-   #endregion
-
-   /// <summary>
-   /// Applies a tensor operator to create a new object from the resulting Tensor
-   /// </summary>
-   /// <remarks>Operators are only applied to voxels. As the header will remain unchanged - do not use operations such as rotate or the header will be incorrect</remarks>
-   /// <typeparam name="TOut">The expected output datatype from the operation</typeparam>
-   /// <param name="other">The second image</param>
-   /// <param name="operation">The operation to apply to the two images</param>
-   /// <returns></returns>
-   internal ImageComplex<TSpace> TrustedOperatorToNew(Func<ComplexTensor, ComplexTensor> operation)
-   {
-      return UnsafeCreateStatic(operation(this.Data));
-   }
+   public ImageDouble<TSpace> Angle() => ImageDouble<TSpace>.UnsafeCreateStatic(Data.Angle());
 
    #region Operators
 

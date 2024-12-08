@@ -5,19 +5,18 @@ using static TorchSharp.torch;
 
 namespace FlipProof.Image;
 
-/// <summary>
-/// Number types like double, but not Complex
-/// </summary>
-/// <typeparam name="TVoxel"></typeparam>
-/// <typeparam name="TSpace"></typeparam>
-[CLSCompliant(true)]
-public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpace>
+   /// <summary>
+   /// Number types like double, but not Complex
+   /// </summary>
+   /// <typeparam name="TVoxel"></typeparam>
+   /// <typeparam name="TSpace"></typeparam>
+   [CLSCompliant(true)]
+public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpace, TSelf, TTensor>
    where TVoxel : struct, INumber<TVoxel>
    where TSpace : struct, ISpace
    where TTensor: SimpleNumericTensor<TVoxel, TTensor>
    where TSelf : Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor>
 {
-   internal TTensor Data { get; }
 
    #region Construction
 
@@ -31,7 +30,6 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    internal Image_SimpleNumeric(ImageHeader header, Tensor voxels) : base(header, voxels)
    {
-      Data = (TTensor)_data;
    }
 
    /// <summary>
@@ -44,7 +42,6 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    internal Image_SimpleNumeric(ImageHeader header, TTensor voxels) : base(header, voxels)
    {
-      Data = voxels;
    }
 
 
@@ -56,15 +53,7 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal Image_SimpleNumeric(TTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
-      Data = (TTensor)_data;
    }
-
-   /// <summary>
-   /// Creates an object like this with the provided voxels
-   /// </summary>
-   /// <param name="voxels"></param>
-   /// <returns></returns>
-   internal abstract TSelf UnsafeCreate(TTensor voxels);
 
 
    #endregion

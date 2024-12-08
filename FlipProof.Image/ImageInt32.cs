@@ -3,29 +3,10 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
-public sealed class ImageInt32<TSpace> : Image_Integer<Int32, TSpace, ImageInt32<TSpace>, Int32Tensor>
+public sealed partial class ImageInt32<TSpace> : Image_Integer<Int32, TSpace, ImageInt32<TSpace>, Int32Tensor>
    where TSpace : struct, ISpace
 {
-   #region Constructors
 
-#pragma warning disable CS0618 // Type or member is obsolete
-   internal override ImageInt32<TSpace> UnsafeCreate(Int32Tensor voxels) => new(voxels, false);
-
-   internal static ImageInt32<TSpace> UnsafeCreateStatic(Int32Tensor voxels) => new(voxels, false);
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
-   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageInt32(ImageHeader header, int[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
-   {
-   }
-
-   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
-   internal ImageInt32(Int32Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
-   {
-
-   }
-   #endregion
 
    #region Operators
 

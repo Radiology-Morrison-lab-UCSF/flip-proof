@@ -46,4 +46,10 @@ public class ComplexTensor : ComplexNumericTensor<Complex, ComplexTensor>
       using var realImag = torch.fft.ifftn(Storage);
       return DoubleTensor.CreateTensor(realImag.real, true);
    }
+
+   /// <summary>
+   /// Angle in radians
+   /// </summary>
+   /// <returns></returns>
+   public DoubleTensor Angle() => DoubleTensor.CreateTensor(torch.angle(Storage), false);
 }

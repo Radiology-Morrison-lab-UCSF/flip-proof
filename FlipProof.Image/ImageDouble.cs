@@ -5,28 +5,11 @@ using TensorExtensionMethods = FlipProof.Torch.TensorExtensionMethods;
 
 namespace FlipProof.Image;
 
-public sealed class ImageDouble<TSpace> : Image_FloatingPoint<double, TSpace, ImageDouble<TSpace>, DoubleTensor>
+public sealed partial class ImageDouble<TSpace> : Image_FloatingPoint<double, TSpace, ImageDouble<TSpace>, DoubleTensor>
       where TSpace : struct, ISpace
 {
 
-   #region Constructors
 
-#pragma warning disable CS0618 // Type or member is obsolete
-   internal static ImageDouble<TSpace> UnsafeCreateStatic(DoubleTensor voxels) => new(voxels, false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
-   public ImageDouble(ImageHeader header, double[] voxels) : base(header, torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
-   {
-   }
-
-   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
-   internal ImageDouble(DoubleTensor voxels, bool verifyShape) : base(voxels, verifyShape)
-   {
-   }
-
-   internal override ImageDouble<TSpace> UnsafeCreate(DoubleTensor voxels) => ImageDouble<TSpace>.UnsafeCreateStatic(voxels);
-
-   #endregion
 
    #region Parameters
 

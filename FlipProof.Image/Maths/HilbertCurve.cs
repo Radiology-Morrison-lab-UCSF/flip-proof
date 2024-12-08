@@ -34,11 +34,11 @@ public class HilbertCurve
 
     public float GetProportionOfLength(float x, float y=0, float z = 0)
     {
-        XYZf coord =new XYZf(x,y,z);
+        XYZ<float> coord =new XYZ<float>(x,y,z);
         return GetProportionOfLength(coord);
     }
 
-    public float GetProportionOfLength(XYZf xyz)
+    public float GetProportionOfLength(XYZ<float> xyz)
     {
         XYZ<int> rounded = (XYZ<int>)(xyz * scaleFactor);
         try

@@ -4,7 +4,7 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
-public class ImageComplex32<TSpace> : Image<Complex32,TSpace>
+public class ImageComplex32<TSpace> : ImageComplexType<Complex32, TSpace, ImageComplex32<TSpace>, Complex32Tensor>
    where TSpace : struct, ISpace
 {
    #region Constructors
@@ -14,38 +14,26 @@ public class ImageComplex32<TSpace> : Image<Complex32,TSpace>
 #pragma warning restore CS0618 // Type or member is obsolete
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageComplex32(ImageHeader header, Complex32[] voxels) : base(header,
-     torch.tensor(voxels.Select(a=>(a.Real, a.Imaginary)).ToArray()).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount))
+     Complex32Tensor.CreateTensor( torch.tensor(voxels.Select(a=>(a.Real, a.Imaginary)).ToArray()).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount), false))
    {
-      Data = Complex32Tensor.CreateTensor(RawData, false);
    }
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageComplex32(Complex32Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
-      Data = voxels;
+   }
+
+   internal override ImageComplex32<TSpace> UnsafeCreate(Complex32Tensor voxels)
+   {
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new(voxels, false);
+#pragma warning restore CS0618 // Type or member is obsolete
    }
 
    #endregion
 
-   #region Properties
-   Complex32Tensor Data { get; }
-
-
-   #endregion
 
    public ImageFloat<TSpace> IFFT() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.IFFTN());
 
-   /// <summary>
-   /// Applies a tensor operator to create a new object from the resulting Tensor
-   /// </summary>
-   /// <remarks>Operators are only applied to voxels. As the header will remain unchanged - do not use operations such as rotate or the header will be incorrect</remarks>
-   /// <typeparam name="TOut">The expected output datatype from the operation</typeparam>
-   /// <param name="other">The second image</param>
-   /// <param name="operation">The operation to apply to the two images</param>
-   /// <returns></returns>
-   internal ImageComplex32<TSpace> TrustedOperatorToNew(Func<Complex32Tensor, Complex32Tensor> operation)
-   {
-      return UnsafeCreateStatic(operation(Data));
-   }
 
    #region Operators
 

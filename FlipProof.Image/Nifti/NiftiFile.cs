@@ -255,7 +255,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 	}
 
 
-	public XYZf Vox2WorldCoordinates(XYZf imageCoords)
+	public XYZ<float> Vox2WorldCoordinates(XYZ<float> imageCoords)
 	{
 		if (base.Head.sFormCode != CoordinateMapping_Nifti.Unknown)
       {
@@ -306,9 +306,9 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 			[1, 0] = base.Head.quartern_y,
 			[2, 0] = base.Head.quartern_z
 		} +  obj.MatMul(ijqk).MultiplyPointwise(pixDim);
-		return new XYZf(result[0,0], result[1,0], result[2,0]);
+		return new XYZ<float>(result[0,0], result[1,0], result[2,0]);
 
-      XYZf CalcWithSForm(XYZf imageCoords)
+      XYZ<float> CalcWithSForm(XYZ<float> imageCoords)
       {
          float[] srow_x = base.Head.Srow_x;
          float[] srow_y = base.Head.Srow_y;
@@ -319,11 +319,11 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
          float x = srow_x[0] * i + srow_x[1] * j + srow_x[2] * k + srow_x[3];
          float y_ = srow_y[0] * i + srow_y[1] * j + srow_y[2] * k + srow_y[3];
          float z_ = srow_z[0] * i + srow_z[1] * j + srow_z[2] * k + srow_z[3];
-         return new XYZf(x, y_, z_);
+         return new XYZ<float>(x, y_, z_);
       }
    }
 
-	public XYZf World2VoxCoordinates_ScannerSpace(XYZf worldCoords)
+	public XYZ<float> World2VoxCoordinates_ScannerSpace(XYZ<float> worldCoords)
 	{
 		if (base.Head.qFormCode > CoordinateMapping_Nifti.Unknown)
 		{
@@ -336,7 +336,7 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 				[3, 0] = 1.0
 			};
 			DenseMatrix<double> result = (vox2WorldMatrix_ScannerSpace_Old.Inverse() * world_matrix);
-			return new XYZf((float)result[0,0], (float)result[1,0], (float)result[2,0]);
+			return new XYZ<float>((float)result[0,0], (float)result[1,0], (float)result[2,0]);
 		}
 		throw new NotImplementedException();
 	}

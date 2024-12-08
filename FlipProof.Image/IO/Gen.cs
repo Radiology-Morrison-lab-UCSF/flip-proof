@@ -1007,13 +1007,13 @@ public static class Gen
 		Buffer.BlockCopy(asBytes, 0, fillMe, 0, asBytes.Length);
 	}
 
-	public static void ReadDataToFillArray(this BinaryReader br, XYZf[] fillMe)
+	public static void ReadDataToFillArray(this BinaryReader br, XYZ<float>[] fillMe)
 	{
 		float[] pointLocXYZ = new float[fillMe.Length * 3];
 		br.ReadDataToFillArray_f(pointLocXYZ);
 		for (int i = 0; i < fillMe.Length; i++)
 		{
-			fillMe[i] = new XYZf(pointLocXYZ[i * 3], pointLocXYZ[i * 3 + 1], pointLocXYZ[i * 3 + 2]);
+			fillMe[i] = new XYZ<float>(pointLocXYZ[i * 3], pointLocXYZ[i * 3 + 1], pointLocXYZ[i * 3 + 2]);
 		}
 	}
 

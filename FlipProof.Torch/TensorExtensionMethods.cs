@@ -440,14 +440,15 @@ public static partial class TensorExtensionMethods
 
    private static BoolTensor OperationToTensor(this Tensor<bool> left, Tensor<bool> right, Func<Tensor, Tensor, Tensor> func) => new(func(left.Storage, right.Storage));
 
-   public static DoubleTensor Mask(this Tensor<double> right, Tensor<bool> left) => new(torch.multiply(left.ToDouble().Storage, right.Storage));
-   public static FloatTensor Mask(this Tensor<float> right, Tensor<bool> left) => new(torch.multiply(left.ToFloat().Storage, right.Storage));
-   public static Int64Tensor Mask(this Tensor<Int64> right, Tensor<bool> left) => new(torch.multiply(left.ToInt64().Storage, right.Storage));
-   public static Int32Tensor Mask(this Tensor<Int32> right, Tensor<bool> left) => new(torch.multiply(left.ToInt32().Storage, right.Storage));
-   public static Int16Tensor Mask(this Tensor<Int16> right, Tensor<bool> left) => new(torch.multiply(left.ToInt16().Storage, right.Storage));
+   public static DoubleTensor Masked(this Tensor<double> data, Tensor<bool> mask) => new(torch.multiply(mask.ToDouble().Storage, data.Storage));
+   public static FloatTensor Masked(this Tensor<float> data, Tensor<bool> mask) => new(torch.multiply(mask.ToFloat().Storage, data.Storage));
+   public static Int64Tensor Masked(this Tensor<Int64> data, Tensor<bool> mask) => new(torch.multiply(mask.ToInt64().Storage, data.Storage));
+   public static Int32Tensor Masked(this Tensor<Int32> data, Tensor<bool> mask) => new(torch.multiply(mask.ToInt32().Storage, data.Storage));
+   public static Int16Tensor Masked(this Tensor<Int16> data, Tensor<bool> mask) => new(torch.multiply(mask.ToInt16().Storage, data.Storage));
    [CLSCompliant(false)]
-   public static Int8Tensor Mask(this Tensor<sbyte> right, Tensor<bool> left) => new(torch.multiply(left.ToInt8().Storage, right.Storage));
-   public static UInt8Tensor Mask(this Tensor<byte> right, Tensor<bool> left) => new(torch.multiply(left.ToUInt8().Storage, right.Storage));
+   public static Int8Tensor Masked(this Tensor<sbyte> data, Tensor<bool> mask) => new(torch.multiply(mask.ToInt8().Storage, data.Storage));
+   public static UInt8Tensor Masked(this Tensor<byte> data, Tensor<bool> mask) => new(torch.multiply(mask.ToUInt8().Storage, data.Storage));
+   public static BoolTensor Masked(this Tensor<bool> data, Tensor<bool> mask) => And(mask,data);
 
    public static BoolTensor And(this Tensor<bool> left, Tensor<bool> right) => OperationToTensor(left, right, torch.logical_and);
    public static BoolTensor Or(this Tensor<bool> left, Tensor<bool> right) => OperationToTensor(left, right, torch.logical_or);

@@ -32,4 +32,10 @@ public abstract class ComplexNumericTensor<T, TSelf> : NumericTensor<T, TSelf>
       Storage.imag.copy_(torch.rand(Storage.shape, realType));
    }
 
+   /// <summary>
+   /// Returns an unlinked copy containing the conjugate of these complex values.
+   /// </summary>
+   /// <returns></returns>
+   public TSelf ToConjugate() => CreateFromTensor(Storage.clone().conj(), true);
+
 }

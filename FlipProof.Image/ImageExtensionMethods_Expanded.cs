@@ -1,6 +1,5 @@
-#pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
 #pragma expandtemplate typeToReplace=ImageDouble
-
+#pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
 
 using FlipProof.Torch;
 using static TorchSharp.torch;
@@ -9,6 +8,41 @@ namespace FlipProof.Image;
 
 public static partial class ImageExtensionMethods
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageDouble<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageDouble<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -74,6 +108,7 @@ public static partial class ImageExtensionMethods
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageDouble<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageDouble<TSpace4d> me, int index, ImageDouble<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -103,82 +138,44 @@ public static partial class ImageExtensionMethods
    }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #region TEMPLATE EXPANSION
 public static partial class ImageExtensionMethods_ImageInt8
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt8<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt8<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -244,6 +241,7 @@ public static partial class ImageExtensionMethods_ImageInt8
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageInt8<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt8<TSpace4d> me, int index, ImageInt8<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -275,6 +273,41 @@ public static partial class ImageExtensionMethods_ImageInt8
 
 public static partial class ImageExtensionMethods_ImageUInt8
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageUInt8<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageUInt8<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -340,6 +373,7 @@ public static partial class ImageExtensionMethods_ImageUInt8
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageUInt8<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageUInt8<TSpace4d> me, int index, ImageUInt8<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -371,6 +405,41 @@ public static partial class ImageExtensionMethods_ImageUInt8
 
 public static partial class ImageExtensionMethods_ImageInt16
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt16<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt16<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -436,6 +505,7 @@ public static partial class ImageExtensionMethods_ImageInt16
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageInt16<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt16<TSpace4d> me, int index, ImageInt16<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -467,6 +537,41 @@ public static partial class ImageExtensionMethods_ImageInt16
 
 public static partial class ImageExtensionMethods_ImageInt32
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt32<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt32<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -532,6 +637,7 @@ public static partial class ImageExtensionMethods_ImageInt32
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageInt32<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt32<TSpace4d> me, int index, ImageInt32<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -563,6 +669,41 @@ public static partial class ImageExtensionMethods_ImageInt32
 
 public static partial class ImageExtensionMethods_ImageInt64
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt64<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt64<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -628,6 +769,7 @@ public static partial class ImageExtensionMethods_ImageInt64
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageInt64<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageInt64<TSpace4d> me, int index, ImageInt64<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -659,6 +801,41 @@ public static partial class ImageExtensionMethods_ImageInt64
 
 public static partial class ImageExtensionMethods_ImageFloat
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageFloat<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageFloat<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -724,6 +901,7 @@ public static partial class ImageExtensionMethods_ImageFloat
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
+
    [OrientationCheckedAtRuntime]
    public static ImageFloat<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageFloat<TSpace4d> me, int index, ImageFloat<TSpace3d> newData)
    where TSpace4d : struct, ISpace<TSpace3d>
@@ -755,6 +933,41 @@ public static partial class ImageExtensionMethods_ImageFloat
 
 public static partial class ImageExtensionMethods_ImageBool
 {
+   /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageBool<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+      /// <summary>
+   /// Returns an image where each voxel indicates the provided volume with the largest value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="ims">Images</param>
+   /// <returns></returns>
+   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageBool<TSpace>[] ims)
+      where TSpace : struct, ISpace
+   {
+      if(ims.Length < 2)
+      {
+         throw new ArgumentException("Expected at least two volumes",nameof(ims));
+      }
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -819,6 +1032,7 @@ public static partial class ImageExtensionMethods_ImageBool
       return new ImageBool<TSpaceResult>(tensor, true);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
+
 
    [OrientationCheckedAtRuntime]
    public static ImageBool<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageBool<TSpace4d> me, int index, ImageBool<TSpace3d> newData)

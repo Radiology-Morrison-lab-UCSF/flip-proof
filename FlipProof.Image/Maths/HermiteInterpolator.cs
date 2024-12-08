@@ -46,22 +46,22 @@ public class HermiteInterpolator
         return a0 * y1 + a1 * m0 + a2 * m1 + a3 * y3;
     }
 
-    public static XYZf Interpolate3D(XYZf p0, XYZf p1, XYZf p3, XYZf p4, float mu, float tension)
+    public static XYZ<float> Interpolate3D(XYZ<float> p0, XYZ<float> p1, XYZ<float> p3, XYZ<float> p4, float mu, float tension)
     {
         CalcAVals(mu, tension, out var oneMinusTensionDiv2, out var a0, out var a1, out var a2, out var a3);
         return Interpolate_Sub(p0, p1, p3, p4, oneMinusTensionDiv2, a0, a1, a2, a3);
     }
 
-    public XYZf Interpolate3D(XYZf p0, XYZf p1, XYZf p3, XYZf p4)
+    public XYZ<float> Interpolate3D(XYZ<float> p0, XYZ<float> p1, XYZ<float> p3, XYZ<float> p4)
     {
         return Interpolate_Sub(p0, p1, p3, p4, oneMinusTensionDiv2, a0, a1, a2, a3);
     }
 
-    private static XYZf Interpolate_Sub(XYZf p0, XYZf p1, XYZf p3, XYZf p4, float oneMinusTensionDiv2, float a0, float a1, float a2, float a3)
+    private static XYZ<float> Interpolate_Sub(XYZ<float> p0, XYZ<float> p1, XYZ<float> p3, XYZ<float> p4, float oneMinusTensionDiv2, float a0, float a1, float a2, float a3)
     {
-        XYZf p3MinusP1 = p3 - p1;
-        XYZf m0 = (p1 - p0) * oneMinusTensionDiv2 + p3MinusP1 * oneMinusTensionDiv2;
-        XYZf m1 = p3MinusP1 * oneMinusTensionDiv2 + (p4 - p3) * oneMinusTensionDiv2;
+        XYZ<float> p3MinusP1 = p3 - p1;
+        XYZ<float> m0 = (p1 - p0) * oneMinusTensionDiv2 + p3MinusP1 * oneMinusTensionDiv2;
+        XYZ<float> m1 = p3MinusP1 * oneMinusTensionDiv2 + (p4 - p3) * oneMinusTensionDiv2;
         return p1 * a0 + m0 * a1 + m1 * a2 + p3 * a3;
     }
 

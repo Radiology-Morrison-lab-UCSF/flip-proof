@@ -832,7 +832,7 @@ public static class Iteration
       }
    }
 
-   public static IEnumerable<XYZf> Loop3DXYZ_Yield_f(int xFrom, int xToExclusive, int yFrom, int yToExclusive, int zFrom, int zToExclusive)
+   public static IEnumerable<XYZ<float>> Loop3DXYZ_Yield_f(int xFrom, int xToExclusive, int yFrom, int yToExclusive, int zFrom, int zToExclusive)
    {
       int i = 0;
       for (int x = xFrom; x < xToExclusive; x++)
@@ -841,7 +841,7 @@ public static class Iteration
          {
             for (int z = zFrom; z < zToExclusive; z++)
             {
-               yield return new XYZf(x, y, z);
+               yield return new XYZ<float>(x, y, z);
                i++;
             }
          }

@@ -30,8 +30,12 @@ public interface ISpace
    private static ConcurrentDictionary<Type, ImageHeader> Orientations { get; } = [];
 
 
-   
-   internal static ImageHeader? GetOrientation<T>() where T : struct, ISpace
+   /// <summary>
+   /// Returns the known orientation for <typeparamref name="T"/>
+   /// </summary>
+   /// <typeparam name="T">The space of interest</typeparam>
+   /// <returns>The known header information for that space</returns>
+   public static ImageHeader? GetOrientation<T>() where T : struct, ISpace
    {
       lock (LockObj)
       {

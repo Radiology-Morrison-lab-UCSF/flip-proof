@@ -4,11 +4,11 @@ namespace FlipProof.Base.Geometry;
 
 public struct Line : IEquatable<Line>
 {
-	public readonly XYZf p0;
+	public readonly XYZ<float> p0;
 
-	public readonly XYZf p1;
+	public readonly XYZ<float> p1;
 
-	public Line(XYZf p_0, XYZf p_1)
+	public Line(XYZ<float> p_0, XYZ<float> p_1)
 	{
 		p0 = p_0;
 		p1 = p_1;
@@ -32,18 +32,18 @@ public struct Line : IEquatable<Line>
 			float x = (l.p1.X - p0.X) * scaleBy + p0.X;
 			float y = (l.p1.Y - p0.Y) * scaleBy + p0.Y;
 			float z = (l.p1.Z - p0.Z) * scaleBy + p0.Z;
-			p1 = new XYZf(x, y, z);
+			p1 = new XYZ<float>(x, y, z);
 		}
 	}
 
-	public XYZf GetLengths()
+	public XYZ<float> GetLengths()
 	{
 		return p1 - p0;
 	}
 
 	public float GetLength()
 	{
-		return p0.DistanceTo(p1);
+		return p0.DistanceToF(p1);
 	}
 
 	public float GetLengthX()
@@ -51,7 +51,7 @@ public struct Line : IEquatable<Line>
 		return p1.X - p0.X;
 	}
 
-	public XYZf GetDirection()
+	public XYZ<float> GetDirection()
 	{
 		return p1 - p0;
 	}
@@ -66,24 +66,24 @@ public struct Line : IEquatable<Line>
 		return p1.Z - p0.Z;
 	}
 
-	public XYZf ExtrapolateTowardStart(float moveBy_Raw)
+	public XYZ<float> ExtrapolateTowardStart(float moveBy_Raw)
 	{
 		float fractionOfLength = moveBy_Raw / GetLength();
 		float x = p0.X - GetLengthX() * fractionOfLength;
 		float newY = p0.Y - GetLengthY() * fractionOfLength;
 		float newZ = p0.Z - GetLengthZ() * fractionOfLength;
-		return new XYZf(x, newY, newZ);
+		return new XYZ<float>(x, newY, newZ);
 	}
 
-	public XYZf GetPointAlong(float fractionOfLength)
+	public XYZ<float> GetPointAlong(float fractionOfLength)
 	{
 		float x = p0.X + GetLengthX() * fractionOfLength;
 		float newY = p0.Y + GetLengthY() * fractionOfLength;
 		float newZ = p0.Z + GetLengthZ() * fractionOfLength;
-		return new XYZf(x, newY, newZ);
+		return new XYZ<float>(x, newY, newZ);
 	}
 
-	public XYZf GetPointAlong_Dist(float length)
+	public XYZ<float> GetPointAlong_Dist(float length)
 	{
 		float thisLength = GetLength();
 		float fractionOfLength = length / thisLength;
@@ -94,13 +94,13 @@ public struct Line : IEquatable<Line>
 		return GetPointAlong(fractionOfLength);
 	}
 
-	public bool PointIsInside(XYZf c, float epsilon = 1E-06f)
+	public bool PointIsInside(XYZ<float> c, float epsilon = 1E-06f)
 	{
 		if (!PointIsInsideBoundingBox(c))
 		{
 			return false;
 		}
-		XYZf j = GetDirection();
+		XYZ<float> j = GetDirection();
 		float i = (c.X - p0.X) / j.X;
 		if (i > 0f && i < 1f && Math.Abs(j.Y * i + p0.Y - c.Y) < epsilon && Math.Abs(j.Z * i + p0.Z - c.Z) < epsilon)
 		{
@@ -109,7 +109,7 @@ public struct Line : IEquatable<Line>
 		return false;
 	}
 
-	public bool PointIsInsideBoundingBox(XYZf c)
+	public bool PointIsInsideBoundingBox(XYZ<float> c)
 	{
 		if ((c.X < p0.X && c.X < p1.X) || (c.Y < p0.Y && c.Y < p1.Y) || (c.Z < p0.Z && c.Z < p1.Z) || (c.X > p0.X && c.X > p1.X) || (c.Y > p0.Y && c.Y > p1.Y) || (c.Z > p0.Z && c.Z > p1.Z))
 		{
@@ -118,7 +118,7 @@ public struct Line : IEquatable<Line>
 		return true;
 	}
 
-	public bool PointIsInsideBoundingBoxZ(XYZf c)
+	public bool PointIsInsideBoundingBoxZ(XYZ<float> c)
 	{
 		if (!(c.Z < p0.Z) || !(c.Z < p1.Z))
 		{
@@ -131,7 +131,7 @@ public struct Line : IEquatable<Line>
 		return false;
 	}
 
-	public XYZf GetPointInCommon(Line secondSide, bool checkForNoMatchingSide = true)
+	public XYZ<float> GetPointInCommon(Line secondSide, bool checkForNoMatchingSide = true)
 	{
 		if (p0.Equals(secondSide.p0) || p0.Equals(secondSide.p1))
 		{
@@ -211,8 +211,8 @@ public struct Line : IEquatable<Line>
 
 	public bool Intersects(Line S2)
 	{
-		XYZf I0;
-		XYZf I1;
+		XYZ<float> I0;
+		XYZ<float> I1;
 		switch (Intersects_Sub(this, S2, out I0, out I1))
 		{
 		case 0:
@@ -232,15 +232,15 @@ public struct Line : IEquatable<Line>
 		}
 	}
 
-	public static int Intersects_Sub(Line S1, Line S2, out XYZf I0, out XYZf I1)
+	public static int Intersects_Sub(Line S1, Line S2, out XYZ<float> I0, out XYZ<float> I1)
 	{
-		Func<XYZf, XYZf, float> dot = (XYZf u, XYZf v) => u.X * v.X + u.Y * v.Y + u.Z * v.Z;
-		Func<XYZf, XYZf, float> perp = (XYZf u, XYZf v) => u.X * v.Y - u.Y * v.X;
-		I0 = default(XYZf);
-		I1 = default(XYZf);
-		XYZf u2 = S1.p1 - S1.p0;
-		XYZf v2 = S2.p1 - S2.p0;
-		XYZf w = S1.p0 - S2.p0;
+		Func<XYZ<float>, XYZ<float>, float> dot = (XYZ<float> u, XYZ<float> v) => u.X * v.X + u.Y * v.Y + u.Z * v.Z;
+		Func<XYZ<float>, XYZ<float>, float> perp = (XYZ<float> u, XYZ<float> v) => u.X * v.Y - u.Y * v.X;
+		I0 = default(XYZ<float>);
+		I1 = default(XYZ<float>);
+		XYZ<float> u2 = S1.p1 - S1.p0;
+		XYZ<float> v2 = S2.p1 - S2.p0;
+		XYZ<float> w = S1.p0 - S2.p0;
 		float D = perp(u2, v2);
 		if (Math.Abs(D) < 1E-08f)
 		{
@@ -277,7 +277,7 @@ public struct Line : IEquatable<Line>
 				I0 = S2.p0;
 				return 1;
 			}
-			XYZf w2 = S1.p1 - S2.p0;
+			XYZ<float> w2 = S1.p1 - S2.p0;
 			float t0;
 			float t1;
 			if (v2.X != 0f)
@@ -325,7 +325,7 @@ public struct Line : IEquatable<Line>
 		return 1;
 	}
 
-	private static bool inSegment2D(XYZf P, Line S)
+	private static bool inSegment2D(XYZ<float> P, Line S)
 	{
 		if (S.p0.X != S.p1.X)
 		{
@@ -378,7 +378,7 @@ public struct Line : IEquatable<Line>
 		}
 	}
 
-	public int SphereCollision(Sphere s, out XYZf intersect1, out XYZf intersect2)
+	public int SphereCollision(Sphere s, out XYZ<float> intersect1, out XYZ<float> intersect2)
 	{
 		int hits = 0;
 		if (RaySphereCollision(p0, p1, s, out var mu1, out var mu2))
@@ -390,7 +390,7 @@ public struct Line : IEquatable<Line>
 			}
 			else
 			{
-				intersect1 = default(XYZf);
+				intersect1 = default(XYZ<float>);
 			}
 			if (mu2 >= 0.0 && mu2 <= 1.0)
 			{
@@ -399,23 +399,23 @@ public struct Line : IEquatable<Line>
 				if (hits == 1)
 				{
 					intersect1 = intersect2;
-					intersect2 = default(XYZf);
+					intersect2 = default(XYZ<float>);
 				}
 			}
 			else
 			{
-				intersect2 = default(XYZf);
+				intersect2 = default(XYZ<float>);
 			}
 		}
 		else
 		{
-			intersect1 = default(XYZf);
-			intersect2 = default(XYZf);
+			intersect1 = default(XYZ<float>);
+			intersect2 = default(XYZ<float>);
 		}
 		return hits;
 	}
 
-	public static bool RaySphereCollision(XYZf p0, XYZf p1, Sphere s, out double mu1, out double mu2)
+	public static bool RaySphereCollision(XYZ<float> p0, XYZ<float> p1, Sphere s, out double mu1, out double mu2)
 	{
 		
 		XYZ<double> dp = new XYZ<double>( p1.X, p1.Y, p1.Z) - new XYZ<double>(p0.X, p0.Y, p0.Z);
