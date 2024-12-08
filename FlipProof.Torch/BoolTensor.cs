@@ -32,6 +32,9 @@ public sealed class BoolTensor : Tensor<bool,BoolTensor>
    [CLSCompliant(false)]
    protected override bool ToScalar(Tensor t) => t.ToBoolean();
 
+   [CLSCompliant(false)]
+   protected override BoolTensor CreateFromTensorSub(Tensor t) => new(t);
+
    /// <summary>
    /// True if all elements are true
    /// </summary>

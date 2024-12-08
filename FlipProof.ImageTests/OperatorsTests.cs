@@ -106,4 +106,6 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
       ImageFloat<TSpace> differenceAsFraction = (orig.ToFloat() - inverse).AbsInPlace() / denominator;
       Assert.IsTrue(differenceAsFraction.GetMaxIntensity() < 0.01f);
    }
+   
+  
 }
