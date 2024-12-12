@@ -21,8 +21,6 @@ jobs:
     - run: git submodule sync --recursive
     - run: git submodule update --init --recursive --force
     - run: git submodule foreach --recursive
-    - name: checkoutLFS
-      uses: actions/checkout@v4
     - run: pwd
     - run: ls
     - run: set GIT_TRACE=1
@@ -31,6 +29,8 @@ jobs:
     - run: git lfs ls-files
     - run: git lfs pull
     - run: git lfs ls-files
+    - run: get-content FlipProof.ImageTests\Resource1.resx
+    - run: git submodule foreach --recursive 'git lfs pull'
     - run: get-content FlipProof.ImageTests\Resource1.resx
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
