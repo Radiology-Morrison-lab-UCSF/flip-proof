@@ -25,7 +25,12 @@ jobs:
       uses: actions/checkout@v4
     - run: pwd
     - run: ls
+    - run: set GIT_TRACE=1
+    - run: set GIT_TRANSFER_TRACE=1
+    - run: set GIT_CURL_VERBOSE=1
+    - run: git lfs ls-files
     - run: git lfs pull
+    - run: git lfs ls-files
     - run: get-content FlipProof.ImageTests\Resource1.resx
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
