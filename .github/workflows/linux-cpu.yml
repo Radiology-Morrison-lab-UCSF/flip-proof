@@ -27,7 +27,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore /p:Configuration=Linux-CPU-Debug /p:Platform="Any CPU"
     - name: Build
       run: dotnet build --configuration Linux-CPU-Debug --no-restore
     - name: Test
