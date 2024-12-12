@@ -80,6 +80,28 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
       return (TSelf)this;
    }
 
+   public TSelf AddInPlace(TSelf other)
+   {
+      _data.Storage.add_(other.Data.Storage);
+      return (TSelf)this;
+   }
+   public TSelf SubtractInPlace(TSelf other)
+   {
+      _data.Storage.subtract_(other.Data.Storage);
+      return (TSelf)this;
+   }
+   public TSelf MultiplyInPlace(TSelf other)
+   {
+      _data.Storage.mul_(other.Data.Storage);
+      return (TSelf)this;
+   }
+   public TSelf DivideInPlace(TSelf other)
+   {
+      _data.Storage.div_(other.Data.Storage);
+      return (TSelf)this;
+   }
+
+
 
    /// <summary>
    /// Applies a <see cref="TTensor"/> operator to create a new object from the resulting <see cref="TTensor"/>

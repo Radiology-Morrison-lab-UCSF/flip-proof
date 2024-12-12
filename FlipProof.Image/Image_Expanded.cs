@@ -7,6 +7,7 @@
 #pragma expandtemplate typeToReplace=double
 #pragma expandtemplate sbyte byte Int16 Int32 Int64 float bool
 
+using FlipProof.Base;
 using FlipProof.Torch;
 using TorchSharp;
 
@@ -33,6 +34,12 @@ public sealed partial class ImageDouble<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageDouble(DoubleTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageDouble(ImageHeader header, Array3D<double> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageDouble<TSpace> UnsafeCreate(DoubleTensor voxels) => ImageDouble<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -65,6 +72,28 @@ public sealed partial class ImageDouble<TSpace>
    /// <returns></returns>
    public ImageDouble<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageDouble<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, double fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageDouble<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, double fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -95,6 +124,12 @@ public sealed partial class ImageInt8<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt8(Int8Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt8(ImageHeader header, Array3D<sbyte> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageInt8<TSpace> UnsafeCreate(Int8Tensor voxels) => ImageInt8<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -127,6 +162,28 @@ public sealed partial class ImageInt8<TSpace>
    /// <returns></returns>
    public ImageInt8<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt8<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, sbyte fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt8<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, sbyte fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -156,6 +213,12 @@ public sealed partial class ImageUInt8<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageUInt8(UInt8Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageUInt8(ImageHeader header, Array3D<byte> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageUInt8<TSpace> UnsafeCreate(UInt8Tensor voxels) => ImageUInt8<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -188,6 +251,28 @@ public sealed partial class ImageUInt8<TSpace>
    /// <returns></returns>
    public ImageUInt8<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageUInt8<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, byte fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageUInt8<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, byte fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -217,6 +302,12 @@ public sealed partial class ImageInt16<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt16(Int16Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt16(ImageHeader header, Array3D<Int16> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageInt16<TSpace> UnsafeCreate(Int16Tensor voxels) => ImageInt16<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -249,6 +340,28 @@ public sealed partial class ImageInt16<TSpace>
    /// <returns></returns>
    public ImageInt16<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt16<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, Int16 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt16<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, Int16 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -278,6 +391,12 @@ public sealed partial class ImageInt32<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt32(Int32Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt32(ImageHeader header, Array3D<Int32> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageInt32<TSpace> UnsafeCreate(Int32Tensor voxels) => ImageInt32<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -310,6 +429,28 @@ public sealed partial class ImageInt32<TSpace>
    /// <returns></returns>
    public ImageInt32<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt32<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, Int32 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt32<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, Int32 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -339,6 +480,12 @@ public sealed partial class ImageInt64<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt64(Int64Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt64(ImageHeader header, Array3D<Int64> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageInt64<TSpace> UnsafeCreate(Int64Tensor voxels) => ImageInt64<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -371,6 +518,28 @@ public sealed partial class ImageInt64<TSpace>
    /// <returns></returns>
    public ImageInt64<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt64<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, Int64 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageInt64<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, Int64 fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -400,6 +569,12 @@ public sealed partial class ImageFloat<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageFloat(FloatTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageFloat(ImageHeader header, Array3D<float> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageFloat<TSpace> UnsafeCreate(FloatTensor voxels) => ImageFloat<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -432,6 +607,28 @@ public sealed partial class ImageFloat<TSpace>
    /// <returns></returns>
    public ImageFloat<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageFloat<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, float fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageFloat<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, float fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
+
 
 
    #endregion
@@ -461,6 +658,12 @@ public sealed partial class ImageBool<TSpace>
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageBool(BoolTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
+   }
+
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageBool(ImageHeader header, Array3D<bool> voxels) : base(header, voxels.ToTensor4D())
+   {
+
    }
    internal override ImageBool<TSpace> UnsafeCreate(BoolTensor voxels) => ImageBool<TSpace>.UnsafeCreateStatic(voxels);
 
@@ -492,6 +695,28 @@ public sealed partial class ImageBool<TSpace>
    /// <param name="mask"></param>
    /// <returns></returns>
    public ImageBool<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+
+   /// <summary>
+   /// Voxels that are true in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageBool<TSpace> SetInsideMaskInPlace(ImageBool<TSpace> mask, bool fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data, fillWith);
+      return this;
+   }
+
+   /// <summary>
+   /// Voxels that are false in the mask are set to the provided value
+   /// </summary>
+   /// <param name="mask"></param>
+   /// <returns></returns>
+   public ImageBool<TSpace> SetOutsideMaskInPlace(ImageBool<TSpace> mask, bool fillWith = default)
+   {
+      Data.MaskedFillInPlace(mask.Data.Not(), fillWith);
+      return this;
+   }
 
 
 

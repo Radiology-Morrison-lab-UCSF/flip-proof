@@ -70,6 +70,7 @@ public abstract class Image<TSpace> : IDisposable
 
    #endregion
 
+
    /// <summary>
    /// Reference equals
    /// </summary>
@@ -254,10 +255,6 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
 
 
-   public void AddInPlace(Image<TVoxel,TSpace> other) => _data.Storage.add_(other._data.Storage);
-   public void SubtractInPlace(Image<TVoxel, TSpace> other) => _data.Storage.subtract_(other._data.Storage);
-   public void MultiplyInPlace(Image<TVoxel, TSpace> other) => _data.Storage.mul_(other._data.Storage);
-   public void DivideInPlace(Image<TVoxel, TSpace> other) => _data.Storage.divide_(other._data.Storage);
 
    /// <summary>
    /// Sorts the volumes of this image, in place, using the keys provided

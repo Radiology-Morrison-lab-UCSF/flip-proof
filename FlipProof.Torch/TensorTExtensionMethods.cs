@@ -1,5 +1,8 @@
 #pragma expandtemplate typeToReplace=DoubleTensor
 #pragma expandtemplate Int8Tensor UInt8Tensor Int16Tensor Int32Tensor Int64Tensor FloatTensor BoolTensor
+#pragma expandtemplate typeToReplace=double
+#pragma expandtemplate Int8 UInt8 Int16 Int32 Int64 float bool
+
 
 using static TorchSharp.torch;
 using TorchSharp.Modules;
@@ -51,6 +54,8 @@ public static partial class TensorExtensionMethods
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static DoubleTensor DeepClone(this DoubleTensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -91,6 +96,17 @@ public static partial class TensorExtensionMethods
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static DoubleTensor Stack(this IList<DoubleTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static DoubleTensor MaskedFillInPlace(this DoubleTensor toMask, Tensor<bool> mask, double replaceWith=default) => toMask.MaskedFillInPlace<DoubleTensor, double>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -142,6 +158,8 @@ public static partial class TensorExtensionMethods_Int8Tensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static Int8Tensor DeepClone(this Int8Tensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -182,6 +200,17 @@ public static partial class TensorExtensionMethods_Int8Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static Int8Tensor Stack(this IList<Int8Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static Int8Tensor MaskedFillInPlace(this Int8Tensor toMask, Tensor<bool> mask, Int8 replaceWith=default) => toMask.MaskedFillInPlace<Int8Tensor, Int8>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -232,6 +261,8 @@ public static partial class TensorExtensionMethods_UInt8Tensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static UInt8Tensor DeepClone(this UInt8Tensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -272,6 +303,17 @@ public static partial class TensorExtensionMethods_UInt8Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static UInt8Tensor Stack(this IList<UInt8Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static UInt8Tensor MaskedFillInPlace(this UInt8Tensor toMask, Tensor<bool> mask, UInt8 replaceWith=default) => toMask.MaskedFillInPlace<UInt8Tensor, UInt8>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -322,6 +364,8 @@ public static partial class TensorExtensionMethods_Int16Tensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static Int16Tensor DeepClone(this Int16Tensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -362,6 +406,17 @@ public static partial class TensorExtensionMethods_Int16Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static Int16Tensor Stack(this IList<Int16Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static Int16Tensor MaskedFillInPlace(this Int16Tensor toMask, Tensor<bool> mask, Int16 replaceWith=default) => toMask.MaskedFillInPlace<Int16Tensor, Int16>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -412,6 +467,8 @@ public static partial class TensorExtensionMethods_Int32Tensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static Int32Tensor DeepClone(this Int32Tensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -452,6 +509,17 @@ public static partial class TensorExtensionMethods_Int32Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static Int32Tensor Stack(this IList<Int32Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static Int32Tensor MaskedFillInPlace(this Int32Tensor toMask, Tensor<bool> mask, Int32 replaceWith=default) => toMask.MaskedFillInPlace<Int32Tensor, Int32>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -502,6 +570,8 @@ public static partial class TensorExtensionMethods_Int64Tensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static Int64Tensor DeepClone(this Int64Tensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -542,6 +612,17 @@ public static partial class TensorExtensionMethods_Int64Tensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static Int64Tensor Stack(this IList<Int64Tensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static Int64Tensor MaskedFillInPlace(this Int64Tensor toMask, Tensor<bool> mask, Int64 replaceWith=default) => toMask.MaskedFillInPlace<Int64Tensor, Int64>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -592,6 +673,8 @@ public static partial class TensorExtensionMethods_FloatTensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static FloatTensor DeepClone(this FloatTensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -632,6 +715,17 @@ public static partial class TensorExtensionMethods_FloatTensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static FloatTensor Stack(this IList<FloatTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static FloatTensor MaskedFillInPlace(this FloatTensor toMask, Tensor<bool> mask, float replaceWith=default) => toMask.MaskedFillInPlace<FloatTensor, float>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this
@@ -682,6 +776,8 @@ public static partial class TensorExtensionMethods_BoolTensor
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
    public static BoolTensor DeepClone(this BoolTensor toClone) => new(toClone.Storage.clone());
+
+   #region COMBINE ACROSS DIMENSIONS
    /// <summary>
    /// Returns a new tensor that is this with the additional row added
    /// </summary>
@@ -722,6 +818,17 @@ public static partial class TensorExtensionMethods_BoolTensor
    /// <param name="other"></param>
    /// <returns>A tensor with n+1 dimensions</returns>
    public static BoolTensor Stack(this IList<BoolTensor> toStack, int dim) =>new (torch.stack(toStack.Select(a => a.Storage).ToList(), dim: dim));
+
+   #endregion
+
+   /// <summary>
+   /// Replaces values in the mask with another value
+   /// </summary>
+   /// <param name="toMask">To be altered</param>
+   /// <param name="mask">Where to set values</param>
+   /// <param name="replaceWith">The value to fill with</param>
+   /// <returns></returns>
+   public static BoolTensor MaskedFillInPlace(this BoolTensor toMask, Tensor<bool> mask, bool replaceWith=default) => toMask.MaskedFillInPlace<BoolTensor, bool>(mask, replaceWith);
 
    /// <summary>
    /// Creates a tensor of zeros, or equivalent, of the same size / shape as this

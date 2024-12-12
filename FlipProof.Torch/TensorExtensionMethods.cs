@@ -440,6 +440,23 @@ public static partial class TensorExtensionMethods
 
    private static BoolTensor OperationToTensor(this Tensor<bool> left, Tensor<bool> right, Func<Tensor, Tensor, Tensor> func) => new(func(left.Storage, right.Storage));
 
+   /// <summary>
+   /// Replaces values within the mask with another value
+   /// </summary>
+   /// <typeparam name="TTensor"></typeparam>
+   /// <typeparam name="TValue"></typeparam>
+   /// <param name="data"></param>
+   /// <param name="mask"></param>
+   /// <param name="maskTo"></param>
+   /// <returns></returns>
+   [CLSCompliant(false)]
+   public static TTensor MaskedFillInPlace<TTensor,TValue>(this TTensor data, Tensor<bool> mask, Scalar maskTo)
+      where TTensor : Tensor<TValue>
+      where TValue : struct
+   {
+      data.Storage.masked_fill_(mask.Storage, maskTo);
+      return data;
+   }
    public static DoubleTensor Masked(this Tensor<double> data, Tensor<bool> mask) => new(torch.multiply(mask.ToDouble().Storage, data.Storage));
    public static FloatTensor Masked(this Tensor<float> data, Tensor<bool> mask) => new(torch.multiply(mask.ToFloat().Storage, data.Storage));
    public static Int64Tensor Masked(this Tensor<Int64> data, Tensor<bool> mask) => new(torch.multiply(mask.ToInt64().Storage, data.Storage));

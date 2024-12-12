@@ -2,6 +2,7 @@
 #pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
 
 using FlipProof.Torch;
+using System.Runtime.CompilerServices;
 using static TorchSharp.torch;
 
 namespace FlipProof.Image;
@@ -136,6 +137,48 @@ public static partial class ImageExtensionMethods
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageDouble<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageDouble<TSpace4D> im, TOtherImage image, Func<ImageDouble<TSpace3D>, TOtherImage, ImageDouble<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageDouble<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageDouble<TSpace4D> im, TOtherImage image, Func<ImageDouble<TSpace3D>, TOtherImage, ImageDouble<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
 }
 
 #region TEMPLATE EXPANSION
@@ -269,6 +312,48 @@ public static partial class ImageExtensionMethods_ImageInt8
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageInt8<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageInt8<TSpace4D> im, TOtherImage image, Func<ImageInt8<TSpace3D>, TOtherImage, ImageInt8<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageInt8<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageInt8<TSpace4D> im, TOtherImage image, Func<ImageInt8<TSpace3D>, TOtherImage, ImageInt8<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
 }
 
 public static partial class ImageExtensionMethods_ImageUInt8
@@ -400,6 +485,48 @@ public static partial class ImageExtensionMethods_ImageUInt8
       where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageUInt8<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageUInt8<TSpace4D> im, TOtherImage image, Func<ImageUInt8<TSpace3D>, TOtherImage, ImageUInt8<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageUInt8<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageUInt8<TSpace4D> im, TOtherImage image, Func<ImageUInt8<TSpace3D>, TOtherImage, ImageUInt8<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
    }
 }
 
@@ -533,6 +660,48 @@ public static partial class ImageExtensionMethods_ImageInt16
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageInt16<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageInt16<TSpace4D> im, TOtherImage image, Func<ImageInt16<TSpace3D>, TOtherImage, ImageInt16<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageInt16<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageInt16<TSpace4D> im, TOtherImage image, Func<ImageInt16<TSpace3D>, TOtherImage, ImageInt16<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
 }
 
 public static partial class ImageExtensionMethods_ImageInt32
@@ -664,6 +833,48 @@ public static partial class ImageExtensionMethods_ImageInt32
       where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageInt32<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageInt32<TSpace4D> im, TOtherImage image, Func<ImageInt32<TSpace3D>, TOtherImage, ImageInt32<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageInt32<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageInt32<TSpace4D> im, TOtherImage image, Func<ImageInt32<TSpace3D>, TOtherImage, ImageInt32<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
    }
 }
 
@@ -797,6 +1008,48 @@ public static partial class ImageExtensionMethods_ImageInt64
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageInt64<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageInt64<TSpace4D> im, TOtherImage image, Func<ImageInt64<TSpace3D>, TOtherImage, ImageInt64<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageInt64<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageInt64<TSpace4D> im, TOtherImage image, Func<ImageInt64<TSpace3D>, TOtherImage, ImageInt64<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
 }
 
 public static partial class ImageExtensionMethods_ImageFloat
@@ -929,6 +1182,48 @@ public static partial class ImageExtensionMethods_ImageFloat
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
    }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageFloat<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageFloat<TSpace4D> im, TOtherImage image, Func<ImageFloat<TSpace3D>, TOtherImage, ImageFloat<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageFloat<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageFloat<TSpace4D> im, TOtherImage image, Func<ImageFloat<TSpace3D>, TOtherImage, ImageFloat<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
 }
 
 public static partial class ImageExtensionMethods_ImageBool
@@ -1060,6 +1355,48 @@ public static partial class ImageExtensionMethods_ImageBool
       where TSpace : struct, ISpace
    {
       return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageBool<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageBool<TSpace4D> im, TOtherImage image, Func<ImageBool<TSpace3D>, TOtherImage, ImageBool<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageBool<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageBool<TSpace4D> im, TOtherImage image, Func<ImageBool<TSpace3D>, TOtherImage, ImageBool<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
    }
 }
 

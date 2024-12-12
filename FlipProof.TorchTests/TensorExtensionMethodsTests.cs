@@ -109,6 +109,24 @@ public class TensorExtensionMethodsTests
       Assert.IsTrue(expectedTensor.Equals(result));
 
    }
+   [TestMethod]
+   public void MaskedFillInPlace()
+   {
+      var data = new float[,] { { 4, -2, 7 }, { -2, 1, 9 } };
+      FloatTensor dataTensor = new(torch.tensor(data));
+
+      var mask = new bool[,] { { true, false, true }, { true, true, false } };
+      BoolTensor maskTensor = new(torch.tensor(mask));
+
+      FloatTensor result = dataTensor.MaskedFillInPlace(maskTensor,44);
+
+      var expected = new float[,] { { 44, -2, 44 }, { 44, 44, 9 } };
+      FloatTensor expectedTensor = new(torch.tensor(expected));
+
+      Assert.AreSame(dataTensor, result);
+      Assert.IsTrue(expectedTensor.Equals(result));
+
+   }
 
    [TestMethod]
    public void ValuewiseEquals()
