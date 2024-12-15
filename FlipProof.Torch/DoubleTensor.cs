@@ -1,7 +1,5 @@
 ﻿using static TorchSharp.torch;
 using TorchSharp;
-using TorchSharp.Modules;
-using System.Numerics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
