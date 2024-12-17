@@ -1,49 +1,13 @@
 #pragma expandtemplate typeToReplace=ImageDouble
-#pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool
+#pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool ImageComplex ImageComplex32
 
 using FlipProof.Torch;
-using System.Runtime.CompilerServices;
 using static TorchSharp.torch;
 
 namespace FlipProof.Image;
 
 public static partial class ImageExtensionMethods
 {
-   /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageDouble<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageDouble<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -185,41 +149,6 @@ public static partial class ImageExtensionMethods
 public static partial class ImageExtensionMethods_ImageInt8
 {
    /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt8<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt8<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
-   /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
    /// <returns></returns>
@@ -358,41 +287,6 @@ public static partial class ImageExtensionMethods_ImageInt8
 
 public static partial class ImageExtensionMethods_ImageUInt8
 {
-   /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageUInt8<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageUInt8<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -533,41 +427,6 @@ public static partial class ImageExtensionMethods_ImageUInt8
 public static partial class ImageExtensionMethods_ImageInt16
 {
    /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt16<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt16<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
-   /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
    /// <returns></returns>
@@ -706,41 +565,6 @@ public static partial class ImageExtensionMethods_ImageInt16
 
 public static partial class ImageExtensionMethods_ImageInt32
 {
-   /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt32<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt32<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -881,41 +705,6 @@ public static partial class ImageExtensionMethods_ImageInt32
 public static partial class ImageExtensionMethods_ImageInt64
 {
    /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageInt64<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageInt64<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
-   /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
    /// <returns></returns>
@@ -1054,41 +843,6 @@ public static partial class ImageExtensionMethods_ImageInt64
 
 public static partial class ImageExtensionMethods_ImageFloat
 {
-   /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageFloat<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageFloat<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
    /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
@@ -1229,41 +983,6 @@ public static partial class ImageExtensionMethods_ImageFloat
 public static partial class ImageExtensionMethods_ImageBool
 {
    /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMax<TSpace>(this ImageBool<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMax(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-      /// <summary>
-   /// Returns an image where each voxel indicates the provided volume with the largest value
-   /// </summary>
-   /// <typeparam name="TSpace"></typeparam>
-   /// <param name="ims">Images</param>
-   /// <returns></returns>
-   public static ImageInt64<TSpace> ArgMin<TSpace>(this ImageBool<TSpace>[] ims)
-      where TSpace : struct, ISpace
-   {
-      if(ims.Length < 2)
-      {
-         throw new ArgumentException("Expected at least two volumes",nameof(ims));
-      }
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpace>(ims.Select(static a => a.Data).ToList().ArgMin(), false);
-#pragma warning restore CS0618 // Type or member is obsolete
-   }
-
-   /// <summary>
    /// Creates a blank image with shape and orientation matching this
    /// </summary>
    /// <returns></returns>
@@ -1387,6 +1106,284 @@ public static partial class ImageExtensionMethods_ImageBool
    /// <param name="function">The operation to apply</param>
    /// <returns><paramref name="im"/></returns>
    public static ImageBool<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageBool<TSpace4D> im, TOtherImage image, Func<ImageBool<TSpace3D>, TOtherImage, ImageBool<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
+}
+
+public static partial class ImageExtensionMethods_ImageComplex
+{
+   /// <summary>
+   /// Creates a blank image with shape and orientation matching this
+   /// </summary>
+   /// <returns></returns>
+   public static ImageComplex<TSpace> Blank<TSpace>(this ImageComplex<TSpace> im)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.Blank());
+   }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageComplex<TSpace> src, ImageComplex<TSpace> destination)
+      where TSpace : struct, ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
+   public static ImageComplex<TSpace> DeepClone<TSpace>(this ImageComplex<TSpace> im)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.DeepClone());
+   }
+
+   /// <summary>
+   /// Concatenates images in the volumes dimension
+   /// </summary>
+   /// <typeparam name="TVoxel">Voxel data type</typeparam>
+   /// <typeparam name="TSpaceIn">The Space being concatenated, which has fewer volumes than <typeparamref name="TSpaceResult"/>. It does not necessarily need to be 3D</typeparam>
+   /// <typeparam name="TSelf">The image type</typeparam>
+   /// <typeparam name="TTensor">The tensor type held in the image</typeparam>
+   /// <typeparam name="TSpaceResult">The Space that results, which has more volumes</typeparam>
+   /// <typeparam name="TReturnType">The resulting image type</typeparam>
+   /// <param name="items"></param>
+   /// <returns></returns>
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageComplex<TSpaceIn>> items)
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
+   {
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageComplex<TSpaceIn> me, int index)
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
+   {
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageComplex<TSpace4d> me, int index, ImageComplex<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex<TSpace3d>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+
+   /// <summary>
+   /// Creates a new image presumed to be the same size and shape without checking from a torch operation
+   /// </summary>
+   /// <typeparam name="TSpace">Image space</typeparam>
+   /// <param name="im">Source image</param>
+   /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
+   /// <returns></returns>
+   internal static ImageComplex<TSpace> TrustedOperatorToNew<TSpace>(this ImageComplex<TSpace> im, Func<Tensor,Tensor> torchOperation)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageComplex<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageComplex<TSpace4D> im, TOtherImage image, Func<ImageComplex<TSpace3D>, TOtherImage, ImageComplex<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageComplex<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageComplex<TSpace4D> im, TOtherImage image, Func<ImageComplex<TSpace3D>, TOtherImage, ImageComplex<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      for (int iVol = 0; iVol < im.Header.Size.VolumeCount; iVol++)
+      {
+         im.SetVolume(iVol,function(im.ExtractVolume<TSpace4D, TSpace3D>(iVol), image));
+      }
+
+      return im;
+   }
+}
+
+public static partial class ImageExtensionMethods_ImageComplex32
+{
+   /// <summary>
+   /// Creates a blank image with shape and orientation matching this
+   /// </summary>
+   /// <returns></returns>
+   public static ImageComplex32<TSpace> Blank<TSpace>(this ImageComplex32<TSpace> im)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.Blank());
+   }
+
+   /// <summary>
+   /// copies voxels into another image
+   /// </summary>
+   /// <returns></returns>
+   public static void CopyInto<TSpace>(this ImageComplex32<TSpace> src, ImageComplex32<TSpace> destination)
+      where TSpace : struct, ISpace
+   {
+      src.Data.CopyInto(destination.Data, false);
+   }
+
+   public static ImageComplex32<TSpace> DeepClone<TSpace>(this ImageComplex32<TSpace> im)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.DeepClone());
+   }
+
+   /// <summary>
+   /// Concatenates images in the volumes dimension
+   /// </summary>
+   /// <typeparam name="TVoxel">Voxel data type</typeparam>
+   /// <typeparam name="TSpaceIn">The Space being concatenated, which has fewer volumes than <typeparamref name="TSpaceResult"/>. It does not necessarily need to be 3D</typeparam>
+   /// <typeparam name="TSelf">The image type</typeparam>
+   /// <typeparam name="TTensor">The tensor type held in the image</typeparam>
+   /// <typeparam name="TSpaceResult">The Space that results, which has more volumes</typeparam>
+   /// <typeparam name="TReturnType">The resulting image type</typeparam>
+   /// <param name="items"></param>
+   /// <returns></returns>
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex32<TSpaceResult> ConcatImage<TSpaceIn, TSpaceResult>(this IReadOnlyList<ImageComplex32<TSpaceIn>> items)
+   where TSpaceIn : struct, ISpace
+   where TSpaceResult : struct, ISpace<TSpaceIn>
+   {
+      if(items.Count == 0 )
+      {
+         throw new ArgumentException("No images provided");
+      }
+      var tensor = items.Count == 1 ? items[0].Data.DeepClone() : items[0].Data.Concat(3, items.Select(a => a.Data).Skip(1).ToArray());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex32<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex32<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageComplex32<TSpaceIn> me, int index)
+   where TSpaceIn : struct, ISpace<TSpaceResult>
+   where TSpaceResult : struct, ISpace
+   {
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex32<TSpaceResult>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+
+   [OrientationCheckedAtRuntime]
+   public static ImageComplex32<TSpace3d> SetVolume<TSpace4d, TSpace3d>(this ImageComplex32<TSpace4d> me, int index, ImageComplex32<TSpace3d> newData)
+   where TSpace4d : struct, ISpace<TSpace3d>
+   where TSpace3d : struct, ISpace
+   {
+
+      me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index] = newData.Data.Storage;
+      var tensor = me.Data.CreateFromTensor(me.Data.Storage[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      return new ImageComplex32<TSpace3d>(tensor, true);
+#pragma warning restore CS0618 // Type or member is obsolete
+   }
+
+
+   /// <summary>
+   /// Creates a new image presumed to be the same size and shape without checking from a torch operation
+   /// </summary>
+   /// <typeparam name="TSpace">Image space</typeparam>
+   /// <param name="im">Source image</param>
+   /// <param name="torchOperation">An operation that does not alter the source and returns a new tensor</param>
+   /// <returns></returns>
+   internal static ImageComplex32<TSpace> TrustedOperatorToNew<TSpace>(this ImageComplex32<TSpace> im, Func<Tensor,Tensor> torchOperation)
+      where TSpace : struct, ISpace
+   {
+      return im.UnsafeCreate(im.Data.CreateFromTrustedOperation(torchOperation));
+   }
+
+   /// <summary>
+   /// Applies an operation to each volume within this image, creating a new image in the process
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns>A new image the same shape and type as <paramref name="im"/></returns>
+   public static ImageComplex32<TSpace4D> VolumewiseOperation<TSpace4D,TSpace3D, TOtherImage>(this ImageComplex32<TSpace4D> im, TOtherImage image, Func<ImageComplex32<TSpace3D>, TOtherImage, ImageComplex32<TSpace3D>> function)
+      where TSpace4D : struct, ISpace<TSpace3D>
+      where TSpace3D : struct, ISpace3D
+      where TOtherImage : Image<TSpace3D>
+   {
+      return im.DeepClone().VolumewiseOperationInPlace(image, function);
+   }   
+      
+      
+      /// <summary>
+   /// Applies an operation to each volume within this image in place
+   /// </summary>
+   /// <typeparam name="TSpace4D">4D image space</typeparam>
+   /// <typeparam name="TSpace3D">3D image space</typeparam>
+   /// <typeparam name="TOtherImage">Image type</typeparam>
+   /// <param name="im">Image to alter and first input to the function</param>
+   /// <param name="image">Second input to the function</param>
+   /// <param name="function">The operation to apply</param>
+   /// <returns><paramref name="im"/></returns>
+   public static ImageComplex32<TSpace4D> VolumewiseOperationInPlace<TSpace4D,TSpace3D, TOtherImage>(this ImageComplex32<TSpace4D> im, TOtherImage image, Func<ImageComplex32<TSpace3D>, TOtherImage, ImageComplex32<TSpace3D>> function)
       where TSpace4D : struct, ISpace<TSpace3D>
       where TSpace3D : struct, ISpace3D
       where TOtherImage : Image<TSpace3D>

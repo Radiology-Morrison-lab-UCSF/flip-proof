@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FlipProof.Base;
+using FlipProof.Base.IO;
 using FlipProof.Image;
 using FlipProof.Image.IO;
 using FlipProof.Torch;

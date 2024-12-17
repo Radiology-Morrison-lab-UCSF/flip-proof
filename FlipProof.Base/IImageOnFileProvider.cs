@@ -1,3 +1,5 @@
+using FlipProof.Base.IO;
+
 namespace FlipProof.Base;
 
 /// <summary>

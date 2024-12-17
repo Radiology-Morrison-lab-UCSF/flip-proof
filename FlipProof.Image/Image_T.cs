@@ -506,6 +506,10 @@ public abstract class Image<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpa
    /// <returns></returns>
    internal abstract TSelf UnsafeCreate(TTensor voxels);
 
-
+   /// <summary>
+   /// Creates a copy of this object
+   /// </summary>
+   /// <returns></returns>
+   public TSelf DeepClone() => UnsafeCreate((TTensor)Data.DeepClone());
    #endregion
 }

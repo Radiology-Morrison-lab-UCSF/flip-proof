@@ -15,8 +15,6 @@ public class Sphere(XYZ<float> position, float radius)
       return pt.DistanceTo(p) < r;
    }
 
-
-
    public XYZ<float> Seed(Random rng)
    {
       return new XYZ<float>(p.X + r * ((float)rng.NextDouble() * 2f - 1f), p.Y + r * ((float)rng.NextDouble() * 2f - 1f), p.Z + r * ((float)rng.NextDouble() * 2f - 1f));

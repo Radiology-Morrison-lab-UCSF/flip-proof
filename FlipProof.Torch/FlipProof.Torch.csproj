@@ -54,14 +54,9 @@
   </ItemGroup>
 
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <ItemGroup Condition="$(DefineConstants.Contains('WINDOWS'))">
-        <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0-windows\CSharpTemplates.exe $(ProjectDir)" />
-      </ItemGroup>
-      <ItemGroup Condition="$(DefineConstants.Contains('LINUX'))">
-        <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir)" />
-      </ItemGroup>
-    </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir)" />
+  </Target>
 
 </Project>

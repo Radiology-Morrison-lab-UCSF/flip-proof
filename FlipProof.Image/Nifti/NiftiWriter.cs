@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using FlipProof.Base;
+using FlipProof.Base.IO;
 using FlipProof.Image.IO;
 
 namespace FlipProof.Image.Nifti;
