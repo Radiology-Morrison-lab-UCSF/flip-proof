@@ -22,7 +22,27 @@ public record ImageHeader(ImageSize Size,
    {
       return new ImageHeader(other.Size, other.Orientation, other.CoordinateSystem, other.PhaseEncodingDimension, other.FrequencyEncodingDimension, other.SliceEncodingDimension);
    }
-   
+
+   /// <summary>
+   /// Returns the header after a theoretical padding with voxels. The physical location of (0,0,0) 
+   /// in the original matches the physical location of (<paramref name="x0"/>,<paramref name="y0"/>,<paramref name="z0"/>)
+   /// in the padded header
+   /// </summary>
+   /// <param name="x0">Pad before image dim 0</param>
+   /// <param name="x1">Pad after image dim 0</param>
+   /// <param name="y0">Pad before image dim 1</param>
+   /// <param name="y1">Pad after image dim 1</param>
+   /// <param name="z0">Pad before image dim 2</param>
+   /// <param name="z1">Pad after image dim 2</param>
+   /// <param name="vols0">Volumes inserted at position 0</param>
+   /// <param name="vols0">Volumes inserted at final positions</param>
+   /// <returns>A new header representing a theoretically padded image aligned to the origina unpadded image</returns>
+   public ImageHeader GetForPaddedImage(long x0, long x1, long y0, long y1, long z0, long z1, long vols0, long vols1) => this with
+   {
+      Orientation =  Orientation * new Matrix4x4(1, 0, 0, -x0, 0, 1, 0, -y0, 0, 0, 1, -z0, 0, 0, 0, 1),
+      Size = new(Size.VolumeCount + vols0 + vols1, Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1),
+   };
+
    /// <summary>
    /// Returns the voxel size in mm
    /// </summary>

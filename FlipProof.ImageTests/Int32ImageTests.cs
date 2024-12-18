@@ -120,7 +120,9 @@ public class Int32ImageTests() : OperatorsTests(9814)
    #region Wrapped
 
    [TestMethod]
-   public void FFT_IFFT() => FFT_IFFT<ImageInt32<TestSpace3D>, Int32, TestSpace3D, Int32Tensor>(() => GetRandom(out Tensor<Int32> _));
+   public void FFT_IFFT() => FFT_IFFT<ImageInt32<TestSpace3D>, Int32, TestSpace3D, Int32Tensor>(() => GetRandom(out Tensor<Int32> _), 0.015f);// error may be greater than normal because values cannot all be perfectly encoded as 32 bit floats
+   [TestMethod]
+   public void FFT_IFFT_D() => FFT_IFFT_D<ImageInt32<TestSpace3D>, Int32, TestSpace3D, Int32Tensor>(() => GetRandom(out Tensor<Int32> _));
 
    #endregion
 

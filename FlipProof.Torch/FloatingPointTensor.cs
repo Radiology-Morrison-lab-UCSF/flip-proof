@@ -27,51 +27,51 @@ public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSe
 
    #region Simple Elementwise Operations
 
-   public TSelf ACos() => CreateFromTensor(Storage.acos(), true);
-   public TSelf ACosH() => CreateFromTensor(Storage.acosh(), true);
-   public TSelf Angle() => CreateFromTensor(Storage.angle(), true);
-   public TSelf ASin() => CreateFromTensor(Storage.asin(), true);
-   public TSelf ASinH() => CreateFromTensor(Storage.asinh(), true);
-   public TSelf ATan() => CreateFromTensor(Storage.atan(), true);
-   public TSelf ATanH() => CreateFromTensor(Storage.atanh(), true);
-   public TSelf Ceil() => CreateFromTensor(Storage.ceil(), true);
-   public TSelf Cos() => CreateFromTensor(Storage.cos(), true);
-   public TSelf CosH() => CreateFromTensor(Storage.cosh(), true);
-   public TSelf Deg2Rad() => CreateFromTensor(Storage.deg2rad(), true);
-   public TSelf DiGamma() => CreateFromTensor(Storage.digamma(), true);
-   public TSelf ErF() => CreateFromTensor(Storage.erf(), true);
-   public TSelf ErFC() => CreateFromTensor(Storage.erfc(), true);
-   public TSelf ErfFInv() => CreateFromTensor(Storage.erfinv(), true);
-   public TSelf Exp() => CreateFromTensor(Storage.exp(), true);
-   public TSelf Exp2() => CreateFromTensor(Storage.exp2(), true);
-   public TSelf ExpM1() => CreateFromTensor(Storage.expm1(), true);
-   public TSelf Floor() => CreateFromTensor(Storage.floor(), true);
-   public TSelf Frac() => CreateFromTensor(Storage.frac(), true);
-   public TSelf LGamma() => CreateFromTensor(Storage.lgamma(), true);
-   public TSelf Log() => CreateFromTensor(Storage.log(), true);
-   public TSelf Log10() => CreateFromTensor(Storage.log10(), true);
-   public TSelf Log1P() => CreateFromTensor(Storage.log1p(), true);
-   public TSelf Log2() => CreateFromTensor(Storage.log2(), true);
-   public TSelf Logit() => CreateFromTensor(Storage.logit(), true);
-   public TSelf I0() => CreateFromTensor(Storage.i0(), true);
-   public TSelf Negative() => CreateFromTensor(Storage.negative(), true);
-   public TSelf Rad2Deg() => CreateFromTensor(Storage.rad2deg(), true);
-   public TSelf Reciprocal() => CreateFromTensor(Storage.reciprocal(), true);
+   public TSelf ACos() => CreateFromTensor(Storage.acos());
+   public TSelf ACosH() => CreateFromTensor(Storage.acosh());
+   public TSelf Angle() => CreateFromTensor(Storage.angle());
+   public TSelf ASin() => CreateFromTensor(Storage.asin());
+   public TSelf ASinH() => CreateFromTensor(Storage.asinh());
+   public TSelf ATan() => CreateFromTensor(Storage.atan());
+   public TSelf ATanH() => CreateFromTensor(Storage.atanh());
+   public TSelf Ceil() => CreateFromTensor(Storage.ceil());
+   public TSelf Cos() => CreateFromTensor(Storage.cos());
+   public TSelf CosH() => CreateFromTensor(Storage.cosh());
+   public TSelf Deg2Rad() => CreateFromTensor(Storage.deg2rad());
+   public TSelf DiGamma() => CreateFromTensor(Storage.digamma());
+   public TSelf ErF() => CreateFromTensor(Storage.erf());
+   public TSelf ErFC() => CreateFromTensor(Storage.erfc());
+   public TSelf ErfFInv() => CreateFromTensor(Storage.erfinv());
+   public TSelf Exp() => CreateFromTensor(Storage.exp());
+   public TSelf Exp2() => CreateFromTensor(Storage.exp2());
+   public TSelf ExpM1() => CreateFromTensor(Storage.expm1());
+   public TSelf Floor() => CreateFromTensor(Storage.floor());
+   public TSelf Frac() => CreateFromTensor(Storage.frac());
+   public TSelf LGamma() => CreateFromTensor(Storage.lgamma());
+   public TSelf Log() => CreateFromTensor(Storage.log());
+   public TSelf Log10() => CreateFromTensor(Storage.log10());
+   public TSelf Log1P() => CreateFromTensor(Storage.log1p());
+   public TSelf Log2() => CreateFromTensor(Storage.log2());
+   public TSelf Logit() => CreateFromTensor(Storage.logit());
+   public TSelf I0() => CreateFromTensor(Storage.i0());
+   public TSelf Negative() => CreateFromTensor(Storage.negative());
+   public TSelf Rad2Deg() => CreateFromTensor(Storage.rad2deg());
+   public TSelf Reciprocal() => CreateFromTensor(Storage.reciprocal());
    /// <summary>
    /// Rounds a copy of the input, returning the new tensor
    /// </summary>
-   public TSelf Round() => CreateFromTensor(Storage.round(), true);
-   public TSelf RSqrt() => CreateFromTensor(Storage.rsqrt(), true);
-   public TSelf Sigmoid() => CreateFromTensor(Storage.sigmoid(), true);
-   public TSelf Sign() => CreateFromTensor(Storage.sign(), true);
-   public TSelf Sin() => CreateFromTensor(Storage.sin(), true);
-   public TSelf Sinc() => CreateFromTensor(Storage.sinc(), true);
-   public TSelf SinH() => CreateFromTensor(Storage.sinh(), true);
-   public TSelf Sqrt() => CreateFromTensor(Storage.sqrt(), true);
-   public TSelf Square() => CreateFromTensor(Storage.square(), true);
-   public TSelf Tan() => CreateFromTensor(Storage.tan(), true);
-   public TSelf TanH() => CreateFromTensor(Storage.tanh(), true);
-   public TSelf Trunc() => CreateFromTensor(Storage.trunc(), true);
+   public TSelf Round() => CreateFromTensor(Storage.round());
+   public TSelf RSqrt() => CreateFromTensor(Storage.rsqrt());
+   public TSelf Sigmoid() => CreateFromTensor(Storage.sigmoid());
+   public TSelf Sign() => CreateFromTensor(Storage.sign());
+   public TSelf Sin() => CreateFromTensor(Storage.sin());
+   public TSelf Sinc() => CreateFromTensor(Storage.sinc());
+   public TSelf SinH() => CreateFromTensor(Storage.sinh());
+   public TSelf Sqrt() => CreateFromTensor(Storage.sqrt());
+   public TSelf Square() => CreateFromTensor(Storage.square());
+   public TSelf Tan() => CreateFromTensor(Storage.tan());
+   public TSelf TanH() => CreateFromTensor(Storage.tanh());
+   public TSelf Trunc() => CreateFromTensor(Storage.trunc());
 
    #endregion
 
@@ -81,13 +81,13 @@ public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSe
    /// </summary>
    /// <param name="other"></param>
    /// <returns></returns>
-   public TSelf FloorDivide(TSelf other) => CreateFromTensor(Storage.floor_divide(other.Storage), true);
+   public TSelf FloorDivide(TSelf other) => CreateFromTensor(Storage.floor_divide(other.Storage));
    /// <summary>
    /// Elementwise remainder of division
    /// </summary>
    /// <param name="other"></param>
    /// <returns></returns>
-   public TSelf FMod(TSelf other) => CreateFromTensor(Storage.fmod(other.Storage), true);
+   public TSelf FMod(TSelf other) => CreateFromTensor(Storage.fmod(other.Storage));
 
    /// <summary>
    /// Rounds the input and returns it

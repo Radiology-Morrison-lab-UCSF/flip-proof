@@ -35,6 +35,10 @@ public sealed partial class ImageDouble<TSpace>
    internal ImageDouble(DoubleTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
    }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageDouble(ImageHeader header, DoubleTensor voxels) : base(header, voxels)
+   {
+   }
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageDouble(ImageHeader header, Array3D<double> voxels) : base(header, voxels.ToTensor4D())
@@ -123,6 +127,10 @@ public sealed partial class ImageInt8<TSpace>
 
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt8(Int8Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
+   {
+   }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageInt8(ImageHeader header, Int8Tensor voxels) : base(header, voxels)
    {
    }
 
@@ -214,6 +222,10 @@ public sealed partial class ImageUInt8<TSpace>
    internal ImageUInt8(UInt8Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
    }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageUInt8(ImageHeader header, UInt8Tensor voxels) : base(header, voxels)
+   {
+   }
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageUInt8(ImageHeader header, Array3D<byte> voxels) : base(header, voxels.ToTensor4D())
@@ -301,6 +313,10 @@ public sealed partial class ImageInt16<TSpace>
 
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt16(Int16Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
+   {
+   }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageInt16(ImageHeader header, Int16Tensor voxels) : base(header, voxels)
    {
    }
 
@@ -392,6 +408,10 @@ public sealed partial class ImageInt32<TSpace>
    internal ImageInt32(Int32Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
    }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageInt32(ImageHeader header, Int32Tensor voxels) : base(header, voxels)
+   {
+   }
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageInt32(ImageHeader header, Array3D<Int32> voxels) : base(header, voxels.ToTensor4D())
@@ -479,6 +499,10 @@ public sealed partial class ImageInt64<TSpace>
 
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageInt64(Int64Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
+   {
+   }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageInt64(ImageHeader header, Int64Tensor voxels) : base(header, voxels)
    {
    }
 
@@ -570,6 +594,10 @@ public sealed partial class ImageFloat<TSpace>
    internal ImageFloat(FloatTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
    }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageFloat(ImageHeader header, FloatTensor voxels) : base(header, voxels)
+   {
+   }
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageFloat(ImageHeader header, Array3D<float> voxels) : base(header, voxels.ToTensor4D())
@@ -657,6 +685,10 @@ public sealed partial class ImageBool<TSpace>
 
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageBool(BoolTensor voxels, bool verifyShape) : base(voxels, verifyShape)
+   {
+   }
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   internal ImageBool(ImageHeader header, BoolTensor voxels) : base(header, voxels)
    {
    }
 

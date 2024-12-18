@@ -71,6 +71,55 @@ public class TensorTests
    }
 
    [TestMethod]
+   public void PadSurround()
+   {
+      // Convert to DoubleTensor
+      DoubleTensor tensor = new DoubleTensor(3,5);
+      tensor[0, 0] = 1;
+      tensor[0, 1] = 3;
+      tensor[0, 2] = 5;
+      tensor[0, 3] = 7;
+      tensor[0, 4] = 11;
+
+      tensor[1, 0] = 13;
+      tensor[1, 1] = 17;
+      tensor[1, 2] = 19;
+      tensor[1, 3] = 23;
+      tensor[1, 4] = 27;
+
+      tensor[2, 0] = 31;
+      tensor[2, 1] = 33;
+      tensor[2, 2] = 37;
+      tensor[2, 3] = 41;
+      tensor[2, 4] = 43;
+
+      // Apply Padding
+      var original = tensor.DeepClone();
+      var result = tensor.PadSurround(1, 3, 5, 2);
+
+      Assert.AreNotSame(tensor, result);
+      Assert.IsTrue(original.ValuewiseEquals(tensor).All(), "input altered");
+      CollectionAssert.AreEqual(new long[] { 7, 12 }, result.Storage.shape);
+
+      // Check dim0 is padded
+      for (int dim0 = 0; dim0 < 7; dim0++)
+      {
+         for (int dim1 = 0; dim1 < 12; dim1++)
+         {
+            if (dim0 == 0 || dim0 > 3 || dim1 < 5 || dim1 > 9)
+            {
+               Assert.AreEqual(0d, result[dim0, dim1], $"{dim0},{dim1} not padded");
+            }
+            else
+            {
+               Assert.AreEqual(original[dim0 - 1, dim1 - 5], result[dim0, dim1]);
+            }
+         }
+      }
+ 
+   }
+
+   [TestMethod]
    public void SortInPlace_WithInvalidDimension()
    {
       var tensor = new DoubleTensor(new long[] { 3, 2 });

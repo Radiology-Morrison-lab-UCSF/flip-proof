@@ -123,6 +123,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// <param name="header"></param>
    /// <param name="voxels">Voxel data - a copy of the provided object is made</param>
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   [OrientationCheckedAtRuntime]
    internal Image(ImageHeader header, Tensor<TVoxel> voxels) : this(voxels.DeepClone(), false) // Space not initialised yet so can't be verified
    {
       ISpace.Initialise<TSpace>(header);

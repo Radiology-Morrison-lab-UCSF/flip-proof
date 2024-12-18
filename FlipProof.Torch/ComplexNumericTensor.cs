@@ -36,6 +36,6 @@ public abstract class ComplexNumericTensor<T, TSelf> : NumericTensor<T, TSelf>
    /// Returns an unlinked copy containing the conjugate of these complex values.
    /// </summary>
    /// <returns></returns>
-   public TSelf ToConjugate() => CreateFromTensor(Storage.clone().conj(), true);
+   public TSelf ToConjugate() => CreateFromTensor(Storage.clone().conj());
 
 }

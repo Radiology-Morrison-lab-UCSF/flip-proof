@@ -4,31 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class Int64Tensor : IntegerTensor<Int64, Int64Tensor>
+public sealed partial class Int64Tensor : IntegerTensor<Int64, Int64Tensor>
 {
-   [SetsRequiredMembers]
-   public Int64Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Int64))
-   {
-   }
-   [CLSCompliant(false)]
-   [SetsRequiredMembers]
-   public Int64Tensor(Tensor t) : base(t) { }
-
-   [CLSCompliant(false)]
-   public override ScalarType DType => ScalarType.Int64;
-
-
-   protected override void Set(Int64 value, params long[] indices) => Storage[indices] = value;
-
-
-
-   [CLSCompliant(false)]
-   protected override Int64Tensor CreateFromTensorSub(Tensor t) => new(t);
-
-   [CLSCompliant(false)]
-   public override Tensor ScalarToTensor(Int64 arr) => torch.tensor(arr);
-   [CLSCompliant(false)]
-   public override Tensor ArrayToTensor(Int64[] arr) => torch.tensor(arr);
 
    [CLSCompliant(false)]
    protected override Int64 ToScalar(Tensor t) => t.ToInt64();

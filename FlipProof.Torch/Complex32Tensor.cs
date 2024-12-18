@@ -5,27 +5,10 @@ using System.Numerics;
 
 namespace FlipProof.Torch;
 
-public sealed class Complex32Tensor : ComplexNumericTensor<Complex32, Complex32Tensor>
+public sealed partial class Complex32Tensor : ComplexNumericTensor<Complex32, Complex32Tensor>
 {
-   [SetsRequiredMembers]
-   public Complex32Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.ComplexFloat32))
-   {
-   }
-
-   [CLSCompliant(false)]
-   [SetsRequiredMembers]
-   public Complex32Tensor(Tensor t) : base(t) { }
-
-   [CLSCompliant(false)]
-   public override ScalarType DType => ScalarType.ComplexFloat32;
-
 
    protected override void Set(Complex32 value, params long[] indices) => Storage[indices] = (value.Real, value.Imaginary);
-
-
-
-   [CLSCompliant(false)]
-   protected override Complex32Tensor CreateFromTensorSub(Tensor t) => new(t);
 
    [CLSCompliant(false)]
    public new static Complex32Tensor CreateTensor(Tensor t, bool wrapCopy) => (Complex32Tensor)NumericTensor<Complex32, Complex32Tensor>.CreateTensor(t, wrapCopy);
@@ -55,9 +38,10 @@ public sealed class Complex32Tensor : ComplexNumericTensor<Complex32, Complex32T
    /// <summary>
    /// Inverse fourier transform
    /// </summary>
-   public FloatTensor IFFTN()
+   /// <param name="dimensions">Dimensions to transform</param>
+   public FloatTensor IFFTN(long[]? dimensions = null)
    {
-      using var realImag = torch.fft.ifftn(Storage);
+      using var realImag = torch.fft.ifftn(Storage, dim:dimensions);
       return FloatTensor.CreateTensor(realImag.real, true);
    }
 

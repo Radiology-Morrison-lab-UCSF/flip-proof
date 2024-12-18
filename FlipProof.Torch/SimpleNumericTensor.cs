@@ -23,25 +23,40 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
    /// Returns a new <see cref="TSelf"/> with absolute values
    /// </summary>
    /// <returns></returns>
-   public virtual TSelf Abs() => CreateFromTensor(Storage.abs(), doNotCast:true);
+   public virtual TSelf Abs() => CreateFromTensor(Storage.abs());
    /// <summary>
    /// Converts to absolute values in place
    /// </summary>
    /// <returns></returns>
-   public virtual TSelf AbsInPlace() => CreateFromTensor(Storage.abs_(), doNotCast:true);
+   public virtual TSelf AbsInPlace() => CreateFromTensor(Storage.abs_());
 
    /// <summary>
-   /// Forward fourier transform
+   /// Forward fourier transform, returning single precision
    /// </summary>
-   public Complex32Tensor FFTN()
+   /// <param name="dimensions">Which dimensions to transform</param>
+   public Complex32Tensor FFTN(long[]? dimensions = null)
    {
-      torch.Tensor result = torch.fft.fftn(Storage);
+      torch.Tensor result = torch.fft.fftn(Storage, dim:dimensions);
       if(result.dtype == torch.ScalarType.ComplexFloat64)
       {
          // when T is double
          result = result.to_type(torch.ScalarType.ComplexFloat32, disposeAfter:true);
       }
       return (Complex32Tensor)Complex32Tensor.CreateTensor(result, false);
+   }
+   /// <summary>
+   /// Forward fourier transform, returning double precision
+   /// </summary>
+   /// <param name="dimensions">Which dimensions to transform</param>
+   public ComplexTensor FFTN_Double(long[]? dimensions = null)
+   {
+      torch.Tensor result = torch.fft.fftn(Storage, dim:dimensions);
+      if(result.dtype == torch.ScalarType.ComplexFloat32)
+      {
+         // when T is float
+         result = result.to_type(torch.ScalarType.ComplexFloat64, disposeAfter:true);
+      }
+      return (ComplexTensor)ComplexTensor.CreateTensor(result, false);
    }
 
    /// Creates <see cref="TSelf"/> that wraps the input <see cref="Tensor"/>. Casting is not allowed

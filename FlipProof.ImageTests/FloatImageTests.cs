@@ -109,6 +109,8 @@ public class FloatImageTests() : OperatorsTests(876)
 
    [TestMethod]
    public void FFT_IFFT() => FFT_IFFT<ImageFloat<TestSpace3D>, float, TestSpace3D, FloatTensor>(() => GetRandom(out Tensor<float> _));
+   [TestMethod]
+   public void FFT_IFFT_D() => FFT_IFFT_D<ImageFloat<TestSpace3D>, float, TestSpace3D, FloatTensor>(() => GetRandom(out Tensor<float> _));
 
    #endregion
 

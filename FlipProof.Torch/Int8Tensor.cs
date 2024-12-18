@@ -9,28 +9,8 @@ namespace FlipProof.Torch;
 /// </summary>
 /// <remarks>Nomenclature used for consistency between int types</remarks>
 [CLSCompliant(false)]
-public class Int8Tensor : IntegerTensor<sbyte, Int8Tensor>
+public sealed partial class Int8Tensor : IntegerTensor<sbyte, Int8Tensor>
 {
-   [SetsRequiredMembers]
-   public Int8Tensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Int8))
-   {
-   }
-
-   [SetsRequiredMembers]
-   public Int8Tensor(Tensor t) : base(t) { }
-
-   public override ScalarType DType => ScalarType.Int8;
-
-
-   protected override void Set(sbyte value, params long[] indices) => Storage[indices] = value;
-
-
-
-   protected override Int8Tensor CreateFromTensorSub(Tensor t) => new(t);
-
-
-   public override Tensor ScalarToTensor(sbyte arr) => torch.tensor(arr);
-   public override Tensor ArrayToTensor(sbyte[] arr) => torch.tensor(arr);
 
    protected override sbyte ToScalar(Tensor t) => t.ToSByte();
 

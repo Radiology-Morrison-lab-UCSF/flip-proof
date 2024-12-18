@@ -150,7 +150,9 @@ public class Int64ImageTests() : OperatorsTests(876)
    #region Wrapped
 
    [TestMethod]
-   public void FFT_IFFT() => FFT_IFFT<ImageInt64<TestSpace3D>, Int64, TestSpace3D, Int64Tensor>(() => GetRandom(out Tensor<Int64> _));
+   public void FFT_IFFT() => FFT_IFFT<ImageInt64<TestSpace3D>, Int64, TestSpace3D, Int64Tensor>(() => GetRandom(out Tensor<Int64> _), 0.015f);// greater error allowance as not all values can be encoded as float
+   [TestMethod]
+   public void FFT_IFFT_D() => FFT_IFFT_D<ImageInt64<TestSpace3D>, Int64, TestSpace3D, Int64Tensor>(() => GetRandom(out Tensor<Int64> _));
 
    #endregion
 

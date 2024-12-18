@@ -6,7 +6,7 @@ using static TorchSharp.torch.utils;
 
 namespace FlipProof.Image;
 
-public class ImageComplex<TSpace> : ImageComplexType<Complex, TSpace, ImageComplex<TSpace>, ComplexTensor>
+public sealed partial class ImageComplex<TSpace> : ImageComplexType<Complex, TSpace, ImageComplex<TSpace>, ComplexTensor>
    where TSpace : struct, ISpace
 {
    #region Constructors
@@ -16,8 +16,15 @@ public class ImageComplex<TSpace> : ImageComplexType<Complex, TSpace, ImageCompl
 
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   [OrientationCheckedAtRuntime]
    public ImageComplex(ImageHeader header, Complex[] voxels) : base(header,
      ComplexTensor.CreateTensor(torch.tensor(voxels).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount), false))
+   {
+   }
+
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   [OrientationCheckedAtRuntime]
+   internal ImageComplex(ImageHeader header, ComplexTensor voxels) : base(header, voxels)
    {
    }
 
@@ -33,6 +40,8 @@ public class ImageComplex<TSpace> : ImageComplexType<Complex, TSpace, ImageCompl
    #endregion
 
    public ImageDouble<TSpace> Angle() => ImageDouble<TSpace>.UnsafeCreateStatic(Data.Angle());
+
+   public ImageDouble<TSpace> IFFT() => ImageDouble<TSpace>.UnsafeCreateStatic(Data.IFFTN([0, 1, 2]));
 
    #region Operators
 

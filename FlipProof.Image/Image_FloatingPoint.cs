@@ -14,6 +14,12 @@ public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Imag
    internal Image_FloatingPoint(ImageHeader header, Tensor voxels):base(header, voxels)
    {
 
+   }   
+   
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   internal Image_FloatingPoint(ImageHeader header, TTensor voxels):base(header, voxels)
+   {
+
    }
 
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]

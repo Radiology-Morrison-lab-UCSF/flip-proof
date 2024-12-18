@@ -66,7 +66,15 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
       return (TSelf)this;
    }
 
-   public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN());
+   /// <summary>
+   /// Fast fourier transform, returning single precision
+   /// </summary>
+   public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN([0,1,2]));
+   /// <summary>
+   /// Fast fourier transform, returning double precision
+   /// </summary>
+   /// <returns></returns>
+   public ImageComplex<TSpace> FFT_D() => ImageComplex<TSpace>.UnsafeCreateStatic(Data.FFTN_Double([0,1,2]));
 
    /// <summary>
    /// Replaces all instances of a value with another. NaN is not supported

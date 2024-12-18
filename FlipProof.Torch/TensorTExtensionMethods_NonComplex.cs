@@ -28,7 +28,7 @@ public static partial class TensorExtensionMethods
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = DoubleTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -48,7 +48,7 @@ public static partial class TensorExtensionMethods
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = DoubleTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -82,7 +82,7 @@ public static partial class TensorExtensionMethods_Int8Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int8Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -102,7 +102,7 @@ public static partial class TensorExtensionMethods_Int8Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int8Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -135,7 +135,7 @@ public static partial class TensorExtensionMethods_UInt8Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = UInt8Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -155,7 +155,7 @@ public static partial class TensorExtensionMethods_UInt8Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = UInt8Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -188,7 +188,7 @@ public static partial class TensorExtensionMethods_Int16Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int16Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -208,7 +208,7 @@ public static partial class TensorExtensionMethods_Int16Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int16Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -241,7 +241,7 @@ public static partial class TensorExtensionMethods_Int32Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int32Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -261,7 +261,7 @@ public static partial class TensorExtensionMethods_Int32Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int32Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -294,7 +294,7 @@ public static partial class TensorExtensionMethods_Int64Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int64Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -314,7 +314,7 @@ public static partial class TensorExtensionMethods_Int64Tensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = Int64Tensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -347,7 +347,7 @@ public static partial class TensorExtensionMethods_FloatTensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = FloatTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -367,7 +367,7 @@ public static partial class TensorExtensionMethods_FloatTensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = FloatTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 
@@ -400,7 +400,7 @@ public static partial class TensorExtensionMethods_BoolTensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = BoolTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmax(concatenated.Storage, 0));
    }   
    
@@ -420,7 +420,7 @@ public static partial class TensorExtensionMethods_BoolTensor
             throw new ArgumentException("Tensors must be same size and shape");
          }
       }
-      using var concatenated = Stack(others, 0);
+      using var concatenated = BoolTensor.Stack(others, 0);
       return new Int64Tensor(torch.argmin(concatenated.Storage, 0));
    }
 

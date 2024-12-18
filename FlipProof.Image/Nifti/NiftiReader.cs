@@ -85,7 +85,7 @@ where TSpace : struct, ISpace
 			read[i] = ReadToDouble<TSpace3D>(filenames[i], lookForZippedVariantIfNotFound, out _);
 		});
 
-		return read.ConcatImage<TSpace3D, TSpace4D>();
+		return ImageDouble<TSpace4D>.ConcatImage<TSpace3D, TSpace4D>(read);
 	}
 
 	public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true)

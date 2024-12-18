@@ -71,6 +71,11 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       }
    }
 
+   /// <summary>
+   /// Number of dimensions
+   /// </summary>
+   public int NDims => Storage.shape.Length;
+
    protected abstract void Set(T value, params long[] indices);
 
    /// <summary>
@@ -194,10 +199,34 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// <summary>
    /// Creates a new <see cref="Tensor<typeparamref name="T"/>" from a given torch Tensor. If the type does not match, a copy cast to <typeparamref name="T"/> is used
    /// </summary>
+   /// <param name="allowCast">Allows casting of the input. If the input is the wrong type, an exception is thrown</param>
+   /// <param name="t">The tensor to wrap</param>
+   /// <returns></returns>
+   [CLSCompliant(false)]
+   public Tensor<T> CreateFromTensorNew(Tensor t, bool allowCast = false)
+   {
+      if (t.dtype != DType)
+      {
+         if (!allowCast)
+         {
+            t = t.to_type(DType);
+         }
+         else
+         {
+            throw new ArgumentException("Input tensor is wrong data type");
+         }
+      }
+      return CreateFromTensor_Sub(t);
+   }
+
+   /// <summary>
+   /// Creates a new <see cref="Tensor<typeparamref name="T"/>" from a given torch Tensor. If the type does not match, a copy cast to <typeparamref name="T"/> is used
+   /// </summary>
    /// <param name="doNotCast">Diallows casting, guaranteeing the input tensor is wrapped, not a copy. If the input is the wrong type, an exception is thrown</param>
    /// <param name="t">The tensor to wrap</param>
    /// <returns></returns>
    [CLSCompliant(false)]
+   [Obsolete("Use CreateFromTensorNew")]
    public Tensor<T> CreateFromTensor(Tensor t, bool doNotCast=false)
    {
       if (t.dtype != DType)
@@ -224,14 +253,14 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    /// </summary>
    /// <param name="scalar"></param>
    /// <returns></returns>
-   public Tensor<T> CreateScalar(T scalar) => CreateFromTensor(ScalarToTensor(scalar));
+   public Tensor<T> CreateScalar(T scalar) => CreateFromTensorNew(ScalarToTensor(scalar));
 
    /// <summary>
    /// Creates a new 1D single value tensor from a given array
    /// </summary>
    /// <param name="scalar"></param>
    /// <returns></returns>
-   public Tensor<T> Create1D(T[] array) => CreateFromTensor(ArrayToTensor(array));
+   public Tensor<T> Create1D(T[] array) => CreateFromTensorNew(ArrayToTensor(array));
 
    /// <summary>
    /// Calls torch.tensor on the input
@@ -355,7 +384,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    {
       using Tensor<T> row = this.Create1D(other);
       
-      return CreateFromTensor(torch.row_stack(Storage, row.Storage), doNotCast: true);
+      return CreateFromTensorNew(torch.row_stack(Storage, row.Storage));
    }
 
    #endregion

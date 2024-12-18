@@ -26,6 +26,9 @@ public class UInt8ImageTests() : OperatorsTests(23354)
 
    [TestMethod]
    public void FFT_IFFT() => FFT_IFFT<ImageUInt8<TestSpace3D>, byte, TestSpace3D, UInt8Tensor>(() => GetRandom(out Tensor<byte> _));
+   [TestMethod]
+   public void FFT_IFFT_D() => FFT_IFFT_D<ImageUInt8<TestSpace3D>, byte, TestSpace3D, UInt8Tensor>(() => GetRandom(out Tensor<byte> _));
+
    #endregion
 
 }

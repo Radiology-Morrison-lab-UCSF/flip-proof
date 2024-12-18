@@ -43,5 +43,38 @@ public class ImageHeaderTests
       float xYSizes = MathF.Sqrt((voxelSizeX * voxelSizeX + voxelSizeY * voxelSizeY) / 2);
       var actual = ImageHeader.GetVoxelSizeFromMatrix(rotatedImage);
       Assert.IsTrue(new XYZ<float>(xYSizes, xYSizes, voxelSizeZ).DistanceTo(actual) < 0.01f);
-   } 
+   }
+
+
+   [TestMethod]
+   public void GetForPaddedImage()
+   {
+      const int padX0 = 21;
+      const int padY0 = 19;
+      const int padZ0 = 91;
+      var origMatrix = ImageTestsBase.GetRandomMatrix4x4(new Random(44));
+      ImageSize origSize = new(11, 3, 5, 7);
+      ImageHeader origHead = new(origSize, origMatrix, CoordinateSystem.RAS, EncodingDirection.X, EncodingDirection.Y, EncodingDirection.Z);
+
+      ImageHeader result = origHead.GetForPaddedImage(padX0, 17, padY0, 41, padZ0, 3, 5, 15);
+
+      Assert.AreEqual(new ImageSize(11 + 5 + 15, 3 + padX0 + 17, 5 + padY0 + 41, 7 + padZ0 + 3), result.Size, "Image size wrong");
+
+      for (int x = 0; x < 3; x++)
+      {
+         for (int y = 0; y < 3; y++)
+         {
+            for (int z = 0; z < 3; z++)
+            {
+               // coordinates of 0,0,0 in the origin should match coordinates
+               // of padx0, pady0, padz0 in the grown image
+               var origin = origHead.VoxelToWorldCoordinate(x, y, z);
+               var newOrigin = result.VoxelToWorldCoordinate(x+padX0, y+padY0, z+padZ0);
+               Assert.AreEqual(origin.X, newOrigin.X, 0.001, "Voxel location unexpected");
+               Assert.AreEqual(origin.Y, newOrigin.Y, 0.001, "Voxel location unexpected");
+               Assert.AreEqual(origin.Z, newOrigin.Z, 0.001, "Voxel location unexpected");
+            }
+         }
+      }
+   }
 }

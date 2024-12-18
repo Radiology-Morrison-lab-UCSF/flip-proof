@@ -4,32 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlipProof.Torch;
 
-public class DoubleTensor : FloatingPointTensor<double, DoubleTensor>, IFloatingPointTensor
+public sealed partial class DoubleTensor : FloatingPointTensor<double, DoubleTensor>, IFloatingPointTensor
 {
-   [SetsRequiredMembers]
-   public DoubleTensor(long[] dimSizes) : base(torch.zeros(dimSizes, ScalarType.Float64))
-   {
-   }
-
-   [CLSCompliant(false)]
-   [SetsRequiredMembers]
-   public DoubleTensor(Tensor t) : base(t) { }
-
-   [CLSCompliant(false)]
-   public override ScalarType DType => ScalarType.Float64;
-
-
-   protected override void Set(double value, params long[] indices) => Storage[indices] = value;
-
-
-   [CLSCompliant(false)]
-   protected override DoubleTensor CreateFromTensorSub(Tensor t) => new(t);
-
-   [CLSCompliant(false)]
-   public override Tensor ScalarToTensor(double arr) => torch.tensor(arr);
-
-   [CLSCompliant(false)]
-   public override Tensor ArrayToTensor(double[] arr) => torch.tensor(arr);
 
    [CLSCompliant(false)]
    protected override double ToScalar(Tensor t) => t.ToDouble();

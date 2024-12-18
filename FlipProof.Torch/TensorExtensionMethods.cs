@@ -14,7 +14,7 @@ public static partial class TensorExtensionMethods
    /// <returns></returns>
    public static Tensor<T> DeepClone<T>(this Tensor<T> tensor) where T:struct
    {
-      return tensor.CreateFromTensor(tensor.Storage.clone(), true);
+      return tensor.CreateFromTensorNew(tensor.Storage.clone());
    }
 
    /// <summary>

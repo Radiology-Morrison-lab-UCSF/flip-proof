@@ -4,7 +4,7 @@ using TorchSharp;
 
 namespace FlipProof.Image;
 
-public class ImageComplex32<TSpace> : ImageComplexType<Complex32, TSpace, ImageComplex32<TSpace>, Complex32Tensor>
+public sealed partial class ImageComplex32<TSpace> : ImageComplexType<Complex32, TSpace, ImageComplex32<TSpace>, Complex32Tensor>
    where TSpace : struct, ISpace
 {
    #region Constructors
@@ -17,6 +17,13 @@ public class ImageComplex32<TSpace> : ImageComplexType<Complex32, TSpace, ImageC
      Complex32Tensor.CreateTensor( torch.tensor(voxels.Select(a=>(a.Real, a.Imaginary)).ToArray()).view(header.Size.X, header.Size.Y, header.Size.Z, header.Size.VolumeCount), false))
    {
    }
+
+   [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
+   [OrientationCheckedAtRuntime]
+   internal ImageComplex32(ImageHeader header, Complex32Tensor voxels) : base(header, voxels)
+   {
+   }
+
    [Obsolete("Data are used directly. Do not feed in a tensor accessible outside this object")]
    internal ImageComplex32(Complex32Tensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
@@ -32,7 +39,7 @@ public class ImageComplex32<TSpace> : ImageComplexType<Complex32, TSpace, ImageC
    #endregion
 
 
-   public ImageFloat<TSpace> IFFT() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.IFFTN());
+   public ImageFloat<TSpace> IFFT() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.IFFTN([0,1,2]));
 
 
    #region Operators

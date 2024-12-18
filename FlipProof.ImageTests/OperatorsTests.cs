@@ -87,7 +87,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
    }
 
 
-   public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0)
+   public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, float errorAllowanceAsFraction=0.01f)
       where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
       where TSpace : struct, ISpace
       where TVoxel : struct,INumber<TVoxel>
@@ -104,7 +104,26 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
       var denominator = orig.ToFloat().AbsInPlace().ReplaceInPlace(0f, 1f);
 
       ImageFloat<TSpace> differenceAsFraction = (orig.ToFloat() - inverse).AbsInPlace() / denominator;
-      Assert.IsTrue(differenceAsFraction.GetMaxIntensity() < 0.01f);
+      Assert.IsTrue(differenceAsFraction.GetMaxIntensity() <= errorAllowanceAsFraction);
+   }
+      public void FFT_IFFT_D<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0)
+      where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
+      where TSpace : struct, ISpace
+      where TVoxel : struct,INumber<TVoxel>
+      where TTensor : SimpleNumericTensor<TVoxel, TTensor>
+   {
+      using DisposeScope scope = torch.NewDisposeScope();
+
+      TImage orig = getIm0();
+
+      ImageComplex<TSpace> forward = orig.FFT_D();
+
+      ImageDouble<TSpace> inverse = forward.IFFT();
+
+      var denominator = orig.ToFloat().AbsInPlace().ReplaceInPlace(0f, 1f);
+
+      ImageDouble<TSpace> differenceAsFraction = (orig.ToDouble() - inverse).AbsInPlace() / denominator;
+      Assert.IsTrue(differenceAsFraction.GetMaxIntensity() < 0.01);
    }
    
   
