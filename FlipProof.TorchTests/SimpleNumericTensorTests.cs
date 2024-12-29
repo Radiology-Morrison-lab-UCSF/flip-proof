@@ -10,7 +10,7 @@ public abstract class SimpleNumericTensorTests<T,S>
    where S:SimpleNumericTensor<T,S>
 {
 
-
+   protected abstract bool TIsRepresentableAsFloat { get; }
    public T[] GetTestArray() => Cast([1, 3, 5, 7, 11, 13, 17, 19]);
 
 
@@ -143,8 +143,13 @@ public abstract class SimpleNumericTensorTests<T,S>
    /// Tests that IFFTN(FFTN(input)) == input
    /// </summary>
    [TestMethod]
-   public void FFTN()
+   public void FFTN32()
    {
+      if(!TIsRepresentableAsFloat)
+      {
+         // test not relevant. See 64bit test
+         return;
+      }
       T[] expected = GetWithSomeValuesNegated(GetTestArray());
       T[] inputArray = expected.ToArray();
 
@@ -156,7 +161,7 @@ public abstract class SimpleNumericTensorTests<T,S>
       float tolerance = Math.Abs(expectedF.Select(MathF.Abs).Min() * 0.0001f);
 
       // Forward
-      Complex32Tensor fwd = tensor.FFTN();
+      Complex32Tensor fwd = FFT32(tensor);
       Complex32[] fwdArray = fwd.ToArray();
       Assert.IsFalse(new ArrayComparer_Float(tolerance).Equals(expectedF, fwdArray.ToArray(a=>a.Real)), "FFT does nothing");
       Assert.IsFalse(new ArrayComparer_Float(tolerance).Equals(expectedF, fwdArray.ToArray(a => a.Imaginary)), "FFT does nothing");
@@ -171,6 +176,47 @@ public abstract class SimpleNumericTensorTests<T,S>
       Assert.IsTrue(new ArrayComparer_Float(tolerance).Equals(expectedF, invArr));
       Assert.IsTrue(inverse.ShapesEqual(tensor));
    }
+
+   /// <summary>
+   /// Tests that IFFTN(FFTN(input)) == input
+   /// </summary>
+   [TestMethod]
+   public void FFTN64()
+   {
+      if(TIsRepresentableAsFloat)
+      {
+         // test not relevant. See 32bit test
+         return;
+      }
+      T[] expected = GetWithSomeValuesNegated(GetTestArray());
+      T[] inputArray = expected.ToArray();
+
+      double[] expectedF = expected.Select(a => Convert.ToDouble(a)).ToArray();
+
+      using S tensor = ToTensor(inputArray);
+
+
+      double tolerance = Math.Abs(expectedF.Select(Math.Abs).Min() * 0.0001);
+
+      // Forward
+      ComplexTensor fwd = FFT64(tensor);
+      Complex[] fwdArray = fwd.ToArray();
+      Assert.IsFalse(new ArrayComparer_Double(tolerance).Equals(expectedF, fwdArray.ToArray(a=>a.Real)), "FFT does nothing");
+      Assert.IsFalse(new ArrayComparer_Double(tolerance).Equals(expectedF, fwdArray.ToArray(a => a.Imaginary)), "FFT does nothing");
+
+      Assert.IsTrue(fwd.ShapesEqual(tensor));
+
+
+      // Inverse
+      DoubleTensor inverse = fwd.IFFTN();
+      double[] invArr = inverse.ToArray();
+
+      Assert.IsTrue(new ArrayComparer_Double(tolerance).Equals(expectedF, invArr));
+      Assert.IsTrue(inverse.ShapesEqual(tensor));
+   }
+
+   protected abstract Complex32Tensor FFT32(S t);
+   protected abstract ComplexTensor FFT64(S t);
 
    /// <summary>
    /// Negates some values in the array and returns it
@@ -202,51 +248,29 @@ public abstract class SimpleNumericTensorTests<T,S>
 [TestClass]
 public class FloatTensorTests : SimpleNumericTensorTests<float, FloatTensor>
 {
+   protected override bool TIsRepresentableAsFloat => true;
    protected override float Cast(int input) => Convert.ToSingle(input);
 
    protected override float[] Cast(FloatTensor inputs) => inputs.Storage.ToArray<float>();
 
    protected override FloatTensor ToTensor(float[] inputs) => new(torch.tensor(inputs));
+
+   protected override Complex32Tensor FFT32(FloatTensor t) => t.FFTN();
+   protected override ComplexTensor FFT64(FloatTensor t) => throw new NotSupportedException();
 }
 
 [TestClass]
 public class DoubleTensorTests : SimpleNumericTensorTests<double, DoubleTensor>
 {
+   protected override bool TIsRepresentableAsFloat => false;
    protected override double Cast(int input) => Convert.ToDouble(input);
 
    protected override double[] Cast(DoubleTensor inputs) => inputs.Storage.ToArray<double>();
 
    protected override DoubleTensor ToTensor(double[] inputs) => new(torch.tensor(inputs));
 
-
-   /// <summary>
-   /// Tests that IFFTN(FFTN(input)) == input
-   /// </summary>
-   /// <remarks>Double tensor has both a 32 and 64 bit FFT result available</remarks>
-   [TestMethod]
-   public void FFTN_Double()
-   {
-      double[] expected = GetWithSomeValuesNegated(GetTestArray());
-      double[] inputArray = expected.ToArray();
-
-
-      using DoubleTensor tensor = ToTensor(inputArray);
-
-
-      double tolerance = Math.Abs(expected.Min() * 0.0001f);
-
-      // Forward
-      ComplexTensor fwd = tensor.FFTN();
-      Complex[] fwdArray = fwd.ToArray();
-      Assert.IsFalse(new ArrayComparer_Double(tolerance).Equals(expected, fwdArray.ToArray(a => a.Real)), "FFT does nothing");
-      Assert.IsFalse(new ArrayComparer_Double(tolerance).Equals(expected, fwdArray.ToArray(a => a.Imaginary)), "FFT does nothing");
-
-      // Inverse
-      DoubleTensor inverse = fwd.IFFTN();
-      double[] invArr = inverse.ToArray();
-
-      Assert.IsTrue(new ArrayComparer_Double(tolerance).Equals(expected, invArr));
-   }
+   protected override Complex32Tensor FFT32(DoubleTensor t) => throw new NotSupportedException();
+   protected override ComplexTensor FFT64(DoubleTensor t) => t.FFTN();
 
 
 }
@@ -254,47 +278,74 @@ public class DoubleTensorTests : SimpleNumericTensorTests<double, DoubleTensor>
 [TestClass]
 public class Int64TensorTests : SimpleNumericTensorTests<Int64, Int64Tensor>
 {
+
+   protected override bool TIsRepresentableAsFloat => false;
+
    protected override Int64 Cast(int input) => Convert.ToInt64(input);
 
    protected override Int64[] Cast(Int64Tensor inputs) => inputs.Storage.ToArray<Int64>();
 
    protected override Int64Tensor ToTensor(Int64[] inputs) => new(torch.tensor(inputs));
+
+   protected override Complex32Tensor FFT32(Int64Tensor t) => throw new NotSupportedException();
+   protected override ComplexTensor FFT64(Int64Tensor t) => t.FFTN();
+
 }
 
 [TestClass]
 public class Int32TensorTests : SimpleNumericTensorTests<Int32, Int32Tensor>
 {
+   protected override bool TIsRepresentableAsFloat => false;
+
    protected override Int32 Cast(int input) => Convert.ToInt32(input);
 
    protected override Int32[] Cast(Int32Tensor inputs) => inputs.Storage.ToArray<Int32>();
 
    protected override Int32Tensor ToTensor(Int32[] inputs) => new(torch.tensor(inputs));
+
+   protected override Complex32Tensor FFT32(Int32Tensor t) => throw new NotSupportedException();
+   protected override ComplexTensor FFT64(Int32Tensor t) => t.FFTN();
+
 }
 
 [TestClass]
 public class Int16TensorTests : SimpleNumericTensorTests<Int16, Int16Tensor>
 {
+   protected override bool TIsRepresentableAsFloat => true;
+
    protected override Int16 Cast(int input) => Convert.ToInt16(input);
 
    protected override Int16[] Cast(Int16Tensor inputs) => inputs.Storage.ToArray<Int16>();
 
    protected override Int16Tensor ToTensor(Int16[] inputs) => new(torch.tensor(inputs));
+
+   protected override Complex32Tensor FFT32(Int16Tensor t) => t.FFTN();
+   protected override ComplexTensor FFT64(Int16Tensor t) => throw new NotSupportedException();
+
 }
 
 
 [TestClass]
 public class Int8TensorTests : SimpleNumericTensorTests<SByte, Int8Tensor>
 {
+   protected override bool TIsRepresentableAsFloat => true;
+
    protected override SByte Cast(int input) => Convert.ToSByte(input);
 
    protected override SByte[] Cast(Int8Tensor inputs) => inputs.Storage.ToArray<SByte>();
 
    protected override Int8Tensor ToTensor(SByte[] inputs) => new(torch.tensor(inputs));
+
+   protected override Complex32Tensor FFT32(Int8Tensor t) => t.FFTN();
+   protected override ComplexTensor FFT64(Int8Tensor t) => throw new NotSupportedException();
+
 }
 
 [TestClass]
 public class UInt8TensorTests : SimpleNumericTensorTests<byte, UInt8Tensor>
 {
+   protected override bool TIsRepresentableAsFloat => true;
+
    protected override bool IsSigned => false;
    protected override Byte Cast(int input) => Convert.ToByte(input);
 
@@ -303,4 +354,8 @@ public class UInt8TensorTests : SimpleNumericTensorTests<byte, UInt8Tensor>
    protected override UInt8Tensor ToTensor(Byte[] inputs) => new(torch.tensor(inputs));
 
    protected override byte[] GetWithSomeValuesNegated(byte[] inputArray) => inputArray;
+
+   protected override Complex32Tensor FFT32(UInt8Tensor t) => t.FFTN();
+   protected override ComplexTensor FFT64(UInt8Tensor t) => throw new NotSupportedException();
+
 }

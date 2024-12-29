@@ -13,7 +13,7 @@ public sealed partial class DoubleTensor : FloatingPointTensor<double, DoubleTen
    /// <summary>
    /// Forward fourier transform
    /// </summary>
-   public new ComplexTensor FFTN() => ComplexTensor.CreateTensor(torch.fft.fftn(Storage), false);
+   public new ComplexTensor FFTN(long[]? dimensions = null) => base.FFTN_Double(dimensions);
 
 
    #region Operators

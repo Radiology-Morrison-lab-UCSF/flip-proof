@@ -111,9 +111,7 @@ public class ImageDoubleTests() : OperatorsTests(876)
    #region Wrapped
 
    [TestMethod]
-   public void FFT_IFFT() => FFT_IFFT<ImageDouble<TestSpace3D>, double, TestSpace3D, DoubleTensor>(() => GetRandom(out Tensor<double> _));
-   [TestMethod]
-   public void FFT_IFFT_D() => FFT_IFFT_D<ImageDouble<TestSpace3D>, double, TestSpace3D, DoubleTensor>(() => GetRandom(out Tensor<double> _));
+   public void FFT_IFFT_D() => FFT_IFFT_D<ImageDouble<TestSpace3D>, double, TestSpace3D, DoubleTensor>(() => GetRandom(out Tensor<double> _), a => a.FFT());
 
    #endregion
 

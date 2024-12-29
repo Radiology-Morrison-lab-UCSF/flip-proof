@@ -87,7 +87,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
    }
 
 
-   public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, float errorAllowanceAsFraction=0.01f)
+   public void FFT_IFFT<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, Func<TImage, ImageComplex32<TSpace>> fft, float errorAllowanceAsFraction=0.01f)
       where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
       where TSpace : struct, ISpace
       where TVoxel : struct,INumber<TVoxel>
@@ -97,7 +97,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
       TImage orig = getIm0();
 
-      ImageComplex32<TSpace> forward = orig.FFT();
+      ImageComplex32<TSpace> forward = fft(orig);
 
       ImageFloat<TSpace> inverse = forward.IFFT();
 
@@ -106,7 +106,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
       ImageFloat<TSpace> differenceAsFraction = (orig.ToFloat() - inverse).AbsInPlace() / denominator;
       Assert.IsTrue(differenceAsFraction.GetMaxIntensity() <= errorAllowanceAsFraction);
    }
-      public void FFT_IFFT_D<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0)
+      public void FFT_IFFT_D<TImage, TVoxel, TSpace, TTensor>(Func<TImage> getIm0, Func<TImage, ImageComplex<TSpace>> fft)
       where TImage : Image_SimpleNumeric<TVoxel, TSpace, TImage, TTensor>
       where TSpace : struct, ISpace
       where TVoxel : struct,INumber<TVoxel>
@@ -116,7 +116,7 @@ public abstract class OperatorsTests(int seed) : ImageTestsBase(seed)
 
       TImage orig = getIm0();
 
-      ImageComplex<TSpace> forward = orig.FFT_D();
+      ImageComplex<TSpace> forward = fft(orig);
 
       ImageDouble<TSpace> inverse = forward.IFFT();
 

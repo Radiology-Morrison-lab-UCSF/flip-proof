@@ -31,10 +31,10 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
    public virtual TSelf AbsInPlace() => CreateFromTensor(Storage.abs_());
 
    /// <summary>
-   /// Forward fourier transform, returning single precision
+   /// Forward fourier transform, returning single precision. Avoid usage on types that cannot be encoded by floats
    /// </summary>
    /// <param name="dimensions">Which dimensions to transform</param>
-   public Complex32Tensor FFTN(long[]? dimensions = null)
+   protected Complex32Tensor FFTN(long[]? dimensions = null)
    {
       torch.Tensor result = torch.fft.fftn(Storage, dim:dimensions);
       if(result.dtype == torch.ScalarType.ComplexFloat64)
@@ -48,7 +48,7 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
    /// Forward fourier transform, returning double precision
    /// </summary>
    /// <param name="dimensions">Which dimensions to transform</param>
-   public ComplexTensor FFTN_Double(long[]? dimensions = null)
+   protected ComplexTensor FFTN_Double(long[]? dimensions = null)
    {
       torch.Tensor result = torch.fft.fftn(Storage, dim:dimensions);
       if(result.dtype == torch.ScalarType.ComplexFloat32)

@@ -56,10 +56,8 @@ public class Int8ImageTests() : OperatorsTests(98882)
    #region Wrapped
 
    [TestMethod]
-   public void FFT_IFFT() => FFT_IFFT<ImageInt8<TestSpace3D>, sbyte, TestSpace3D, Int8Tensor>(() => GetRandom(out Tensor<sbyte> _));
+   public void FFT_IFFT() => FFT_IFFT<ImageInt8<TestSpace3D>, sbyte, TestSpace3D, Int8Tensor>(() => GetRandom(out Tensor<sbyte> _), a => a.FFT());
 
-   [TestMethod]
-   public void FFT_IFFT_D() => FFT_IFFT_D<ImageInt8<TestSpace3D>, sbyte, TestSpace3D, Int8Tensor>(() => GetRandom(out Tensor<sbyte> _));
 
    #endregion
 

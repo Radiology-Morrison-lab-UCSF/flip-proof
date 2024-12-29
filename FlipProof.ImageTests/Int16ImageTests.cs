@@ -89,9 +89,7 @@ public class Int16ImageTests() : OperatorsTests(72)
    #region Wrapped
 
    [TestMethod]
-   public void FFT_IFFT() => FFT_IFFT<ImageInt16<TestSpace3D>, Int16, TestSpace3D, Int16Tensor>(() => GetRandom(out Tensor<Int16> _));
-   [TestMethod]
-   public void FFT_IFFT_D() => FFT_IFFT_D<ImageInt16<TestSpace3D>, Int16, TestSpace3D, Int16Tensor>(() => GetRandom(out Tensor<Int16> _));
+   public void FFT_IFFT() => FFT_IFFT<ImageInt16<TestSpace3D>, Int16, TestSpace3D, Int16Tensor>(() => GetRandom(out Tensor<Int16> _), a => a.FFT());
 
    #endregion
 
