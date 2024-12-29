@@ -17,17 +17,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        submodules: recursive
         lfs: 'true'
-    - name: checkoutLFS
-      uses: actions/checkout@v4
-    - run: git lfs pull        
+    - run: git submodule sync --recursive
+    - run: git submodule update --init --recursive --force
+    - run: git submodule foreach --recursive
+    - run: git lfs ls-files
+    - run: git lfs pull
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore /p:Configuration=Linux-CPU-Debug /p:Platform="Any CPU"
+    - name: BuildCSharpTemplatesTool
+      run: dotnet build --configuration Release csharp-templates/CSharpTemplates/
+    - name: debugging
+      run: ls /home/runner/work/flip-proof/flip-proof/FlipProof.Torch//../csharp-templates/CSharpTemplates/bin/Release/net8.0/
     - name: Build
       run: dotnet build --configuration Linux-CPU-Debug --no-restore
     - name: Test
