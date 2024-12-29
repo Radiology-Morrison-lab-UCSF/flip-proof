@@ -1,4 +1,5 @@
-﻿using FlipProof.Torch;
+﻿using FlipProof.Base;
+using FlipProof.Torch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +72,7 @@ public class TensorTests
    }
 
    [TestMethod]
-   public void PadSurround()
+   public void Pad()
    {
       // Convert to DoubleTensor
       DoubleTensor tensor = new DoubleTensor(3,5);
@@ -95,7 +96,7 @@ public class TensorTests
 
       // Apply Padding
       var original = tensor.DeepClone();
-      var result = tensor.PadSurround(1, 3, 5, 2);
+      var result = tensor.Pad(1, 3, 5, 2);
 
       Assert.AreNotSame(tensor, result);
       Assert.IsTrue(original.ValuewiseEquals(tensor).All(), "input altered");
@@ -116,6 +117,48 @@ public class TensorTests
             }
          }
       }
+ 
+   }
+   [TestMethod]
+   public void Unpad()
+   {
+      DoubleTensor tensor = new DoubleTensor(3,5,11);
+      tensor.FillWithRandom();
+
+      // NB we don't crop here because we can't reconstitute cropped off values
+      // so for simplicity of testing, limiting here to a pad that is literally
+      // just a pad
+      Box<long> padTo = new(new(-2, -7, -5), new XYZ<long>(17, 21, 18));
+      var padded = tensor.Pad(padTo);
+
+      Assert.IsFalse(padded.ShapesEqual(tensor));
+
+      var unpadded = padded.Unpad(padTo, new XYZ<long>(tensor.Shape[0], tensor.Shape[1], tensor.Shape[2]));
+
+      Assert.IsTrue(tensor.ShapesEqual(unpadded));
+      Assert.IsTrue(tensor.ValuewiseEquals(unpadded).All());
+
+ 
+   }
+   [TestMethod]
+   public void Unpad4D()
+   {
+      DoubleTensor tensor = new DoubleTensor(3,5,11,7);
+      tensor.FillWithRandom();
+
+      // NB we don't crop here because we can't reconstitute cropped off values
+      // so for simplicity of testing, limiting here to a pad that is literally
+      // just a pad
+      Box4D<long> padTo = new(new(-2, -7, -5, -1), new XYZA<long>(17, 21, 18, 11));
+      var padded = tensor.Pad(padTo);
+
+      Assert.IsFalse(padded.ShapesEqual(tensor));
+
+      var unpadded = padded.Unpad(padTo, new XYZA<long>(tensor.Shape));
+
+      Assert.IsTrue(tensor.ShapesEqual(unpadded));
+      Assert.IsTrue(tensor.ValuewiseEquals(unpadded).All());
+
  
    }
 

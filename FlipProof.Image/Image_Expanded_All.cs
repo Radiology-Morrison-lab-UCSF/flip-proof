@@ -5,6 +5,7 @@
 #pragma expandtemplate typeToReplace=ImageDouble<TSpaceIn>
 #pragma expandtemplate ImageInt8<TSpaceIn> ImageUInt8<TSpaceIn> ImageInt16<TSpaceIn> ImageInt32<TSpaceIn> ImageInt64<TSpaceIn> ImageFloat<TSpaceIn> ImageBool<TSpaceIn> ImageComplex<TSpaceIn> ImageComplex32<TSpaceIn>
 
+using FlipProof.Base;
 using FlipProof.Torch;
 using static TorchSharp.torch;
 
@@ -55,23 +56,16 @@ public partial class ImageDouble<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageDouble<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageDouble<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageDouble<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageDouble<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -135,23 +129,16 @@ public partial class ImageInt8<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageInt8<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageInt8<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt8<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageInt8<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -214,23 +201,16 @@ public partial class ImageUInt8<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageUInt8<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageUInt8<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageUInt8<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageUInt8<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -293,23 +273,16 @@ public partial class ImageInt16<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageInt16<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageInt16<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt16<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageInt16<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -372,23 +345,16 @@ public partial class ImageInt32<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageInt32<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageInt32<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt32<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageInt32<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -451,23 +417,16 @@ public partial class ImageInt64<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageInt64<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageInt64<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageInt64<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -530,23 +489,16 @@ public partial class ImageFloat<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageFloat<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageFloat<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageFloat<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageFloat<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -609,23 +561,16 @@ public partial class ImageBool<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageBool<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageBool<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageBool<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageBool<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -688,23 +633,16 @@ public partial class ImageComplex<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageComplex<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageComplex<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageComplex<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageComplex<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -767,23 +705,16 @@ public partial class ImageComplex32<TSpace>
    /// Pads or crops an image, returning an image in a different space
    /// </summary>
    /// <typeparam name="TSpaceResult">The new space describing the result</typeparam>
-   /// <param name="x0">Voxels to insert before the image</param>
-   /// <param name="x1">Voxels to insert after the image</param>
-   /// <param name="y0">Voxels to insert before the image</param>
-   /// <param name="y1">Voxels to insert after the image</param>
-   /// <param name="z0">Voxels to insert before the image</param>
-   /// <param name="z1">Voxels to insert after the image</param>
-   /// <param name="vols0">Volumes to insert before the image</param>
-   /// <param name="vols1">Volumes to insert after the image</param>
-   /// <returns></returns>
+   /// <param name="newBounds">The region of voxels in each volume to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
    [OrientationCheckedAtRuntime]
-   public ImageComplex32<TSpaceResult> Pad<TSpaceResult>(long x0, long x1, long y0, long y1, long z0, long z1, long vols0 = 0, long vols1=0)
+   public ImageComplex32<TSpaceResult> Pad<TSpaceResult>(Box4D<long> newBounds)
       where TSpaceResult:struct, ISpace
    {
-      ImageHeader head = Header.GetForPaddedImage(x0, x1, y0, y1, z0, z1, vols0, vols1);
+      ImageHeader head = Header.GetForPaddedImage(newBounds);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageComplex32<TSpaceResult>(head, Data.PadSurround(x0, x1, y0, y1, z0, z1, vols0, vols1));
+      return new ImageComplex32<TSpaceResult>(head, Data.Pad(newBounds));
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 

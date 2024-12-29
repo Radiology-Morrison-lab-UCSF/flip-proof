@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static TorchSharp.torch;
 using TorchSharp;
+using FlipProof.Base;
 
 namespace FlipProof.Torch;
 public abstract class Tensor<T, TSelf> : Tensor<T>
@@ -80,9 +81,90 @@ public abstract class Tensor<T, TSelf> : Tensor<T>
       return other[0].CreateFromTensor(torch.stack(other.Select(a => a.Storage), dimension));
    }
 
+
+   /// <summary>
+   /// Pads or crops a 3D tensor, returning a tensor in a different space
+   /// </summary>
+   /// <param name="newBounds">The region of voxels to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
+   public TSelf Pad(Box<long> newBounds)
+   {
+      if (NDims != 3)
+      {
+         throw new InvalidOperationException($"3D box cannot pad {NDims}D tensor");
+      }
+      var mySize = Storage.shape;
+      return Pad(
+         -newBounds.Origin.X, newBounds.FarCorner.X - mySize[0],
+         -newBounds.Origin.Y, newBounds.FarCorner.Y - mySize[1],
+         -newBounds.Origin.Z, newBounds.FarCorner.Z - mySize[2]
+         );
+   }
+   /// <summary>
+   /// Pads or crops a 4D tensor, returning a tensor in a different space
+   /// </summary>
+   /// <param name="newBounds">The region of voxels to keep, in Voxel space. If within the image, cropping occurs. If outside, padding occurs</param>
+   /// <returns>A padded and/or cropped image</returns>
+   public TSelf Pad(Box4D<long> newBounds)
+   {
+      if (NDims != 4)
+      {
+         throw new InvalidOperationException($"4D box cannot pad {NDims}D tensor");
+      }
+      new Box4D<long>(new(), new(Storage.shape)).CalcPadding(newBounds, out long xB4, out long xAfter, out long yB4, out long yAfter, out long zB4, out long zAfter, out long volB4, out long volAfter);
+
+      return Pad(xB4, xAfter, yB4, yAfter, zB4, zAfter,volB4, volAfter);
+   }
+   /// <summary>
+   /// Performs the inverse operation of <see cref="Pad(Box{long})"/>
+   /// </summary>
+   /// <param name="currentBounds">The region of voxels requested in <see cref="Pad(Box{long})"/></param>
+   /// <param name="origSize">The original size of the unpadded tensor</param>
+   /// <returns>A padded and/or cropped tensor</returns>
+   public TSelf Unpad(Box<long> currentBounds, XYZ<long> origSize) => Pad(new Box<long>(currentBounds.Origin.Negate(), origSize));
+
+   /// <summary>
+   /// Performs the inverse operation of <see cref="Pad(Box{long})"/>
+   /// </summary>
+   /// <param name="currentBounds">The region of voxels requested in <see cref="Pad(Box{long})"/></param>
+   /// <param name="origSize">The original size of the unpadded tensor</param>
+   /// <returns>A padded and/or cropped tensor</returns>
+   public TSelf Unpad(Box4D<long> currentBounds, XYZA<long> origSize) => Pad(new Box4D<long>(currentBounds.Origin.Negate(), origSize));
+
+   /// <summary>
+   /// Pads the tensor so it is centered in the result
+   /// </summary>
+   /// <param name="padBy">Amount to pad before and after data in each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
+   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
+   /// <returns>A new, padded, tensor</returns>
+   public TSelf Pad(params long[] padBy)
+   {
+      if (padBy.Length != NDims * 2)
+      {
+         throw new ArgumentException($"Expected {NDims * 2} values");
+      }
+
+      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
+      long[] padTorchOrder = padBy.Reverse().ToArray();
+
+      for (int i = 0; i < padTorchOrder.Length; i += 2)
+      {
+         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
+      }
+
+      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
+   }
+
+
    /// <summary>
    /// Fills this tensor with random values
    /// </summary>
    public abstract void FillWithRandom();
+
+   /// <summary>
+   /// Returns a copy of this tensor
+   /// </summary>
+   /// <returns></returns>
+   public abstract TSelf DeepClone();
 
 }

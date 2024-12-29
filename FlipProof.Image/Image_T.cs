@@ -53,6 +53,12 @@ public abstract class Image<TSpace> : IDisposable
    protected ImageBool<TSpace> VoxelwiseEquals(Image<TSpace> other) => new(new BoolTensor( RawData.eq(other.RawData)), false);
 #pragma warning restore CS0618 // Type or member is obsolete
 
+   /// <summary>
+   /// Returns a 4D tensor containing the single volume requested. The returned value is not linked to this object
+   /// </summary>
+   /// <param name="index">The volume of interest</param>
+   internal Tensor ExtractVolumeAsTensor(long index) => RawData[TensorIndex.Colon, TensorIndex.Colon, TensorIndex.Colon, index].unsqueeze_(3);
+
    #region Comparison Operators
 
 
@@ -397,8 +403,8 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// Set voxels for a given 3D volume. 
    /// </summary>
    /// <remarks>Orientation unsafe. Use of this method should be reserved for situations where Image level operations were not supported and tensor operations were the only option</remarks>
-   /// <param name="index"></param>
-   /// <param name="newData"></param>
+   /// <param name="index">The volume to set</param>
+   /// <param name="newData">The new data. This is copied, not used directly</param>
    [OrientationCheckedAtRuntime]
    [Obsolete("Orientation unsafe")]
    public void SetVolume(int index, Tensor<TVoxel> newData)
@@ -513,4 +519,10 @@ public abstract class Image<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpa
    /// <returns></returns>
    public TSelf DeepClone() => UnsafeCreate((TTensor)Data.DeepClone());
    #endregion
+
+   /// <summary>
+   /// Returns a copy of the voxels as a wrapped tensor
+   /// </summary>
+   /// <returns></returns>
+   public new TTensor GetAllVoxelsAsTensor() => Data.DeepClone();
 }

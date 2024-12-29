@@ -53,12 +53,12 @@ public class ImageHeaderTests
       const int padY0 = 19;
       const int padZ0 = 91;
       var origMatrix = ImageTestsBase.GetRandomMatrix4x4(new Random(44));
-      ImageSize origSize = new(11, 3, 5, 7);
+      ImageSize origSize = new(3, 5, 7, 11);
       ImageHeader origHead = new(origSize, origMatrix, CoordinateSystem.RAS, EncodingDirection.X, EncodingDirection.Y, EncodingDirection.Z);
 
       ImageHeader result = origHead.GetForPaddedImage(padX0, 17, padY0, 41, padZ0, 3, 5, 15);
 
-      Assert.AreEqual(new ImageSize(11 + 5 + 15, 3 + padX0 + 17, 5 + padY0 + 41, 7 + padZ0 + 3), result.Size, "Image size wrong");
+      Assert.AreEqual(new ImageSize(3 + padX0 + 17, 5 + padY0 + 41, 7 + padZ0 + 3, 11 + 5 + 15), result.Size, "Image size wrong");
 
       for (int x = 0; x < 3; x++)
       {

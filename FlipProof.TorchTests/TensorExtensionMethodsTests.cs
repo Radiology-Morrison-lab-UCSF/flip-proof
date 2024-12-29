@@ -1,4 +1,5 @@
-﻿using FlipProof.Torch;
+﻿using FlipProof.Base;
+using FlipProof.Torch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,6 +126,92 @@ public class TensorExtensionMethodsTests
 
       Assert.AreSame(dataTensor, result);
       Assert.IsTrue(expectedTensor.Equals(result));
+
+   }
+   
+   [TestMethod]
+   public void GetMaskBounds4D()
+   {
+      var vol5 = new bool[7,6,3] {
+      {
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+            {
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+      {
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+      {
+         { false, false, false },
+         { true, true, false },
+         { false, true, false },
+         { false, false, false },
+         { false, true, false },
+         { false, false, false },
+      },
+      {
+         { false, false, false },
+         { false, false, false },
+         { false, true, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+            {
+         { false, false, false },
+         { false, false, false },
+         { false, true, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+      {
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+         { false, false, false },
+      },
+      };
+
+      // First four volumes should be all false
+      // Copy the 5th volume in to volumes 5,6 and 10
+      bool[,,,] fourD = new bool[7, 6, 3, 11];
+      for (int x = 0; x < fourD.GetLength(0); x++)
+      {
+         for (int y = 0; y < fourD.GetLength(1); y++)
+         {
+            for (int z = 0; z < fourD.GetLength(2); z++)
+            {
+               fourD[x, y, z, 5] = vol5[x,y,z];
+               fourD[x, y, z, 6] = vol5[x,y,z];
+               fourD[x, y, z, 10] = vol5[x,y,z];
+            }
+         }
+      }
+
+
+      BoolTensor maskTensor = new(torch.tensor(fourD));
+
+      Box4D<long> actual = maskTensor.GetMaskBounds4D();
+      Assert.AreEqual(new Box4D<long>(new XYZA<long>(3,1,0,5), new XYZA<long>(3,4,2,6)), actual);
 
    }
 

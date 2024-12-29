@@ -5,7 +5,7 @@ namespace FlipProof.Image;
 
 public readonly record struct ImageSize : IEnumerable<long>
 {
-   public ImageSize(long volumeCount, long x, long y, long z)
+   public ImageSize(long x, long y, long z, long volumeCount)
    {
       X = x > 0 ? x : throw new ArgumentException("Dimensions must be 1 or greater", nameof(x));
       Y = y > 0 ? y : throw new ArgumentException("Dimensions must be 1 or greater", nameof(y));
@@ -76,5 +76,8 @@ public readonly record struct ImageSize : IEnumerable<long>
       yield return VolumeCount;
    }
 
+
+   public static implicit operator XYZA<long>(ImageSize sz) => new(sz.X, sz.Y, sz.Z, sz.VolumeCount);
+   public static implicit operator XYZ<long>(ImageSize sz) => new(sz.X, sz.Y, sz.Z);
 
 }

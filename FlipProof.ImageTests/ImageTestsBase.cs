@@ -26,6 +26,7 @@ public abstract class ImageTestsBase(int seed)
    }
 
 
+   protected ImageDouble<TestSpace3D> GetRandom(long minImSizeEachDim, out Tensor<double> voxels) => GetRandom(GetRandomHeader(minImSizeEachDim), out voxels);
    protected ImageDouble<TestSpace3D> GetRandom(out Tensor<double> voxels) => GetRandom(GetRandomHeader(), out voxels);
    protected ImageDouble<TestSpace3D> GetRandom(ImageHeader head, out Tensor<double> voxels)
    {
@@ -163,10 +164,10 @@ public abstract class ImageTestsBase(int seed)
 
 
 
-   protected ImageHeader GetRandomHeader()
+   protected ImageHeader GetRandomHeader(long minImSizeEachDim=2)
    {
 
-      return new ImageHeader(new ImageSize(1, (uint)r.NextInt64(100), (uint)r.NextInt64(100), (uint)r.NextInt64(100)),
+      return new ImageHeader(new ImageSize((uint)r.NextInt64(minImSizeEachDim, 100), (uint)r.NextInt64(minImSizeEachDim, 100), (uint)r.NextInt64(minImSizeEachDim, 100), 1),
                              GetRandomMatrix4x4(),
                              CoordinateSystem.RAS,
                              NextEncodingDir(),

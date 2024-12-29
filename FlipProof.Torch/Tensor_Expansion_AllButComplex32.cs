@@ -39,6 +39,14 @@ public partial class DoubleTensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(double[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(double value) => new(Storage == value);
 }
 
 #region TEMPLATE EXPANSION
@@ -67,6 +75,14 @@ public partial class Int8Tensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Int8[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(Int8 value) => new(Storage == value);
 }
 
 public partial class UInt8Tensor
@@ -94,6 +110,14 @@ public partial class UInt8Tensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(UInt8[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(UInt8 value) => new(Storage == value);
 }
 
 public partial class Int16Tensor
@@ -121,6 +145,14 @@ public partial class Int16Tensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Int16[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(Int16 value) => new(Storage == value);
 }
 
 public partial class Int32Tensor
@@ -148,6 +180,14 @@ public partial class Int32Tensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Int32[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(Int32 value) => new(Storage == value);
 }
 
 public partial class Int64Tensor
@@ -175,6 +215,14 @@ public partial class Int64Tensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Int64[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(Int64 value) => new(Storage == value);
 }
 
 public partial class FloatTensor
@@ -202,6 +250,14 @@ public partial class FloatTensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(float[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(float value) => new(Storage == value);
 }
 
 public partial class BoolTensor
@@ -229,6 +285,14 @@ public partial class BoolTensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(bool[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(bool value) => new(Storage == value);
 }
 
 public partial class ComplexTensor
@@ -256,6 +320,14 @@ public partial class ComplexTensor
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Complex[] arr) => torch.tensor(arr);
 
+   /// <summary>
+   /// Returns a boolean for each value indicating whether it matches the provided value
+   /// </summary>
+   /// <typeparam name="TSpace"></typeparam>
+   /// <param name="others"></param>
+   /// <param name="dimension"></param>
+   /// <returns></returns>
+   public BoolTensor ValuewiseEquals(Complex value) => new(Storage == value);
 }
 
 #endregion TEMPLATE EXPANSION

@@ -1,4 +1,5 @@
-﻿using FlipProof.Torch;
+﻿using FlipProof.Base;
+using FlipProof.Torch;
 using System.Runtime.CompilerServices;
 using TorchSharp;
 using TorchSharp.Modules;
@@ -53,6 +54,23 @@ public partial class ImageBool<TSpace> : Image<bool, TSpace, ImageBool<TSpace>, 
    {
       return UnsafeCreateStatic(operation(this.Data, other.Data));
    }
+
+   /// <summary>
+   /// Returns a box that tightly includes all true values in voxel space
+   /// </summary>
+   /// <param name="volume">The volume to inspect</param>
+   /// <returns>Bounds of true values</returns>
+   public Box<long> GetMaskBoundingBox(long volume)
+   {
+      using BoolTensor vol = new(ExtractVolumeAsTensor(volume));
+      return (Box<long>)vol.GetMaskBounds4D();
+   }
+
+   /// <summary>
+   /// Returns a box that tightly includes all true values in voxel space
+   /// </summary>
+   /// <returns>Bounds of true values</returns>
+   public Box4D<long> GetMaskBoundingBox() => Data.GetMaskBounds4D();
 
    #region Operators
 

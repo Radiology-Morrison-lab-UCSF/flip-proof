@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using FlipProof.Base;
+using System.Numerics;
 using TorchSharp;
 using static TorchSharp.torch;
 
@@ -437,6 +438,30 @@ public static partial class TensorExtensionMethods
 
 
    #region Bool
+
+   /// <summary>
+   /// Returns a box that tightly includes all true values. Dimensions above the 4th are ignored
+   /// </summary>
+   /// <param name="mask4d"></param>
+   /// <returns></returns>
+   public static Box4D<long> GetMaskBounds4D(this Tensor<bool> mask4d)
+   {
+      using var first = mask4d.Storage.nonzero().min(dim: 0).values;
+      using var last = mask4d.Storage.nonzero().max(dim: 0).values;
+
+      long from0 = first.ReadCpuInt64(0);
+      long from1 = first.ReadCpuInt64(1);
+      long from2 = first.ReadCpuInt64(2);
+      long from3 = first.ReadCpuInt64(3);
+
+      long to0 = last.ReadCpuInt64(0) + 1;
+      long to1 = last.ReadCpuInt64(1) + 1;
+      long to2 = last.ReadCpuInt64(2) + 1;
+      long to3 = last.ReadCpuInt64(3) + 1;
+
+      return new Box4D<long>(new(from0, from1, from2, from3), new(to0 - from0, to1 - from1, to2 - from2, to3 - from3));
+   }
+
 
    private static BoolTensor OperationToTensor(this Tensor<bool> left, Tensor<bool> right, Func<Tensor, Tensor, Tensor> func) => new(func(left.Storage, right.Storage));
 

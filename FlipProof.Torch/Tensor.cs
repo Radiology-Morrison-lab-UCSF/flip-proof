@@ -2,6 +2,7 @@
 using static TorchSharp.torch;
 using TorchSharp;
 using System.Diagnostics.CodeAnalysis;
+using FlipProof.Base;
 
 namespace FlipProof.Torch;
 
@@ -38,6 +39,8 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
    [CLSCompliant(false)]
    public required Tensor Storage { get; init; }
 
+   public long[] Shape => Storage.shape;
+
    /// <summary>
    /// Returns the total number of datapoints in the tensor
    /// </summary>
@@ -63,7 +66,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
       get
       {
          using Tensor t = Storage[indices];
-         return ToScalar(t);
+         return this.ToScalar(t);
       }
       set
       {
@@ -415,7 +418,7 @@ public abstract class Tensor<T> : IDisposable, IEquatable<Tensor<T>>
 
    public bool ShapesEqual<S>(Tensor<S> other) where S:struct
    {
-      return other.Storage.shape.SequenceEqual(other.Storage.shape);
+      return Storage.shape.SequenceEqual(other.Storage.shape);
    }
 
    /// <summary>

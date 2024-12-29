@@ -13,6 +13,8 @@ public sealed partial class BoolTensor : Tensor<bool,BoolTensor>
    /// <returns></returns>
    public bool All() => Storage.all().ToBoolean();
 
+   [CLSCompliant(false)]
+   protected override bool ToScalar(Tensor t) => t.ToBoolean();
 
    public override void FillWithRandom()
    {

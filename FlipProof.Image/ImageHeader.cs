@@ -1,6 +1,7 @@
 ﻿using FlipProof.Base;
 using System.Collections.Immutable;
 using System.Numerics;
+using static TorchSharp.torch;
 
 namespace FlipProof.Image;
 
@@ -16,6 +17,10 @@ public record ImageHeader(ImageSize Size,
    /// The number of dimensions ths image has (3 or 4)
    /// </summary>
    public int NDims => Size.NDims;
+   /// <summary>
+   /// Bounds of the image in voxel space
+   /// </summary>
+   public Box4D<long> VoxelBounds => new(new(), Size);
 
    IImageHeader IImageHeader.Create(IImageHeader other) => Create(other);
    public static ImageHeader Create(IImageHeader other)
@@ -23,6 +28,18 @@ public record ImageHeader(ImageSize Size,
       return new ImageHeader(other.Size, other.Orientation, other.CoordinateSystem, other.PhaseEncodingDimension, other.FrequencyEncodingDimension, other.SliceEncodingDimension);
    }
 
+   /// <summary>
+   /// Returns the header after a theoretical padding with voxels. The physical location of (0,0,0) 
+   /// in the original matches the physical location of (<paramref name="x0"/>,<paramref name="y0"/>,<paramref name="z0"/>)
+   /// in the padded header
+   /// </summary>
+   /// <param name="newBounds">In voxel space</param>
+   public ImageHeader GetForPaddedImage(Box4D<long> newBounds)
+   {
+      VoxelBounds.CalcPadding(newBounds, out long xB4, out long xAfter, out long yB4, out long yAfter, out long zB4, out long zAfter, out long volB4, out long volAfter);
+
+      return GetForPaddedImage(xB4, xAfter, yB4, yAfter, zB4,zAfter, volB4, volAfter);
+   }
    /// <summary>
    /// Returns the header after a theoretical padding with voxels. The physical location of (0,0,0) 
    /// in the original matches the physical location of (<paramref name="x0"/>,<paramref name="y0"/>,<paramref name="z0"/>)
@@ -40,7 +57,7 @@ public record ImageHeader(ImageSize Size,
    public ImageHeader GetForPaddedImage(long x0, long x1, long y0, long y1, long z0, long z1, long vols0, long vols1) => this with
    {
       Orientation =  Orientation * new Matrix4x4(1, 0, 0, -x0, 0, 1, 0, -y0, 0, 0, 1, -z0, 0, 0, 0, 1),
-      Size = new(Size.VolumeCount + vols0 + vols1, Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1),
+      Size = new(Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1, Size.VolumeCount + vols0 + vols1),
    };
 
    /// <summary>
@@ -74,5 +91,5 @@ public record ImageHeader(ImageSize Size,
    /// Returns the same header but with the 4th dimension only 1 deep
    /// </summary>
    /// <returns></returns>
-   public ImageHeader As3D() => this with { Size = new ImageSize(1, Size.X, Size.Y, Size.Z) };
+   public ImageHeader As3D() => this with { Size = new ImageSize(Size.X, Size.Y, Size.Z, 1) };
 }

@@ -190,7 +190,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		{
 			uint noVols = NoDimensions < 4 ? 1 : (uint)_dataArrayDims[4];
 
-			return new ImageSize(noVols, (uint)_dataArrayDims[1], (uint)_dataArrayDims[2], (uint)_dataArrayDims[3]);
+			return new ImageSize((uint)_dataArrayDims[1], (uint)_dataArrayDims[2], (uint)_dataArrayDims[3], noVols);
 		}
 	}
 	/// <summary>

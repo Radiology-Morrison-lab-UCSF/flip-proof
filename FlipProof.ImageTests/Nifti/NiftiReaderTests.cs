@@ -36,7 +36,7 @@ public class NiftiReaderTests
       Image.Image<TestSpace4D> im = nf16.ToImage<TestSpace4D>();
 
       
-      Assert.AreEqual(new Image.ImageSize(3, 64, 60, 21), im.Header.Size);
+      Assert.AreEqual(new Image.ImageSize(64, 60, 21, 3), im.Header.Size);
       Assert.AreEqual(4, im.Header.NDims);
       Assert.AreEqual( Image.CoordinateSystem.RAS, im.Header.CoordinateSystem);
 

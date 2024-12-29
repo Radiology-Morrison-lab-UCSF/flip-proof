@@ -14,6 +14,7 @@ using UInt8 = System.Byte;
 using System.Numerics;
 using static Tensorboard.TensorShapeProto.Types;
 using System.Diagnostics.CodeAnalysis;
+using FlipProof.Base;
 
 namespace FlipProof.Torch;
 
@@ -50,7 +51,7 @@ public partial class DoubleTensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public DoubleTensor DeepClone() => new(Storage.clone());
+   public override DoubleTensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -104,29 +105,6 @@ public partial class DoubleTensor
    public DoubleTensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public DoubleTensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 #region TEMPLATE EXPANSION
@@ -163,7 +141,7 @@ public partial class Int8Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public Int8Tensor DeepClone() => new(Storage.clone());
+   public override Int8Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -217,29 +195,6 @@ public partial class Int8Tensor
    public Int8Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public Int8Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class UInt8Tensor
@@ -275,7 +230,7 @@ public partial class UInt8Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public UInt8Tensor DeepClone() => new(Storage.clone());
+   public override UInt8Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -329,29 +284,6 @@ public partial class UInt8Tensor
    public UInt8Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public UInt8Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class Int16Tensor
@@ -387,7 +319,7 @@ public partial class Int16Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public Int16Tensor DeepClone() => new(Storage.clone());
+   public override Int16Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -441,29 +373,6 @@ public partial class Int16Tensor
    public Int16Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public Int16Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class Int32Tensor
@@ -499,7 +408,7 @@ public partial class Int32Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public Int32Tensor DeepClone() => new(Storage.clone());
+   public override Int32Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -553,29 +462,6 @@ public partial class Int32Tensor
    public Int32Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public Int32Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class Int64Tensor
@@ -611,7 +497,7 @@ public partial class Int64Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public Int64Tensor DeepClone() => new(Storage.clone());
+   public override Int64Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -665,29 +551,6 @@ public partial class Int64Tensor
    public Int64Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public Int64Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class FloatTensor
@@ -723,7 +586,7 @@ public partial class FloatTensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public FloatTensor DeepClone() => new(Storage.clone());
+   public override FloatTensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -777,29 +640,6 @@ public partial class FloatTensor
    public FloatTensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public FloatTensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class BoolTensor
@@ -835,7 +675,7 @@ public partial class BoolTensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public BoolTensor DeepClone() => new(Storage.clone());
+   public override BoolTensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -889,29 +729,6 @@ public partial class BoolTensor
    public BoolTensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public BoolTensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class Complex32Tensor
@@ -947,7 +764,7 @@ public partial class Complex32Tensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public Complex32Tensor DeepClone() => new(Storage.clone());
+   public override Complex32Tensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -1001,29 +818,6 @@ public partial class Complex32Tensor
    public Complex32Tensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public Complex32Tensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 public partial class ComplexTensor
@@ -1059,7 +853,7 @@ public partial class ComplexTensor
    /// Copies this object and its storage
    /// </summary>
    /// <returns></returns>
-   public ComplexTensor DeepClone() => new(Storage.clone());
+   public override ComplexTensor DeepClone() => new(Storage.clone());
 
    #region COMBINE ACROSS DIMENSIONS
    /// <summary>
@@ -1113,29 +907,6 @@ public partial class ComplexTensor
    public ComplexTensor Blank() => new (torch.zeros_like(Storage));
 
 
-   /// <summary>
-   /// Pads the tensor so it is centered in the result
-   /// </summary>
-   /// <param name="padBy">Amount to pad left and right for each dimension. Provide twice as many values as their are dimensions ordered LDim0, RDim0, LDim1, RDim1, etc</param>
-   /// <remarks>This does not match behaviour of torch.pad, which has arguments in a sort of reverse order</remarks>
-   /// <returns>A new, padded, tensor</returns>
-   public ComplexTensor PadSurround(params long[] padBy)
-   {
-      if (padBy.Length != NDims * 2)
-      {
-         throw new ArgumentException($"Expected {NDims * 2} values");
-      }
-
-      // Torch orders things in reverse DimN L, DimN R, Dim N-1 L, Dim N-1 R, etc
-      long[] padTorchOrder = padBy.Reverse().ToArray();
-
-      for (int i = 0; i < padTorchOrder.Length;i+=2)
-      {
-         (padTorchOrder[i], padTorchOrder[i + 1]) = (padTorchOrder[i + 1], padTorchOrder[i]);
-      }
-
-      return CreateFromTensor(torch.nn.functional.pad(Storage, padTorchOrder, PaddingModes.Constant));
-   }
 }
 
 #endregion TEMPLATE EXPANSION
