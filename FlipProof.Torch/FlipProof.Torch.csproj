@@ -55,8 +55,13 @@
 
 
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir)" />
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="$(DefineConstants.Contains('LINUX'))">
+    <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates $(ProjectDir)" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="$(DefineConstants.Contains('WINDOWS'))">
+    <!-- use for debugging errors: <Exec Command="start cmd /k &quot;$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir) &amp;&amp; exit &quot;" />-->
+    <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir)" />
   </Target>
 
 </Project>

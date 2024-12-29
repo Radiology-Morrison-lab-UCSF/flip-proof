@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="$(DefineConstants.Contains('LINUX'))">
-      <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates.exe $(ProjectDir)" />
+      <Exec Command="$(ProjectDir)\..\csharp-templates\CSharpTemplates\bin\Release\net8.0\CSharpTemplates $(ProjectDir)" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="$(DefineConstants.Contains('WINDOWS'))">
