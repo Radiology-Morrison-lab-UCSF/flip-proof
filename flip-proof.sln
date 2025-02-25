@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{11BEF17D
 		base.props = base.props
 	EndProjectSection
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonExample", "PythonExample\PythonExample.pyproj", "{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,18 @@ Global
 		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Debug|Any CPU.Build.0 = Release|Any CPU
 		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F371B00-62A3-4A86-B20D-702E4BACCB71}.Win-GPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Linux-CPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Linux-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Linux-GPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Linux-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.MacOS-CPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.MacOS-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-CPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-GPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

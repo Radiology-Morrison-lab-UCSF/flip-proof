@@ -88,7 +88,7 @@ where TSpace : struct, ISpace
 		return ImageDouble<TSpace4D>.ConcatImage<TSpace3D, TSpace4D>(read);
 	}
 
-	public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true)
+   public static ImageFloat<TSpace> ReadToFloat<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true)
 		where TSpace : struct, ISpace
 	{
 		NiftiFile_Base origNifti;

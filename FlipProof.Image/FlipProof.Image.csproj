@@ -2,6 +2,7 @@
 
   <Import Project="..\base.props" />
   <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies><!-- Forces copy of dependencies from FlipProof.Torch -->
   </PropertyGroup>
 
   <ItemGroup>
