@@ -35,7 +35,7 @@ public abstract class FloatingPointTensorTests<T,TTensor>
 
    #region Simple Elementwise Operations
 
-   void SimpleElementwiseStabilityTest(Func<TTensor,TTensor> act)
+   void SimpleElementwiseStabilityTest(Func<TTensor,TTensor> act, bool isInPlace=false)
    {
       T[] vals = [Cast(1), Cast(-1f), Cast(5), Cast(7.51f), Cast(11), Cast(55.5f)];
 
@@ -43,10 +43,24 @@ public abstract class FloatingPointTensorTests<T,TTensor>
       TTensor orig = (TTensor)(object)input.DeepClone();
       TTensor result = act(input);
 
-      Assert.AreNotSame(input, result, "Returns input");
-      Assert.IsTrue(input.ValuewiseEquals(orig).All(), "Input altered");
+      if (isInPlace)
+      {
+         Assert.AreSame(input, result, "Does not return input");
+      }
+      else
+      {
+         Assert.AreNotSame(input, result, "Returns input");
+      }
+      
+      Assert.AreEqual(!isInPlace, input.ValuewiseEquals(orig).All(), isInPlace ? "Input not altered" : "Input altered");
+
       Assert.IsTrue(input.ShapesEqual(result));
    }
+
+   [TestMethod]
+   public void Abs() => SimpleElementwiseStabilityTest(a => a.Abs());
+   [TestMethod]
+   public void AbsInPlace() => SimpleElementwiseStabilityTest(a => a.AbsInPlace(), true);
 
    [TestMethod]
    public void ACos() => SimpleElementwiseStabilityTest(a=>a.ACos());

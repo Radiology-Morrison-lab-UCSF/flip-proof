@@ -28,7 +28,11 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
    /// Converts to absolute values in place
    /// </summary>
    /// <returns></returns>
-   public virtual TSelf AbsInPlace() => CreateFromTensor(Storage.abs_());
+   public virtual TSelf AbsInPlace()
+   {
+      Storage.abs_(); 
+      return (this as TSelf)!;
+   }
 
    /// <summary>
    /// Forward fourier transform, returning single precision. Avoid usage on types that cannot be encoded by floats
