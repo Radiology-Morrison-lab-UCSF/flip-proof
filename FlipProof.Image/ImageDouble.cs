@@ -13,6 +13,44 @@ public sealed partial class ImageDouble<TSpace> : Image_FloatingPoint<double, TS
 
    #region Parameters
 
+   #region Pythonic Operators
+   public ImageDouble<TSpace> Add_UInt8(ImageUInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   [CLSCompliant(false)]
+   public ImageDouble<TSpace> Add_Int8(ImageInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   public ImageDouble<TSpace> Add_Int16(ImageInt16<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   public ImageDouble<TSpace> Add_Int32(ImageInt32<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   public ImageDouble<TSpace> Add_Int64(ImageInt64<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   public ImageDouble<TSpace> Add_Float(ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+   public ImageDouble<TSpace> Add_Double(ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
+
+   public ImageDouble<TSpace> Subtract_UInt8(ImageUInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   [CLSCompliant(false)]
+   public ImageDouble<TSpace> Subtract_Int8(ImageInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   public ImageDouble<TSpace> Subtract_Int16(ImageInt16<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   public ImageDouble<TSpace> Subtract_Int32(ImageInt32<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   public ImageDouble<TSpace> Subtract_Int64(ImageInt64<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   public ImageDouble<TSpace> Subtract_Float(ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+   public ImageDouble<TSpace> Subtract_Double(ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data - right.Data);
+
+   public ImageDouble<TSpace> Mul_UInt8(ImageUInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   [CLSCompliant(false)]
+   public ImageDouble<TSpace> Mul_Int8(ImageInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   public ImageDouble<TSpace> Mul_Int16(ImageInt16<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   public ImageDouble<TSpace> Mul_Int32(ImageInt32<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   public ImageDouble<TSpace> Mul_Int64(ImageInt64<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   public ImageDouble<TSpace> Mul_Float(ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+   public ImageDouble<TSpace> Mul_Double(ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data * right.Data);
+
+   public ImageDouble<TSpace> Div_UInt8(ImageUInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   [CLSCompliant(false)]
+   public ImageDouble<TSpace> Div_Int8(ImageInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   public ImageDouble<TSpace> Div_Int16(ImageInt16<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   public ImageDouble<TSpace> Div_Int32(ImageInt32<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   public ImageDouble<TSpace> Div_Int64(ImageInt64<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   public ImageDouble<TSpace> Div_Float(ImageFloat<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   public ImageDouble<TSpace> Div_Double(ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
+   #endregion
+
    #endregion
 
    /// <summary>
