@@ -241,3 +241,8 @@ Flip Proof and its associated code is not a registered medical device and has no
 Efforts have been made to ensure safety and correctness of outputs. These can be checked by running the associated unit tests and checking coverage. However, like all frameworks, bugs and limitations will exist and so this framework should be used with caution. Responsibility is on you to verify your pipelines work as expected.
 
 Finally, Flip Proof is designed to prevent common hidden coding errors that can present danger in clinical scenarios, or cause unreliabilty in derived products. While reasonably watertight, it is not 'hack proof' and is designed to be used in good faith. Attempts to subvert its 'safety rails' (for example, using reflection to access private members) will endanger patient safety and suggest this is not the framework for you.
+
+
+## Licenses
+
+ - `chris_*` images were acquired by Chirs Rorden at the [McCausland Center for Brain Imaging](https://www.mccauslandcenter.sc.edu) and are distributed under the [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/).

@@ -6,20 +6,27 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FlipProof.Image.Nifti.Simple;
-public static class NiftiReader<TSpace>
-   where TSpace : struct, ISpace
+
+/// <summary>
+/// Simple nifti reader for use in Python 
+/// </summary>
+/// <typeparam name="TSpace"></typeparam>
+public static class NiftiReader
 {
-   public static ImageDouble<TSpace> ReadToDouble(string fileLoc, bool lookForZippedVariantIfNotFound)
+   public static ImageDouble<TSpace> ReadToDouble<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound)
+         where TSpace : struct, ISpace
    {
-      return NiftiReader.ReadToDouble<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
+      return FlipProof.Image.Nifti.NiftiReader.ReadToDouble<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
    }
-   public static ImageFloat<TSpace> ReadToFloat(string fileLoc, bool lookForZippedVariantIfNotFound)
+   public static ImageFloat<TSpace> ReadToFloat<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound)
+         where TSpace : struct, ISpace
    {
-      return NiftiReader.ReadToFloat<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
+      return FlipProof.Image.Nifti.NiftiReader.ReadToFloat<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
    }
-   public static ImageBool<TSpace> ReadToBool(string fileLoc, bool lookForZippedVariantIfNotFound)
+   public static ImageBool<TSpace> ReadToBool<TSpace>(string fileLoc, bool lookForZippedVariantIfNotFound)
+         where TSpace : struct, ISpace
    {
-      return NiftiReader.ReadToBool<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
+      return FlipProof.Image.Nifti.NiftiReader.ReadToBool<TSpace>(fileLoc, lookForZippedVariantIfNotFound, out _);
    }
 
 }
