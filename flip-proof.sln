@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{11BEF17D
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonExample", "PythonExample\PythonExample.pyproj", "{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlipProof.ITK", "FlipProof.ITK\FlipProof.ITK.csproj", "{AB60FC1C-FB69-4E31-B147-EC135B460006}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +208,30 @@ Global
 		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-GPU-Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{03E835E2-A7F8-4108-A70F-4A3D7089FF0F}.Win-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-GPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-GPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Linux-GPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.MacOS-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.MacOS-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.MacOS-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.MacOS-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-CPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-CPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-CPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-CPU-Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-GPU-Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-GPU-Debug|Any CPU.Build.0 = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-GPU-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60FC1C-FB69-4E31-B147-EC135B460006}.Win-GPU-Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

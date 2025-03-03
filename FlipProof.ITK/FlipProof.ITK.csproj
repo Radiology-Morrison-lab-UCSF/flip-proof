@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\base.props" />
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!-- Forces copy of dependencies from FlipProof.Torch -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlipProof.Torch\FlipProof.Torch.csproj" />
+    <ProjectReference Include="..\FlipProof.Image\FlipProof.Image.csproj" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug MacOS'">
+    <Exec Command="cd ITK &amp;&amp; ./build-sitk.sh" />
+  </Target>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug Win' Or '$(Configuration)'=='Release Win'">
+    <Exec Command="ITK\link-sitk.bat" />
+  </Target>
+
+  <ItemGroup>
+    <!-- Reference the dll in the current-build itk directory -->
+    <Reference Include="SimpleITKCSharpManaged">
+      <HintPath>ITK\current-build\SimpleITKCSharpManaged.dll</HintPath>
+    </Reference>
+    <!-- Copy the dll's accompanying binary without keeping the dir structure -->
+    <None Update="ITK\current-build\*.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+    <None Update="ITK\current-build\*.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+    <None Update="ITK\current-build\SimpleITKCSharpNative.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+  </ItemGroup>
+  
+  
+</Project>
