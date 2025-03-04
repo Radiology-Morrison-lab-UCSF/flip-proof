@@ -22,8 +22,6 @@ namespace FlipProof.ITK
          using TemporaryFilenameGenerator tempFiles = new();
          var saveTo = tempFiles.Next("nii");
 
-         Console.WriteLine("Saving to " + saveTo);
-
          flipProofIm.SaveAsNifti(saveTo);
          
          itk.simple.ImageFileReader reader = new itk.simple.ImageFileReader();
@@ -32,6 +30,7 @@ namespace FlipProof.ITK
          return reader.Execute();
       }
 
+      [Obsolete("Header is checked at run time. Consider using a non-ITK method where possible to achieve compile-time-checks")]
       public static Image<TSpace> ToFlipProof<TSpace>(this itk.simple.Image itkImage)
          where TSpace : struct, ISpace
       {
