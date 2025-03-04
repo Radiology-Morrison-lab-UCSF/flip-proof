@@ -30,12 +30,12 @@ public interface IImageHeader
          Orientation.Equals(other.Orientation,Size.Min()/10000f);
    }
 
-   /// <summary>
-   /// Creates a new image header of the same type as this based on another
-   /// </summary>
-   /// <param name="other">Copies information from this</param>
-   /// <returns>A new imageheader of the same type as this</returns>
-   public IImageHeader Create(IImageHeader other);
+   ///// <summary>
+   ///// Creates a new image header of the same type as this based on another
+   ///// </summary>
+   ///// <param name="other">Copies information from this</param>
+   ///// <returns>A new imageheader of the same type as this</returns>
+   //public IImageHeader Create(IImageHeader other);
 
 
    /// <summary>

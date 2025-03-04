@@ -69,7 +69,7 @@ public abstract class NiftiFile_Base(NiftiHeader head, Stream voxels) : IDisposa
 		where TVoxel: struct, INumber<TVoxel>
 		where TSpace : struct, ISpace
    {
-      var head = NiftiHeader.Create(vols.Header);
+      var head = NiftiHeader.Create(vols.Header, EnumMethods.Type2DataType(typeof(TVoxel), true));
       head.PixDim[4] = TR;
 
       LargeMemoryStream vox = vols.GetVoxelBytes();

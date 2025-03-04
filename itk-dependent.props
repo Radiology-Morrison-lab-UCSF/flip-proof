@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <!-- Reference the dll in the current-build itk directory -->
+    <Reference Include="SimpleITKCSharpManaged">
+      <HintPath>..\FlipProof.ITK\ITK\current-build\SimpleITKCSharpManaged.dll</HintPath>
+    </Reference>
+    <!-- Copy the dll's accompanying binary without keeping the dir structure -->
+    <None Update="..\FlipProof.ITK\ITK\current-build\*.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+    <None Update="..\FlipProof.ITK\ITK\current-build\*.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+    <None Update="..\FlipProof.ITK\ITK\current-build\SimpleITKCSharpNative.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </None>
+  </ItemGroup>
+
+</Project>

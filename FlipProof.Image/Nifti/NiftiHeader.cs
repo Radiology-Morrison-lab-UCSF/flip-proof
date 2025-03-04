@@ -281,7 +281,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 			calMin = 0f;
 		}
 
-		NiftiHeader header = Create(v0.Header);
+		NiftiHeader header = Create(v0.Header, EnumMethods.Type2DataType(typeof(TVoxel), true));
 		header.calMin = calMin;
 		header.calMax = calMax;
 		header.bitPix = typeof(TVoxel).Type2DataType(true).BitsPerPixel();
@@ -529,17 +529,14 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		}
 	}
 
-	IImageHeader IImageHeader.Create(IImageHeader other)
-	{
-		return Create(other);
-	}
+
 	/// <summary>
 	/// Creates a nifti header from a generic image header
 	/// </summary>
 	/// <param name="other"></param>
 	/// <returns></returns>
 	/// <exception cref="NotSupportedException"></exception>
-   public static NiftiHeader Create(IImageHeader other)
+   public static NiftiHeader Create(IImageHeader other, DataType dataType)
 	{
 		if (other.CoordinateSystem != CoordinateSystem.RAS)
 		{
@@ -551,20 +548,21 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
       float qa, qb, qc, qd;
 		float translationX, translationY, translationZ;
-		if (Matrix4x4.Decompose(other.Orientation, out var scale, out var rotationQuaternions, out var translation))
-		{
-			qa = rotationQuaternions.W;
-			qb = rotationQuaternions.X;
-			qc = rotationQuaternions.Y;
-			qd = rotationQuaternions.Z;
-			translationX = translation.X;
-			translationY = translation.Y;
-			translationZ = translation.Z;
-			qCode = CoordinateMapping_Nifti.ScannerAnat;
-         sCode = CoordinateMapping_Nifti.Unknown;
-      }
-		else
-		{
+#warning This is not correct - Matrix4x4.Decompose does not work with the Nifti orientation matrix translation
+      //if (Matrix4x4.Decompose(other.Orientation, out var scale, out var rotationQuaternions, out var translation))
+      //{
+      //	qa = rotationQuaternions.W;
+      //	qb = rotationQuaternions.X;
+      //	qc = rotationQuaternions.Y;
+      //	qd = rotationQuaternions.Z;
+      //	translationX = translation.X;
+      //	translationY = translation.Y;
+      //	translationZ = translation.Z;
+      //	qCode = CoordinateMapping_Nifti.ScannerAnat;
+      //       sCode = CoordinateMapping_Nifti.Unknown;
+      //    }
+      //else
+      {
          qCode = CoordinateMapping_Nifti.Unknown;
          sCode = CoordinateMapping_Nifti.ScannerAnat;
 
@@ -593,10 +591,10 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		var header = new NiftiHeader(true)
 		{
 			magicString = magic_singlefile.ToArray(),
-         bitPix = 8,
+         bitPix = EnumMethods.BitsPerPixel(dataType),
 			calMax = 1,
 			calMin = 0,
-			dataType = DataType.signedChar,
+			dataType = dataType,
 			qFormCode = qCode,
 			sFormCode = sCode,
 			sliceCode = 0, // not supported
@@ -642,7 +640,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
 	private static short[] GetDataArrayDimensions(IImageHeader other)
 	{
-		return other.Size.Select(Convert.ToInt16).Concat_Start((short)other.Size.NDims).ToArray();
+		return other.Size.Select(Convert.ToInt16).Concat_Start((short)other.Size.NDims).PadToLength(8, (short)1).ToArray();
 	}
 
    private static byte GetDimInfo(IImageHeader head)

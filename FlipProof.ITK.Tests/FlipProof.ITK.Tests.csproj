@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="..\base.props" />
   <PropertyGroup>
     <IsPackable>false</IsPackable>
@@ -13,26 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlipProof.ImageTests\FlipProof.ImageTests.csproj" />
     <ProjectReference Include="..\FlipProof.Image\FlipProof.Image.csproj" />
+    <ProjectReference Include="..\FlipProof.ITK\FlipProof.ITK.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Resource1.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resource1.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resource1.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
+  <Import Project="..\itk-dependent.props" />
 </Project>

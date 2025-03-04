@@ -137,7 +137,7 @@ public interface ISpace
       where T: struct, ISpace
    {
       var existing = ISpace.GetOrientation<T>();
-      return existing != null && existing.Equals(orientation);
+      return existing != null && orientation != null && existing.TolerantEquals(orientation, false);
    }
 
    /// <summary>

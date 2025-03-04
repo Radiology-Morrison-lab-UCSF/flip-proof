@@ -1076,6 +1076,27 @@ public static class GenMethods
       return res;
    }
 
+   /// <summary>
+   /// If the ienumerable contains less than the specified number of items, it will pad with the specified value
+   /// at the end of the ienumerable
+   /// </summary>
+   /// <param name="items">To pad</param>
+   /// <param name="length">Desired minimum length</param>
+   /// <param name="padWith">Pads with this value</param>
+   /// <returns>Padded Ienumerable </returns>
+   public static IEnumerable<T> PadToLength<T>(this IEnumerable<T> items, int length, T padWith)
+   {
+      foreach (T item in items)
+      {
+         yield return item;
+         length--;
+      }
+      for (; length > 0; length--)
+      {
+         yield return padWith;
+      }
+   }
+
    public static IEnumerable<int> RankOrderUnique<T>(T[] orig) where T : IComparable<T>, IEquatable<T>
    {
       T[] sorted = new T[orig.Length];

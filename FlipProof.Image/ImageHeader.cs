@@ -1,4 +1,5 @@
 ﻿using FlipProof.Base;
+using FlipProof.Image.Matrices;
 using System.Collections.Immutable;
 using System.Numerics;
 using static TorchSharp.torch;
@@ -22,7 +23,7 @@ public record ImageHeader(ImageSize Size,
    /// </summary>
    public Box4D<long> VoxelBounds => new(new(), Size);
 
-   IImageHeader IImageHeader.Create(IImageHeader other) => Create(other);
+   //IImageHeader IImageHeader.Create(IImageHeader other) => Create(other);
    public static ImageHeader Create(IImageHeader other)
    {
       return new ImageHeader(other.Size, other.Orientation, other.CoordinateSystem, other.PhaseEncodingDimension, other.FrequencyEncodingDimension, other.SliceEncodingDimension);
@@ -80,16 +81,73 @@ public record ImageHeader(ImageSize Size,
    
    public XYZ<float> VoxelToWorldCoordinate(float x, float y, float z)
    {
+      return VoxelToWorldCoordinate(x, y, z, Orientation);
+   }
+
+   private static XYZ<float> VoxelToWorldCoordinate(float x, float y, float z, Matrix4x4 orientation)
+   {
       return new XYZ<float>(
-             Orientation.M11 * x + Orientation.M12 * y + Orientation.M13 * z + Orientation.M14,
-             Orientation.M21 * x + Orientation.M22 * y + Orientation.M23 * z + Orientation.M24,
-             Orientation.M31 * x + Orientation.M32 * y + Orientation.M33 * z + Orientation.M34
+             orientation.M11 * x + orientation.M12 * y + orientation.M13 * z + orientation.M14,
+             orientation.M21 * x + orientation.M22 * y + orientation.M23 * z + orientation.M24,
+             orientation.M31 * x + orientation.M32 * y + orientation.M33 * z + orientation.M34
          );
    }
+
 
    /// <summary>
    /// Returns the same header but with the 4th dimension only 1 deep
    /// </summary>
    /// <returns></returns>
    public ImageHeader As3D() => this with { Size = new ImageSize(Size.X, Size.Y, Size.Z, 1) };
+
+
+   /// <summary>
+   /// Compares two headers, tolerantly wrt to orientation
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public bool TolerantEquals(IImageHeader other, bool checkEncodingDirections)
+   {
+      return CoordinateSystem == other.CoordinateSystem &&
+         ((!checkEncodingDirections) || PhaseEncodingDimension == other.PhaseEncodingDimension) &&
+         ((!checkEncodingDirections) || FrequencyEncodingDimension == other.FrequencyEncodingDimension) &&
+         ((!checkEncodingDirections) || SliceEncodingDimension == other.SliceEncodingDimension) &&
+         Size.Equals(other.Size) && 
+         DistWithinTolerance();
+
+      bool DistWithinTolerance()
+      {
+         var voxelSize = this.GetVoxelSize();
+         double tolerance = 0.001 * voxelSize.Min(); //1000th of the smallest dim in voxel size 
+
+         var this000 = this.VoxelToWorldCoordinate(0, 0, 0);
+         var other000 = VoxelToWorldCoordinate(0, 0, 0, other.Orientation);
+         if (this000.DistanceTo(other000) > tolerance)
+         {
+            return false;
+         }
+
+
+         // Check end of image bounds
+         var thisEdge = this.VoxelToWorldCoordinate(Size.X, Size.Y, Size.Z);
+         var otherEdge = VoxelToWorldCoordinate(Size.X, Size.Y, Size.Z, other.Orientation);
+         if (thisEdge.DistanceTo(otherEdge) > tolerance)
+         {
+            return false;
+         }
+
+         if(Size.X == Size.Y || Size.Y == Size.Z || Size.Z == Size.X)
+         {
+            // Do 1,3,5 in case of rotation
+            var this135 = this.VoxelToWorldCoordinate(1, 3, 5);
+            var other135 = VoxelToWorldCoordinate(1, 3, 5, other.Orientation);
+            if (this135.DistanceTo(other135) > tolerance)
+            {
+               return false;
+            }
+         }
+
+         return true;
+      }
+   }
 }
