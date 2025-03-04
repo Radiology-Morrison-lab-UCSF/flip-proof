@@ -45,7 +45,7 @@ public sealed partial class ImageInt8<TSpace> : Image_Integer<sbyte,TSpace, Imag
 
    public static ImageInt16<TSpace> operator +(ImageUInt8<TSpace> left, ImageInt8<TSpace> right) => left.Add_Int8(right);
    public static ImageInt16<TSpace> operator +(ImageInt8<TSpace> left, ImageUInt8<TSpace> right) => left.Add_UInt8(right);
-   public static ImageInt16<TSpace> operator -(ImageUInt8<TSpace> left, ImageInt8<TSpace> right) => left.Add_Int8(right);
+   public static ImageInt16<TSpace> operator -(ImageUInt8<TSpace> left, ImageInt8<TSpace> right) => left.Subtract_Int8(right);
    public static ImageInt16<TSpace> operator -(ImageInt8<TSpace> left, ImageUInt8<TSpace> right) => left.Subtract_UInt8(right);
    public static ImageInt16<TSpace> operator *(ImageUInt8<TSpace> left, ImageInt8<TSpace> right) => left.Mul_Int8(right);
    public static ImageInt16<TSpace> operator *(ImageInt8<TSpace> left, ImageUInt8<TSpace> right) => left.Mul_UInt8(right);
