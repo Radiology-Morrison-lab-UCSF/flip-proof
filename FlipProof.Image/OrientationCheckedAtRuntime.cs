@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FlipProof.Image;
 
 [System.AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor, Inherited = true, AllowMultiple = false)]
-sealed class OrientationCheckedAtRuntime : Attribute
+public sealed class OrientationCheckedAtRuntime : Attribute
 {
    const string DefaultMessage = "Causes a Runtime Orientation Check";
    public OrientationCheckedAtRuntime(string? alternativeOption = null)

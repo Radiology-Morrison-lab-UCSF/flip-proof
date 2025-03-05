@@ -13,6 +13,7 @@ namespace FlipProof.ITK
 {
     public static class Converter
     {
+      [OrientationCheckedAtRuntime] // All ITK methods run orientation checks and itk rejects non-orthagonal spaces
       public static itk.simple.Image ToITK<TVoxel, TSpace>(this Image<TVoxel,TSpace> flipProofIm)
          where TSpace: struct, ISpace
          where TVoxel : struct, INumber<TVoxel>
@@ -30,7 +31,7 @@ namespace FlipProof.ITK
          return reader.Execute();
       }
 
-      [Obsolete("Header is checked at run time. Consider using a non-ITK method where possible to achieve compile-time-checks")]
+      [OrientationCheckedAtRuntime]
       public static Image<TSpace> ToFlipProof<TSpace>(this itk.simple.Image itkImage)
          where TSpace : struct, ISpace
       {
