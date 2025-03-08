@@ -196,7 +196,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 	/// <summary>
 	/// Returns the patient-scanner matrix, if available, else the standard space matrix. An exception is thrown if using the analyse orientation (qform and sform both zero).
 	/// </summary>
-	System.Numerics.Matrix4x4 IImageHeader.Orientation
+	IReadOnlyOrientation IImageHeader.Orientation
 	{
 		get
 		{
@@ -239,9 +239,9 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		}
 	}
 
-   private Matrix4x4 GetVox2StdSpaceMatrix()
+   private OrientationMatrix GetVox2StdSpaceMatrix()
    {
-      return new Matrix4x4()
+      return new( new Matrix4x4()
       {
          M11 = Srow_x[0],
          M12 = Srow_x[1],
@@ -256,7 +256,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
          M33 = Srow_z[2],
          M34 = Srow_z[3],
          M44 = 1f
-      };
+      });
    }
 
 
@@ -295,36 +295,90 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		magicString = magic_singlefile.ToArray();
 	}
 
-   public Matrix4x4 GetVox2WorldMatrix_ScannerSpace()
+   internal DecomposableNiftiTransformD GetVox2WorldMatrix_ScannerSpace()
 	{
-      DenseMatrix<double> d = GetVox2WorldDecomposableMatrix_ScannerSpace().FastCalcMat;
-      return new Matrix4x4()
-      {
-         M11 = (float)d[0, 0],
-         M21 = (float)d[1, 0],
-         M31 = (float)d[2, 0],
-         M41 = 0f,
-
-         M12 = (float)d[0, 1],
-         M22 = (float)d[1, 1],
-         M32 = (float)d[2, 1],
-         M42 = 0f,
-
-         M13 = (float)d[0, 2],
-         M23 = (float)d[1, 2],
-         M33 = (float)d[2, 2],
-         M43 = 0f,
-
-         M14 = (float)d[0, 3],
-         M24 = (float)d[1, 3],
-         M34 = (float)d[2, 3],
-         M44 = 1f,
-
-      };
+      return GetVox2WorldDecomposableMatrix_ScannerSpace();
    }
-   public DecomposableTransform<double> GetVox2WorldDecomposableMatrix_ScannerSpace()
+	/// <summary>
+	/// Sets the SRow. Does not update the quaternions
+	/// </summary>
+	/// <param name="m"></param>
+	/// <exception cref="ArgumentException"></exception>
+   public void SetVox2WorldMatrix_SForm(Matrix4x4 m)
    {
-      return DecomposableTransform<double>.FromNiftiQuaternions(quartern_b, quartern_c, quartern_d, PixDim.Skip(1L).Take(3L).Select(Convert.ToDouble).ToArray(),
+		if(m.M41 != 0 || m.M42 != 0 || m.M43 != 0 || m.M44 != 1)
+      {
+         throw new ArgumentException("Matrix must be a simple 3D matrix with final row 0 0 0 1");
+      }
+
+      srow_x = [m.M11, m.M12, m.M13, m.M14];
+		srow_y = [m.M21, m.M22, m.M23, m.M24];
+		srow_z = [m.M31, m.M32, m.M33, m.M34];
+		
+   }
+	
+	/// <summary>
+	/// Sets the SRow. Does not update the quaternions
+	/// </summary>
+	/// <param name="m"></param>
+	/// <exception cref="ArgumentException"></exception>
+   public void SetVox2WorldMatrix_SForm(DenseMatrix<float> m)
+   {
+		if (m.NoRows != 3 || m.NoCols != 4)
+      {
+         throw new ArgumentException("Matrix must be a simple 3 row x 4 col matrix");
+      }
+
+      srow_x = m.GetRow(0);
+		srow_y = m.GetRow(1);
+      srow_z = m.GetRow(2);
+   }
+	/// <summary>
+	/// Sets the quaternions, not sRow
+	/// </summary>
+	/// <param name="m"></param>
+	/// <exception cref="ArgumentException"></exception>
+   internal bool SetVox2WorldMatrix_QForm(DecomposableNiftiTransform<double> m)
+   {
+		try
+		{
+			m.TryGetNiftiQuaternions(out double quartern_b, out double quartern_c, out double quartern_d, out var pixDims, out var translation, out var qFac);
+
+			this.quartern_b = (float)quartern_b;
+			this.quartern_c = (float)quartern_c;
+			this.quartern_d = (float)quartern_d;
+			this.quartern_x = (float)translation[0];
+			this.quartern_y = (float)translation[1];
+			this.quartern_z = (float)translation[2];
+			this.PixDim[0] = (float)qFac;
+			this.pixDim[1] = (float)pixDims[0];
+			this.pixDim[2] = (float)pixDims[1];
+			this.pixDim[3] = (float)pixDims[2];
+			return true;
+		}
+		catch (Exception ex)
+		{
+			return false;
+		}
+   }
+
+   private static bool TryConvertToQuaternions(Matrix4x4 m, [NotNullWhen(true)] out Matrices.Quaternion? quaternions,out XYZ<float> translation)
+   {
+      if (m.M41 != 0 || m.M42 != 0 || m.M43 != 0 || m.M44 != 1)
+      {
+         quaternions = null;
+			translation = default;
+         return false;
+      }
+
+      quaternions = Matrices.Quaternion.FromMatrixValues(m.M11, m.M12, m.M13, m.M21, m.M22, m.M23, m.M31, m.M32, m.M33);
+		translation = new(m.M14, m.M24, m.M34);
+      return true;
+   }
+
+   internal DecomposableNiftiTransformD GetVox2WorldDecomposableMatrix_ScannerSpace()
+   {
+      return DecomposableNiftiTransformD.FromNiftiQuaternions(quartern_b, quartern_c, quartern_d, PixDim.Skip(1L).Take(3L).Select(Convert.ToDouble).ToArray(),
       [
          quartern_x,
          quartern_y,
@@ -349,9 +403,9 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		}
 	}
 
-	private void SetQuarternsFromVox2WorldMatrix_ScannerSpace(DecomposableTransform<double> trans)
+	private void SetQuarternsFromVox2WorldMatrix_ScannerSpace(DecomposableNiftiTransform<double> trans)
 	{
-		trans.ToNiftiQuaternions(out var b, out var c, out var d, out var pixDims, out var _, out var qFac);
+		trans.TryGetNiftiQuaternions(out var b, out var c, out var d, out var pixDims, out var _, out var qFac);
 		PixDim[0] = (float)qFac;
 		PixDim[1] = (float)pixDims[0];
 		PixDim[2] = (float)pixDims[1];
@@ -546,35 +600,29 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		CoordinateMapping_Nifti qCode;
 		CoordinateMapping_Nifti sCode;
 
-      float qa, qb, qc, qd;
-		float translationX, translationY, translationZ;
-#warning This is not correct - Matrix4x4.Decompose does not work with the Nifti orientation matrix translation
-      //if (Matrix4x4.Decompose(other.Orientation, out var scale, out var rotationQuaternions, out var translation))
-      //{
-      //	qa = rotationQuaternions.W;
-      //	qb = rotationQuaternions.X;
-      //	qc = rotationQuaternions.Y;
-      //	qd = rotationQuaternions.Z;
-      //	translationX = translation.X;
-      //	translationY = translation.Y;
-      //	translationZ = translation.Z;
-      //	qCode = CoordinateMapping_Nifti.ScannerAnat;
-      //       sCode = CoordinateMapping_Nifti.Unknown;
-      //    }
-      //else
+		Matrix4x4 sformMatrix;
+		if (other.Orientation.TryGetNiftiQuaternions(out double qb, out double qc, out double qd, out var translation, out var rotationQuaternions, out var qFac))
       {
-         qCode = CoordinateMapping_Nifti.Unknown;
+			qCode = CoordinateMapping_Nifti.ScannerAnat;
+			sCode = CoordinateMapping_Nifti.Unknown;
+			sformMatrix = default;
+
+      }
+		else
+		{
+			qCode = CoordinateMapping_Nifti.Unknown;
          sCode = CoordinateMapping_Nifti.ScannerAnat;
 
-         qa = qb = qc = qd = 0;
-         translationX = translationY = translationZ = 0;
+         qb = qc = qd = 0;
+         translation = [0, 0, 0];
 
+			sformMatrix = other.Orientation.GetMatrix();
       }
 		float[]	pixelDims = new float[8] { 
 												other.Size.NDims, 
-												other.Orientation.GetVoxelSizeX(), 
-												other.Orientation.GetVoxelSizeY(),
-												other.Orientation.GetVoxelSizeZ(), 
+												(float)other.Orientation.VoxelSize.X,
+                                    (float)other.Orientation.VoxelSize.Y,
+                                    (float)other.Orientation.VoxelSize.Z, 
 												1, 1, 1, 1, };
 
 		// first slice is inclusice, 1 indexed
@@ -612,14 +660,14 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 			quartern_b = (float)qb,
 			quartern_c = (float)qc,
 			quartern_d = (float)qd,
-			quartern_x = translationX,
-			quartern_y = translationY,
-			quartern_z = translationZ,
+			quartern_x = (float)translation[0],
+			quartern_y = (float)translation[1],
+			quartern_z = (float)translation[2],
 			sclSlope = 1f,
 			scl_inter = 0f,
-			srow_x = [other.Orientation.M11, other.Orientation.M12, other.Orientation.M13, other.Orientation.M14],
-			srow_y = [other.Orientation.M21, other.Orientation.M22, other.Orientation.M23, other.Orientation.M24],
-			srow_z = [other.Orientation.M31, other.Orientation.M32, other.Orientation.M33, other.Orientation.M34],
+			srow_x = [sformMatrix.M11, sformMatrix.M12, sformMatrix.M13, sformMatrix.M14],
+			srow_y = [sformMatrix.M21, sformMatrix.M22, sformMatrix.M23, sformMatrix.M24],
+			srow_z = [sformMatrix.M31, sformMatrix.M32, sformMatrix.M33, sformMatrix.M34],
 			sliceDuration = 0, // not supported
 			sliceStart = 1, // inclusive, 1-indexed
 			sliceLast = (short)lastSlice, // inclusive, 1-indexed

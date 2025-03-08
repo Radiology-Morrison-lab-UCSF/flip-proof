@@ -3,12 +3,12 @@ using System;
 
 namespace FlipProof.Image.Matrices;
 
-public record Quaternion(double W, double X, double Y, double Z)
+internal record Quaternion(double W, double X, double Y, double Z)
 {
 
-   public static Quaternion FromMatrixValues(Matrix4x4_Optimised<double> m) => FromMatrixValues(m.M0_0, m.M0_1, m.M0_2, m.M1_0, m.M1_1, m.M1_2, m.M2_0, m.M2_1, m.M2_2);
+	public static Quaternion FromMatrixValues(Matrix4x4_Optimised<double> m) => FromMatrixValues(m.M0_0, m.M0_1, m.M0_2, m.M1_0, m.M1_1, m.M1_2, m.M2_0, m.M2_1, m.M2_2);
 
-   public static Quaternion FromMatrixValues(double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32, double r33)
+	public static Quaternion FromMatrixValues(double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32, double r33)
 	{
 		double q0 = (r11 + r22 + r33 + 1.0) / 4.0;
 		double q1 = (r11 - r22 - r33 + 1.0) / 4.0;
@@ -180,7 +180,7 @@ public record Quaternion(double W, double X, double Y, double Z)
 		Quaternion quat = DeepClone();
 		double qmagsq = quat.GetSquareMagnitude();
 		double factor = Math.Abs(1.0 - qmagsq) < 2.107342E-08 ? 2.0 / (1.0 + qmagsq) : 1.0 / (qmagsq * qmagsq);
-      return quat.Scale(factor);
+		return quat.Scale(factor);
 	}
 
 	public double GetMagnitude()
@@ -188,19 +188,47 @@ public record Quaternion(double W, double X, double Y, double Z)
 		return Math.Sqrt(GetSquareMagnitude());
 	}
 
-   public double GetSquareMagnitude() => W * W + X * X + Y * Y + Z * Z;
+	public double GetSquareMagnitude() => W * W + X * X + Y * Y + Z * Z;
 
-   public Quaternion Scale(double a)
+	public Quaternion Scale(double a)
 	{
-		return new(W*a, X*a, Y*a,Z*a);
+		return new(W * a, X * a, Y * a, Z * a);
 	}
 
-   public Quaternion DeepClone() => new Quaternion(W, X, Y, Z);
+	public Quaternion DeepClone() => new Quaternion(W, X, Y, Z);
 
-   public override string ToString() => "Real: " + W + " Imaginary: (" + X + ",\t" + Y + ",\t" + Z + ")";
+	public override string ToString() => "Real: " + W + " Imaginary: (" + X + ",\t" + Y + ",\t" + Z + ")";
 
-   internal static void MatrixToQuaternionValues(DenseMatrix<double> denseMatrix2, out object var, out double quartern_b, out double quartern_c, out double quartern_d)
-   {
-      throw new NotImplementedException();
-   }
+	public static bool TryMatrixToQuaternionValues(DenseMatrix<double> m, out double q0, out double q1, out double q2, out double q3)
+	{
+		double m2 = m[0, 0];
+		double r12 = m[0, 1];
+		double r13 = m[0, 2];
+		double r14 = m[1, 0];
+		double r15 = m[1, 1];
+		double r16 = m[1, 2];
+		double r17 = m[2, 0];
+		double r18 = m[2, 1];
+		double r19 = m[2, 2];
+		return TryMatrixToQuaternionValues(m2, r12, r13, r14, r15, r16, r17, r18, r19, out q0, out q1, out q2, out q3);
+	}
+
+	public static bool TryMatrixToQuaternionValues(double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21, double m22, out double q0, out double q1, out double q2, out double q3)
+	{
+		q0 = Math.Sqrt(Math.Max(0.0, 1.0 + m00 + m11 + m22)) / 2.0;
+		q1 = Math.Sqrt(Math.Max(0.0, 1.0 + m00 - m11 - m22)) / 2.0;
+		q2 = Math.Sqrt(Math.Max(0.0, 1.0 - m00 + m11 - m22)) / 2.0;
+		q3 = Math.Sqrt(Math.Max(0.0, 1.0 - m00 - m11 + m22)) / 2.0;
+		q1 = CopySign(q1, m21 - m12);
+		q2 = CopySign(q2, m02 - m20);
+		q3 = CopySign(q3, m10 - m01);
+
+		return !(double.IsNaN(q0) || double.IsNaN(q1) || double.IsNaN(q2));
+
+
+      static double CopySign(double num, double sign)
+		{
+			return sign == 0.0 ? num : num * (double)Math.Sign(sign);
+		}
+	}
 }

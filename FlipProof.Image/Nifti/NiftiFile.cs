@@ -341,9 +341,9 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		throw new NotImplementedException();
 	}
 
-	public DecomposableTransform<double> GetVox2WorldMatrix_ScannerSpace()
+	internal DecomposableNiftiTransform<double> GetVox2WorldMatrix_ScannerSpace()
 	{
-		return DecomposableTransform<double>.FromNiftiQuaternions(base.Head.quartern_b, base.Head.quartern_c, base.Head.quartern_d, base.Head.PixDim.Skip(1L).Take(3L).Select((Func<float, double>)((float entry) => entry))
+		return DecomposableNiftiTransform<double>.FromNiftiQuaternions(base.Head.quartern_b, base.Head.quartern_c, base.Head.quartern_d, base.Head.PixDim.Skip(1L).Take(3L).Select((Func<float, double>)((float entry) => entry))
 			.ToArray(),
       [
          base.Head.quartern_x,

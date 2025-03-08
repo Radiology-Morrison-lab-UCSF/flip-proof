@@ -168,7 +168,7 @@ public abstract class ImageTestsBase(int seed)
    {
 
       return new ImageHeader(new ImageSize((uint)r.NextInt64(minImSizeEachDim, 100), (uint)r.NextInt64(minImSizeEachDim, 100), (uint)r.NextInt64(minImSizeEachDim, 100), 1),
-                             GetRandomMatrix4x4(),
+                             new OrientationMatrix(GetRandomMatrix4x4()),
                              CoordinateSystem.RAS,
                              NextEncodingDir(),
                              NextEncodingDir(),

@@ -7,7 +7,7 @@ using static TorchSharp.torch;
 namespace FlipProof.Image;
 
 public record ImageHeader(ImageSize Size,
-                          Matrix4x4 Orientation,
+                          IReadOnlyOrientation Orientation,
                           CoordinateSystem CoordinateSystem,
                           EncodingDirection PhaseEncodingDimension,
                           EncodingDirection FrequencyEncodingDimension,
@@ -57,7 +57,7 @@ public record ImageHeader(ImageSize Size,
    /// <returns>A new header representing a theoretically padded image aligned to the origina unpadded image</returns>
    public ImageHeader GetForPaddedImage(long x0, long x1, long y0, long y1, long z0, long z1, long vols0, long vols1) => this with
    {
-      Orientation =  Orientation * new Matrix4x4(1, 0, 0, -x0, 0, 1, 0, -y0, 0, 0, 1, -z0, 0, 0, 0, 1),
+      Orientation =  Orientation.GetTranslated(-x0, -y0, -z0),
       Size = new(Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1, Size.VolumeCount + vols0 + vols1),
    };
 
@@ -65,33 +65,17 @@ public record ImageHeader(ImageSize Size,
    /// Returns the voxel size in mm
    /// </summary>
    /// <returns></returns>
-   public XYZ<float> GetVoxelSize()=> GetVoxelSizeFromMatrix(Orientation);
+   public XYZ<double> GetVoxelSize() => Orientation.VoxelSize;
 
-   internal static XYZ<float> GetVoxelSizeFromMatrix(Matrix4x4 orientation)
-   {
-      return new(Norm(orientation.M11, orientation.M21, orientation.M31),
-                 Norm(orientation.M12, orientation.M22, orientation.M32),
-                 Norm(orientation.M13, orientation.M23, orientation.M33));
 
-      static float Norm(float x, float y, float z) => MathF.Sqrt(x * x + y * y + z * z);
 
-   }
-
-   public XYZ<float> VoxelToWorldCoordinate(XYZ<float> vox) => VoxelToWorldCoordinate(vox.X, vox.Y, vox.Z);
+   public XYZ<double> VoxelToWorldCoordinate(XYZ<float> vox) => VoxelToWorldCoordinate(vox.X, vox.Y, vox.Z);
    
-   public XYZ<float> VoxelToWorldCoordinate(float x, float y, float z)
+   public XYZ<double> VoxelToWorldCoordinate(float x, float y, float z)
    {
-      return VoxelToWorldCoordinate(x, y, z, Orientation);
+      return Orientation.VoxelToWorldCoordinate(x, y, z);
    }
 
-   private static XYZ<float> VoxelToWorldCoordinate(float x, float y, float z, Matrix4x4 orientation)
-   {
-      return new XYZ<float>(
-             orientation.M11 * x + orientation.M12 * y + orientation.M13 * z + orientation.M14,
-             orientation.M21 * x + orientation.M22 * y + orientation.M23 * z + orientation.M24,
-             orientation.M31 * x + orientation.M32 * y + orientation.M33 * z + orientation.M34
-         );
-   }
 
 
    /// <summary>
@@ -113,41 +97,8 @@ public record ImageHeader(ImageSize Size,
          ((!checkEncodingDirections) || FrequencyEncodingDimension == other.FrequencyEncodingDimension) &&
          ((!checkEncodingDirections) || SliceEncodingDimension == other.SliceEncodingDimension) &&
          Size.Equals(other.Size) && 
-         DistWithinTolerance();
-
-      bool DistWithinTolerance()
-      {
-         var voxelSize = this.GetVoxelSize();
-         double tolerance = 0.001 * voxelSize.Min(); //1000th of the smallest dim in voxel size 
-
-         var this000 = this.VoxelToWorldCoordinate(0, 0, 0);
-         var other000 = VoxelToWorldCoordinate(0, 0, 0, other.Orientation);
-         if (this000.DistanceTo(other000) > tolerance)
-         {
-            return false;
-         }
+         Orientation.Equals(other.Orientation);
 
 
-         // Check end of image bounds
-         var thisEdge = this.VoxelToWorldCoordinate(Size.X, Size.Y, Size.Z);
-         var otherEdge = VoxelToWorldCoordinate(Size.X, Size.Y, Size.Z, other.Orientation);
-         if (thisEdge.DistanceTo(otherEdge) > tolerance)
-         {
-            return false;
-         }
-
-         if(Size.X == Size.Y || Size.Y == Size.Z || Size.Z == Size.X)
-         {
-            // Do 1,3,5 in case of rotation
-            var this135 = this.VoxelToWorldCoordinate(1, 3, 5);
-            var other135 = VoxelToWorldCoordinate(1, 3, 5, other.Orientation);
-            if (this135.DistanceTo(other135) > tolerance)
-            {
-               return false;
-            }
-         }
-
-         return true;
-      }
    }
 }

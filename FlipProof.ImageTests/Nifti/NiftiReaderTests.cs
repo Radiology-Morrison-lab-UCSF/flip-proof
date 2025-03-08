@@ -1,10 +1,44 @@
-﻿using FlipProof.Image.IO;
+﻿using FlipProof.Base;
+using FlipProof.Image;
+using FlipProof.Image.IO;
+using FlipProof.Image.Matrices;
 using FlipProof.Image.Nifti;
+using System.Numerics;
 
 namespace FlipProof.ImageTests.Nifti;
 [TestClass]
 public class NiftiReaderTests
 {
+   [TestMethod]
+   [DataRow(false)]
+   [DataRow(true)]
+   public void ReadWriteNifti_NonDiagonalOrientation(bool useSForm)
+   {
+      ImageFloat<TestSpace4D> orig = GetImageWithNonDiagonalOrientation(useSForm);
+      CheckMatrix(orig);
+
+      using TemporaryFilenameGenerator tempFiles = new();
+
+      orig.SaveAsNifti(tempFiles.Next("nii"));
+
+      var read = NiftiReader.ReadToFloat<TestSpace4D>(tempFiles.Last, false);
+
+      Assert.IsTrue(orig.Header.Equals(read.Header));
+      CheckMatrix(read);
+
+      CollectionAssert.AreEqual(orig.GetAllVoxels(), read.GetAllVoxels());
+
+      static void CheckMatrix(ImageFloat<TestSpace4D> read)
+      {
+         // Coords verified against ITKSnap
+         var world = read.Header.VoxelToWorldCoordinate(13, 58, 19);
+         Assert.AreEqual(4.42, world.X, 0.001);
+         Assert.AreEqual(312.4, world.Y, 0.001);
+         Assert.AreEqual(173.4, world.Z, 0.001);
+      }
+   }
+
+
    [TestMethod]
    public void ReadNifti()
    {
@@ -50,10 +84,43 @@ public class NiftiReaderTests
       Assert.AreEqual(201.2, world.Y, 0.001);
       Assert.AreEqual(102.6, world.Z, 0.001);
 
-      Assert.AreEqual(new System.Numerics.Matrix4x4(-1.2f,0,0,-176.4f,
-                                                      0,3.4f,0,4,
-                                                      0,0,5.4f,0,
-                                                      0,0,0,1), im.Header.Orientation);
+   }
+
+
+   protected ImageFloat<TestSpace4D> GetImageWithNonDiagonalOrientation(bool useSForm)
+   { 
+      // Start with a real image
+      using NiftiReader nr = new(Gen.GetUnzippedStream(new MemoryStream(Resource1.fmri_example_nii, false), true));
+      Assert.IsTrue(nr.TryRead(out string msg, out NiftiFile_Base? nf));
+
+      // Swap out the header for something more complex
+      /*
+       * Rotation matrix:
+            [ -0.7081229,  0.4710896,  0.5259625;
+               0.5995155,  0.0076180,  0.8003269;
+               0.3730189,  0.8820525, -0.2878200 ]
+       */
+      var decomposable = DecomposableNiftiTransform<double>.FromNiftiQuaternions(0.3781795, 0.707736, 0.5942821, [5.4, 3.3, 7.1], [21.3, -87.1, 101.72], 1);
+
+      Assert.IsTrue(nf.Head.SetVox2WorldMatrix_QForm(decomposable));
+      nf.Head.SetVox2WorldMatrix_SForm(decomposable.FastCalcMat.Cast<float>());
+     
+      if (useSForm)
+      {
+         nf.Head.sFormCode = CoordinateMapping_Nifti.ScannerAnat;
+         nf.Head.qFormCode = CoordinateMapping_Nifti.Unknown;
+      }
+      else
+      {
+         nf.Head.sFormCode = CoordinateMapping_Nifti.Unknown;
+         nf.Head.qFormCode = CoordinateMapping_Nifti.ScannerAnat;
+      }
+
+      //NiftiWriter.Write(nf, @"C:\users\lreid\data\test.nii", FileMode.Create);
+
+      var image = nf.ToImage<TestSpace4D>().ToFloat();
+
+      return image;
    }
 
 }

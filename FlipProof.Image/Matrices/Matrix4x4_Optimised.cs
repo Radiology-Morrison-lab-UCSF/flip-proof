@@ -451,7 +451,7 @@ public sealed class Matrix4x4_Optimised<T> where T:struct,IFloatingPoint<T>
 		q.ToAxisAngle(out rotationAxes, out rotationRads);
 	}
 
-	public void DecomposeRotationMatrix(out XYZ<double> translations, out XYZ<double> scale, out Quaternion q)
+   internal void DecomposeRotationMatrix(out XYZ<double> translations, out XYZ<double> scale, out Quaternion q)
 	{
 		DecomposeRotationMatrix(ToDouble(), out translations, out scale, out q);
 	}

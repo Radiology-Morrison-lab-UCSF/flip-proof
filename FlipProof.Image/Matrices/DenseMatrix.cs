@@ -150,10 +150,16 @@ public class DenseMatrix<T> where T:struct, IFloatingPoint<T>
 
    internal DenseMatrix<T> DeepClone() => new(storage.DeepClone());
 
-	/// <summary>
-	/// Matrix multiplication
-	/// </summary>
-	public static DenseMatrix<T> operator *(DenseMatrix<T> left, DenseMatrix<T> right) => left.MatMul(right);
+	public bool Equals(DenseMatrix<T> other, double tolerance)
+   {
+		using var absDiff = (storage.Storage - other.storage.Storage).abs_();
+      return !absDiff.greater(tolerance).any().ToBoolean();
+   }
+
+   /// <summary>
+   /// Matrix multiplication
+   /// </summary>
+   public static DenseMatrix<T> operator *(DenseMatrix<T> left, DenseMatrix<T> right) => left.MatMul(right);
 	/// <summary>
 	/// Matrix multiplication
 	/// </summary>

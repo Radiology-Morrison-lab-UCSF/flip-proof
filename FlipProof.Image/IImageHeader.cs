@@ -4,7 +4,6 @@ using System.Numerics;
 using FlipProof.Image.Matrices;
 using static FlipProof.Image.ImageHeader;
 namespace FlipProof.Image;
-
 public interface IImageHeader
 {
    EncodingDirection PhaseEncodingDimension { get; }
@@ -12,10 +11,10 @@ public interface IImageHeader
    EncodingDirection SliceEncodingDimension { get; }
    ImageSize Size { get; }
    /// <summary>
-   /// Returns a copy of the the orientation
+   /// Returns a readonly copy of the the orientation
    /// </summary>
-   /// <remarks>This is a value type. Modifying the copy will not modify that held by the header.</remarks>
-   System.Numerics.Matrix4x4 Orientation { get; }
+   /// <remarks></remarks>
+   IReadOnlyOrientation Orientation { get; }
    CoordinateSystem CoordinateSystem { get;}
 
    /// <summary>
@@ -27,7 +26,7 @@ public interface IImageHeader
    public bool IsSameSpaceAs(IImageHeader other)
    {
       return this.Size.Equals(other.Size) &&
-         Orientation.Equals(other.Orientation,Size.Min()/10000f);
+         Orientation.Equals(other.Orientation,Size);
    }
 
    ///// <summary>

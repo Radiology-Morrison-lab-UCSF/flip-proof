@@ -248,7 +248,7 @@ where TSpace : struct, ISpace
 		try
 		{
 			Checkfilename(ref fileLoc, lookForZippedVariantIfNotFound);
-			using NiftiReader nr = new NiftiReader(fileLoc);
+         using NiftiReader nr = new NiftiReader(fileLoc);
 			return nr.TryRead(out err, out read);
 		}
 		catch (Exception e)

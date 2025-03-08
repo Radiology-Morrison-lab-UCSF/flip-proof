@@ -90,7 +90,7 @@ public  class ISpaceTests() : ImageTestsBase(55)
       Assert.ThrowsException<OrientationException>(()=> ISpace.Initialise<MySpace2>(GetRandomHeader()));
 
       // Orientation
-      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Orientation = GetRandomMatrix4x4() }));
+      Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { Orientation =new OrientationMatrix( GetRandomMatrix4x4()) }));
       Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { FrequencyEncodingDimension = header.FrequencyEncodingDimension == EncodingDirection.X ? EncodingDirection.Y : EncodingDirection.X }));
       Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { PhaseEncodingDimension = header.PhaseEncodingDimension == EncodingDirection.X ? EncodingDirection.Y : EncodingDirection.X }));
       Assert.ThrowsException<OrientationException>(() => ISpace.Initialise<MySpace2>(header with { SliceEncodingDimension = header.SliceEncodingDimension == EncodingDirection.X ? EncodingDirection.Y : EncodingDirection.X }));
