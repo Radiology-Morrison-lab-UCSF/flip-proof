@@ -97,7 +97,7 @@ public record ImageHeader(ImageSize Size,
          ((!checkEncodingDirections) || FrequencyEncodingDimension == other.FrequencyEncodingDimension) &&
          ((!checkEncodingDirections) || SliceEncodingDimension == other.SliceEncodingDimension) &&
          Size.Equals(other.Size) && 
-         Orientation.Equals(other.Orientation);
+         Orientation.TolerantEquals(other.Orientation, Size);
 
 
    }

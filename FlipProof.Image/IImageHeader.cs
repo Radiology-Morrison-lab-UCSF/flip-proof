@@ -26,7 +26,7 @@ public interface IImageHeader
    public bool IsSameSpaceAs(IImageHeader other)
    {
       return this.Size.Equals(other.Size) &&
-         Orientation.Equals(other.Orientation,Size);
+         Orientation.TolerantEquals(other.Orientation,Size);
    }
 
    ///// <summary>

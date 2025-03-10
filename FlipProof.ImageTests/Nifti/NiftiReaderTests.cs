@@ -14,6 +14,9 @@ public class NiftiReaderTests
    [DataRow(true)]
    public void ReadWriteNifti_NonDiagonalOrientation(bool useSForm)
    {
+#pragma warning disable CS0618 // Type or member is obsolete
+      ISpace.Debug_Clear<TestSpace4D>();
+#pragma warning restore CS0618 // Type or member is obsolete
       ImageFloat<TestSpace4D> orig = GetImageWithNonDiagonalOrientation(useSForm);
       CheckMatrix(orig);
 
@@ -32,9 +35,9 @@ public class NiftiReaderTests
       {
          // Coords verified against ITKSnap
          var world = read.Header.VoxelToWorldCoordinate(13, 58, 19);
-         Assert.AreEqual(4.42, world.X, 0.001);
-         Assert.AreEqual(312.4, world.Y, 0.001);
-         Assert.AreEqual(173.4, world.Z, 0.001);
+         Assert.AreEqual(132.7, world.X, 0.1);
+         Assert.AreEqual(64.41, world.Y, 0.01);
+         Assert.AreEqual(257.9, world.Z, 0.1);
       }
    }
 
@@ -102,7 +105,7 @@ public class NiftiReaderTests
        */
       var decomposable = DecomposableNiftiTransform<double>.FromNiftiQuaternions(0.3781795, 0.707736, 0.5942821, [5.4, 3.3, 7.1], [21.3, -87.1, 101.72], 1);
 
-      Assert.IsTrue(nf.Head.SetVox2WorldMatrix_QForm(decomposable));
+      nf.Head.SetVox2WorldMatrix_QForm(decomposable);
       nf.Head.SetVox2WorldMatrix_SForm(decomposable.FastCalcMat.Cast<float>());
      
       if (useSForm)

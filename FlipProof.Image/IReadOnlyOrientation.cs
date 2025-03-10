@@ -34,7 +34,7 @@ public interface IReadOnlyOrientation
    /// <param name="imageSize">Size of the image this will be used with, in voxels. Furthest bounds of this are checked</param>
    /// <param name="tolerance">Defaults to 1/1000th of the smallest voxel size</param>
    /// <returns></returns>
-   public bool Equals(IReadOnlyOrientation other, ImageSize imageSize, double? toleranceOverride = null)
+   public bool TolerantEquals(IReadOnlyOrientation other, ImageSize imageSize, double? toleranceOverride = null)
    {
       double tolerance = toleranceOverride ??  VoxelSize.Min()! * 0.001; //1000th of the smallest dim in voxel size 
 

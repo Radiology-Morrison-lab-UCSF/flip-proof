@@ -338,29 +338,21 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 	/// </summary>
 	/// <param name="m"></param>
 	/// <exception cref="ArgumentException"></exception>
-   internal bool SetVox2WorldMatrix_QForm(DecomposableNiftiTransform<double> m)
-   {
-		try
-		{
-			m.TryGetNiftiQuaternions(out double quartern_b, out double quartern_c, out double quartern_d, out var pixDims, out var translation, out var qFac);
+	internal void SetVox2WorldMatrix_QForm(DecomposableNiftiTransform<double> m)
+	{
+		m.TryGetNiftiQuaternions(out double quartern_b, out double quartern_c, out double quartern_d, out var pixDims, out var translation, out var qFac);
 
-			this.quartern_b = (float)quartern_b;
-			this.quartern_c = (float)quartern_c;
-			this.quartern_d = (float)quartern_d;
-			this.quartern_x = (float)translation[0];
-			this.quartern_y = (float)translation[1];
-			this.quartern_z = (float)translation[2];
-			this.PixDim[0] = (float)qFac;
-			this.pixDim[1] = (float)pixDims[0];
-			this.pixDim[2] = (float)pixDims[1];
-			this.pixDim[3] = (float)pixDims[2];
-			return true;
-		}
-		catch (Exception ex)
-		{
-			return false;
-		}
-   }
+		this.quartern_b = (float)quartern_b;
+		this.quartern_c = (float)quartern_c;
+		this.quartern_d = (float)quartern_d;
+		this.quartern_x = (float)translation[0];
+		this.quartern_y = (float)translation[1];
+		this.quartern_z = (float)translation[2];
+		this.PixDim[0] = (float)qFac;
+		this.pixDim[1] = (float)pixDims[0];
+		this.pixDim[2] = (float)pixDims[1];
+		this.pixDim[3] = (float)pixDims[2];
+	}
 
    private static bool TryConvertToQuaternions(Matrix4x4 m, [NotNullWhen(true)] out Matrices.Quaternion? quaternions,out XYZ<float> translation)
    {
@@ -601,7 +593,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		CoordinateMapping_Nifti sCode;
 
 		Matrix4x4 sformMatrix;
-		if (other.Orientation.TryGetNiftiQuaternions(out double qb, out double qc, out double qd, out var translation, out var rotationQuaternions, out var qFac))
+		if (other.Orientation.TryGetNiftiQuaternions(out double qb, out double qc, out double qd, out _, out var translation, out var qFac))
       {
 			qCode = CoordinateMapping_Nifti.ScannerAnat;
 			sCode = CoordinateMapping_Nifti.Unknown;
