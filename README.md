@@ -238,11 +238,14 @@ Flip Proof is currently in Alpha and all public interfaces are subject to change
 
 Flip Proof and its associated code is not a registered medical device and has not undergone third-party testing or verification of any kind. 
 
-Efforts have been made to ensure safety and correctness of outputs. These can be checked by running the associated unit tests and checking coverage. However, like all frameworks, bugs and limitations will exist and so this framework should be used with caution. Responsibility is on you to verify your pipelines work as expected.
+Efforts have been made to ensure safety and correctness of outputs. These can be checked by running the associated unit tests and checking coverage. However, like all frameworks, bugs and limitations will exist and so this framework should be used with caution. Responsibility is on you to verify your pipelines work as expected. 
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 Finally, Flip Proof is designed to prevent common hidden coding errors that can present danger in clinical scenarios, or cause unreliabilty in derived products. While reasonably watertight, it is not 'hack proof' and is designed to be used in good faith. Attempts to subvert its 'safety rails' (for example, using reflection to access private members) will endanger patient safety and suggest this is not the framework for you.
 
 
 ## Licenses
- - This work is released under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/). 
+ -  Copyright 2025 Lee Reid
+ -  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  - `chris_*` images were acquired by Chirs Rorden at the [McCausland Center for Brain Imaging](https://www.mccauslandcenter.sc.edu) and are distributed under the [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/).
