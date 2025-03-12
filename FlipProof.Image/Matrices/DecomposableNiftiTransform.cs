@@ -51,19 +51,19 @@ class DecomposableNiftiTransform<T> : IEquatable<DecomposableNiftiTransform<T>> 
       Set(rot, pixDimensionz, translationz, qfac);
    }
 
-   public static DecomposableNiftiTransform<T> FromNiftiQuaternions(double quartern_b, double quartern_c, double quartern_d, T[] pixDims, T[] translations, T qFace)
+   public static DecomposableNiftiTransform<T> FromNiftiQuaternions(double quatern_b, double quatern_c, double quatern_d, T[] pixDims, T[] translations, T qFace)
    {
-      double b_sq = quartern_b * quartern_b;
-      double c_sq = quartern_c * quartern_c;
-      double d_sq = quartern_d * quartern_d;
+      double b_sq = quatern_b * quatern_b;
+      double c_sq = quatern_c * quatern_c;
+      double d_sq = quatern_d * quatern_d;
       double a_sq = 1.0 - b_sq - c_sq - d_sq;
-      double num = a_sq <= 0.0 ? 0.0 : Math.Sqrt(a_sq);
-      double ab = num * quartern_b;
-      double ac = num * quartern_c;
-      double ad = num * quartern_d;
-      double bc = quartern_b * quartern_c;
-      double bd = quartern_b * quartern_d;
-      double cd = quartern_c * quartern_d;
+      double quatern_a = a_sq <= 0.0 ? 0.0 : Math.Sqrt(a_sq);
+      double ab = quatern_a * quatern_b;
+      double ac = quatern_a * quatern_c;
+      double ad = quatern_a * quatern_d;
+      double bc = quatern_b * quatern_c;
+      double bd = quatern_b * quatern_d;
+      double cd = quatern_c * quatern_d;
       return new DecomposableNiftiTransform<T>(
          new DenseMatrix<double>(3, 3)
          {
@@ -102,13 +102,13 @@ class DecomposableNiftiTransform<T> : IEquatable<DecomposableNiftiTransform<T>> 
       DenseMatrix<T> fast = new DenseMatrix<T>(3, 4);
       rotate.CopyTo(fast);
       fast[0, 0] *= pixDim[0];
-      fast[0, 1] *= pixDim[0];
-      fast[0, 2] *= pixDim[0];
-      fast[1, 0] *= pixDim[1];
+      fast[0, 1] *= pixDim[1];
+      fast[0, 2] *= pixDim[2] * qfac;
+      fast[1, 0] *= pixDim[0];
       fast[1, 1] *= pixDim[1];
-      fast[1, 2] *= pixDim[1];
-      fast[2, 0] *= pixDim[2] * qfac;//qfac flips intepretation of z slice direction
-      fast[2, 1] *= pixDim[2] * qfac;
+      fast[1, 2] *= pixDim[2] * qfac;
+      fast[2, 0] *= pixDim[0];// * qfac;//qfac flips intepretation of z slice direction
+      fast[2, 1] *= pixDim[1];// * qfac;
       fast[2, 2] *= pixDim[2] * qfac;
       fast.SetColumn(3, offset);
 
@@ -264,15 +264,15 @@ class DecomposableNiftiTransform<T> : IEquatable<DecomposableNiftiTransform<T>> 
       double pixSize_x = pixDim[0];
       double pixSize_y = pixDim[1];
       double pixSize_z = pixDim[2];
-      fastMat.M0_0 = (float)(fastMat.M0_0 / pixSize_x);
-      fastMat.M0_1 = (float)(fastMat.M0_1 / pixSize_x);
-      fastMat.M0_2 = (float)(fastMat.M0_2 / pixSize_x);
-      fastMat.M1_0 = (float)(fastMat.M1_0 / pixSize_y);
-      fastMat.M1_1 = (float)(fastMat.M1_1 / pixSize_y);
-      fastMat.M1_2 = (float)(fastMat.M1_2 / pixSize_y);
-      fastMat.M2_0 = (float)(fastMat.M2_0 / pixSize_z);
-      fastMat.M2_1 = (float)(fastMat.M2_1 / pixSize_z);
-      fastMat.M2_2 = (float)(fastMat.M2_2 / pixSize_z);
+      fastMat.M11 = (float)(fastMat.M11 / pixSize_x);
+      fastMat.M12 = (float)(fastMat.M12 / pixSize_x);
+      fastMat.M13 = (float)(fastMat.M13 / pixSize_x);
+      fastMat.M21 = (float)(fastMat.M21 / pixSize_y);
+      fastMat.M22 = (float)(fastMat.M22 / pixSize_y);
+      fastMat.M23 = (float)(fastMat.M23 / pixSize_y);
+      fastMat.M31 = (float)(fastMat.M31 / pixSize_z);
+      fastMat.M32 = (float)(fastMat.M32 / pixSize_z);
+      fastMat.M33 = (float)(fastMat.M33 / pixSize_z);
    }
 
    internal static void DeScaleMatrix(double[] pixDim, Matrix4x4_Optimised<double> fastMat)
@@ -280,31 +280,22 @@ class DecomposableNiftiTransform<T> : IEquatable<DecomposableNiftiTransform<T>> 
       double pixSize_x = pixDim[0];
       double pixSize_y = pixDim[1];
       double pixSize_z = pixDim[2];
-      fastMat.M0_0 /= pixSize_x;
-      fastMat.M0_1 /= pixSize_x;
-      fastMat.M0_2 /= pixSize_x;
-      fastMat.M1_0 /= pixSize_y;
-      fastMat.M1_1 /= pixSize_y;
-      fastMat.M1_2 /= pixSize_y;
-      fastMat.M2_0 /= pixSize_z;
-      fastMat.M2_1 /= pixSize_z;
-      fastMat.M2_2 /= pixSize_z;
+      fastMat.M11 /= pixSize_x;
+      fastMat.M12 /= pixSize_x;
+      fastMat.M13 /= pixSize_x;
+      fastMat.M21 /= pixSize_y;
+      fastMat.M22 /= pixSize_y;
+      fastMat.M23 /= pixSize_y;
+      fastMat.M31 /= pixSize_z;
+      fastMat.M32 /= pixSize_z;
+      fastMat.M33 /= pixSize_z;
    }
 
-   internal void FlipX(T imWidth_rawCoords)
-   {
-      Flip(0, imWidth_rawCoords);
-   }
+   internal void FlipX(T imWidth_rawCoords) => Flip(0, imWidth_rawCoords);
 
-   internal void FlipY(T imHeight_rawCoords)
-   {
-      Flip(1, imHeight_rawCoords);
-   }
+   internal void FlipY(T imHeight_rawCoords) => Flip(1, imHeight_rawCoords);
 
-   internal void FlipZ(T imDepth_rawCoords)
-   {
-      Flip(2, imDepth_rawCoords);
-   }
+   internal void FlipZ(T imDepth_rawCoords) => Flip(2, imDepth_rawCoords);
 
    internal void Flip(int dimension, T sizeOfThisDim_rawCoords)
    {

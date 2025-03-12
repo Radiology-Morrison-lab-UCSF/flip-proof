@@ -100,13 +100,13 @@ public class DecomposableTransformTests : ReadOnlyOrientationTests
       // or scaling R by the voxel size where x,y,z are applied to columns 0,1,2 respectively
       // Q fac reverses the direction of the z axis
       Assert.AreEqual(3 * rotationMatrix[0,0], transform[0, 0]);
-      Assert.AreEqual(3 * rotationMatrix[0,1], transform[0, 1]);
-      Assert.AreEqual(3 * rotationMatrix[0,2], transform[0, 2]);
-      Assert.AreEqual(5 * rotationMatrix[1,0], transform[1, 0]);
+      Assert.AreEqual(3 * rotationMatrix[1,0], transform[1, 0]);
+      Assert.AreEqual(3 * rotationMatrix[2,0], transform[2, 0]);
+      Assert.AreEqual(5 * rotationMatrix[0,1], transform[0, 1]);
       Assert.AreEqual(5 * rotationMatrix[1,1], transform[1, 1]);
-      Assert.AreEqual(5 * rotationMatrix[1,2], transform[1, 2]);
-      Assert.AreEqual(7 * rotationMatrix[2,0] * qFac, transform[2, 0]);
-      Assert.AreEqual(7 * rotationMatrix[2,1] * qFac, transform[2, 1]);
+      Assert.AreEqual(5 * rotationMatrix[2,1], transform[2, 1]);
+      Assert.AreEqual(7 * rotationMatrix[0,2] * qFac, transform[0, 2]);
+      Assert.AreEqual(7 * rotationMatrix[1,2] * qFac, transform[1, 2]);
       Assert.AreEqual(7 * rotationMatrix[2,2] * qFac, transform[2, 2]);
 
    }
@@ -124,5 +124,10 @@ public class DecomposableTransformTests : ReadOnlyOrientationTests
       // sin(2pi/8/2) =sin(pi/8) = 0.382683
       // negative here to match test's expected direction
       return DecomposableNiftiTransformD.FromNiftiQuaternions(0, 0, -0.38268343236509, ((XYZ<double>)voxelSize).ToArray(), ((XYZ<double>)translate).ToArray(), 1);
+   }
+   protected override IReadOnlyOrientation Get31DegRotInXYPlane(XYZ<float> voxelSize, XYZ<float> translate)
+   {
+      // negative here to match test's expected direction
+      return DecomposableNiftiTransformD.FromNiftiQuaternions(0, 0, -0.541052068, ((XYZ<double>)voxelSize).ToArray(), ((XYZ<double>)translate).ToArray(), 1);
    }
 }

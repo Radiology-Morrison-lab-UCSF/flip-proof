@@ -156,6 +156,7 @@ public class DenseMatrix<T> where T:struct, IFloatingPoint<T>
       return !absDiff.greater(tolerance).any().ToBoolean();
    }
 
+
    /// <summary>
    /// Matrix multiplication
    /// </summary>

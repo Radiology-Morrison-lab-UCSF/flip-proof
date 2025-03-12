@@ -241,7 +241,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 
    private OrientationMatrix GetVox2StdSpaceMatrix()
    {
-      return new( new Matrix4x4()
+      return new( new Matrix4x4_Optimised<double>()
       {
          M11 = Srow_x[0],
          M12 = Srow_x[1],
@@ -592,12 +592,11 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		CoordinateMapping_Nifti qCode;
 		CoordinateMapping_Nifti sCode;
 
-		Matrix4x4 sformMatrix;
+		Matrix4x4_Optimised<float> sformMatrix;
 		if (other.Orientation.TryGetNiftiQuaternions(out double qb, out double qc, out double qd, out _, out var translation, out var qFac))
       {
 			qCode = CoordinateMapping_Nifti.ScannerAnat;
 			sCode = CoordinateMapping_Nifti.Unknown;
-			sformMatrix = default;
 
       }
 		else
@@ -608,8 +607,9 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
          qb = qc = qd = 0;
          translation = [0, 0, 0];
 
-			sformMatrix = other.Orientation.GetMatrix();
       }
+		sformMatrix = other.Orientation.GetMatrix().ToFloat();
+		
 		float[]	pixelDims = new float[8] { 
 												other.Size.NDims, 
 												(float)other.Orientation.VoxelSize.X,

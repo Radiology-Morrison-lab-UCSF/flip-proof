@@ -35,7 +35,7 @@ public record ImageHeader(ImageSize Size,
    /// in the padded header
    /// </summary>
    /// <param name="newBounds">In voxel space</param>
-   public ImageHeader GetForPaddedImage(Box4D<long> newBounds)
+   internal ImageHeader GetForPaddedImage(Box4D<long> newBounds)
    {
       VoxelBounds.CalcPadding(newBounds, out long xB4, out long xAfter, out long yB4, out long yAfter, out long zB4, out long zAfter, out long volB4, out long volAfter);
 
@@ -55,12 +55,14 @@ public record ImageHeader(ImageSize Size,
    /// <param name="vols0">Volumes inserted at position 0</param>
    /// <param name="vols0">Volumes inserted at final positions</param>
    /// <returns>A new header representing a theoretically padded image aligned to the origina unpadded image</returns>
-   public ImageHeader GetForPaddedImage(long x0, long x1, long y0, long y1, long z0, long z1, long vols0, long vols1) => this with
+   public ImageHeader GetForPaddedImage(long x0, long x1, long y0, long y1, long z0, long z1, long vols0, long vols1)
    {
-      Orientation =  Orientation.GetTranslated(-x0, -y0, -z0),
-      Size = new(Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1, Size.VolumeCount + vols0 + vols1),
-   };
-
+      return this with
+      {
+         Orientation = Orientation.GetForPaddedImage(x0, y0,z0),
+         Size = new(Size.X + x0 + x1, Size.Y + y0 + y1, Size.Z + z0 + z1, Size.VolumeCount + vols0 + vols1),
+      };
+   }
    /// <summary>
    /// Returns the voxel size in mm
    /// </summary>

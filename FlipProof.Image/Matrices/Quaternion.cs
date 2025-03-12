@@ -6,7 +6,7 @@ namespace FlipProof.Image.Matrices;
 internal record Quaternion(double W, double X, double Y, double Z)
 {
 
-	public static Quaternion FromMatrixValues(Matrix4x4_Optimised<double> m) => FromMatrixValues(m.M0_0, m.M0_1, m.M0_2, m.M1_0, m.M1_1, m.M1_2, m.M2_0, m.M2_1, m.M2_2);
+	public static Quaternion FromMatrixValues(Matrix4x4_Optimised<double> m) => FromMatrixValues(m.M11, m.M12, m.M13, m.M21, m.M22, m.M23, m.M31, m.M32, m.M33);
 
 	public static Quaternion FromMatrixValues(double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32, double r33)
 	{
@@ -159,19 +159,19 @@ internal record Quaternion(double W, double X, double Y, double Z)
 		}
 		return new Matrix4x4_Optimised<double>
 		{
-			M0_0 = m0,
-			M0_1 = m,
-			M0_2 = m2,
-			M0_3 = translate.X,
-			M1_0 = m3,
-			M1_1 = m4,
-			M1_2 = m5,
-			M1_3 = translate.Y,
-			M2_0 = m6,
-			M2_1 = m7,
-			M2_2 = m8,
-			M2_3 = translate.Z,
-			M3_3 = 1.0
+			M11 = m0,
+			M12 = m,
+			M13 = m2,
+			M14 = translate.X,
+			M21 = m3,
+			M22 = m4,
+			M23 = m5,
+			M24 = translate.Y,
+			M31 = m6,
+			M32 = m7,
+			M33 = m8,
+			M34 = translate.Z,
+			M44 = 1.0
 		};
 	}
 

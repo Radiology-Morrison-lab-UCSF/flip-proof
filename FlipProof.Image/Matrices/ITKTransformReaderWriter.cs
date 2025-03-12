@@ -18,16 +18,16 @@ internal class ITKTransformReaderWriter
       br.ReadByte();
       Matrix4x4_Optimised<float> mat = new Matrix4x4_Optimised<float>
       {
-         M0_0 = br.ReadSingle(),
-         M0_1 = br.ReadSingle(),
-         M0_2 = br.ReadSingle(),
-         M1_0 = br.ReadSingle(),
-         M1_1 = br.ReadSingle(),
-         M1_2 = br.ReadSingle(),
-         M2_0 = br.ReadSingle(),
-         M2_1 = br.ReadSingle(),
-         M2_2 = br.ReadSingle(),
-         M3_3 = 1f
+         M11 = br.ReadSingle(),
+         M12 = br.ReadSingle(),
+         M13 = br.ReadSingle(),
+         M21 = br.ReadSingle(),
+         M22 = br.ReadSingle(),
+         M23 = br.ReadSingle(),
+         M31 = br.ReadSingle(),
+         M32 = br.ReadSingle(),
+         M33 = br.ReadSingle(),
+         M44 = 1f
       };
       float k = br.ReadSingle();
       float l = br.ReadSingle();
@@ -55,9 +55,9 @@ internal class ITKTransformReaderWriter
             offset[i] -= mat.At(i, j) * m_Centre[j];
          }
       }
-      mat.M0_3 = offset[0];
-      mat.M1_3 = offset[1];
-      mat.M2_3 = offset[2];
+      mat.M14 = offset[0];
+      mat.M24 = offset[1];
+      mat.M34 = offset[2];
       fixedParameters = new XYZ<float>(fixedX, fixedY, fixedZ);
       return mat;
    }
@@ -78,16 +78,16 @@ internal class ITKTransformReaderWriter
       br.ReadByte();
       Matrix4x4_Optimised<double> mat = new()
       {
-         M0_0 = br.ReadDouble(),
-         M0_1 = br.ReadDouble(),
-         M0_2 = br.ReadDouble(),
-         M1_0 = br.ReadDouble(),
-         M1_1 = br.ReadDouble(),
-         M1_2 = br.ReadDouble(),
-         M2_0 = br.ReadDouble(),
-         M2_1 = br.ReadDouble(),
-         M2_2 = br.ReadDouble(),
-         M3_3 = 1.0
+         M11 = br.ReadDouble(),
+         M12 = br.ReadDouble(),
+         M13 = br.ReadDouble(),
+         M21 = br.ReadDouble(),
+         M22 = br.ReadDouble(),
+         M23 = br.ReadDouble(),
+         M31 = br.ReadDouble(),
+         M32 = br.ReadDouble(),
+         M33 = br.ReadDouble(),
+         M44 = 1.0
       };
       double k = br.ReadDouble();
       double l = br.ReadDouble();
@@ -115,9 +115,9 @@ internal class ITKTransformReaderWriter
             offset[i] -= mat.At(i, j) * m_Centre[j];
          }
       }
-      mat.M0_3 = offset[0];
-      mat.M1_3 = offset[1];
-      mat.M2_3 = offset[2];
+      mat.M14 = offset[0];
+      mat.M24 = offset[1];
+      mat.M34 = offset[2];
       fixedParameters = new XYZ<double>(fixedX, fixedY, fixedZ);
       return mat;
    }
@@ -134,16 +134,16 @@ internal class ITKTransformReaderWriter
          108, 101, 95, 51, 95, 51, 0
       ];
       br.Write(start);
-      br.Write(mat.M0_0);
-      br.Write(mat.M0_1);
-      br.Write(mat.M0_2);
-      br.Write(mat.M1_0);
-      br.Write(mat.M1_1);
-      br.Write(mat.M1_2);
-      br.Write(mat.M2_0);
-      br.Write(mat.M2_1);
-      br.Write(mat.M2_2);
-      double[] offset = [mat.M0_3, mat.M1_3, mat.M2_3];
+      br.Write(mat.M11);
+      br.Write(mat.M12);
+      br.Write(mat.M13);
+      br.Write(mat.M21);
+      br.Write(mat.M22);
+      br.Write(mat.M23);
+      br.Write(mat.M31);
+      br.Write(mat.M32);
+      br.Write(mat.M33);
+      double[] offset = [mat.M14, mat.M24, mat.M34];
       for (int i = 0; i < 3; i++)
       {
          double translation_i = offset[i] - fixedParameters[i];

@@ -1,4 +1,5 @@
 ﻿using FlipProof.Image;
+using FlipProof.Image.Matrices;
 using FlipProof.ImageTests;
 using System.Numerics;
 namespace FlipProof.ITK.Tests;
@@ -9,14 +10,14 @@ public abstract class ITKTest(int seed) : ImageTestsBase(seed)
    {
       ImageHeader head = this.GetRandomHeader();
 
-      Matrix4x4 mat = new System.Numerics.Matrix4x4(-1.99879f, -0.0634398f, -0.0286845f, 121.278f,
-                                                      -0.0593802f, 1.98365f, -0.248181f, -105.205f,
-                                                      -0.0363202f, 0.247179f, 1.98433f, -89.5261f,
-                                                      0, 0, 0, 1f);
+      Matrix4x4_Optimised<double> mat = new(-1.99879f, -0.0634398, -0.0286845, 121.278,
+                                                      -0.0593802, 1.98365, -0.248181, -105.205,
+                                                      -0.0363202, 0.247179, 1.98433, -89.5261,
+                                                      0, 0, 0, 1);
       head = head with
       {
          // Orthonormal header, not something fully random ITK will reject
-         Orientation = mat
+         Orientation = new OrientationMatrix(mat)
       };
       return head;
    }

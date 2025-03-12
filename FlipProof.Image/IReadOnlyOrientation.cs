@@ -1,4 +1,5 @@
 ﻿using FlipProof.Base;
+using FlipProof.Image.Matrices;
 using System.Numerics;
 
 namespace FlipProof.Image;
@@ -9,24 +10,61 @@ public interface IReadOnlyOrientation
    XYZ<double> VoxelToWorldCoordinate(XYZ<double> xyz) => VoxelToWorldCoordinate(xyz.X, xyz.Y, xyz.Z);
    XYZ<double> VoxelToWorldCoordinate(double x, double y, double z);
 
+   /// <summary>
+   /// Voxel size (in mm by default)
+   /// </summary>
    XYZ<double> VoxelSize { get; }
+   /// <summary>
+   /// Translation component of the orientation
+   /// </summary>
+   XYZ<double> Translation { get; }
 
    /// <summary>
    /// Returns a copy translated by the given offsets
    /// </summary>
-   /// <param name="offsetX"></param>
-   /// <param name="offsetY"></param>
-   /// <param name="offsetZ"></param>
+   /// <param name="offset">In mm, not in voxels</param>
    /// <returns></returns>
-   IReadOnlyOrientation GetTranslated(double offsetX, double offsetY, double offsetZ);
+   internal IReadOnlyOrientation GetTranslated(XYZ<double> offset) => GetTranslated(offset.X, offset.Y, offset.Z);
+   /// <summary>
+   /// Returns a copy translated by the given offsets
+   /// </summary>
+   /// <param name="offsetX">In mm, not in voxels</param>
+   /// <param name="offsetY">In mm, not in voxels</param>
+   /// <param name="offsetZ">In mm, not in voxels</param>
+   /// <returns></returns>
+   internal IReadOnlyOrientation GetTranslated(double offsetX, double offsetY, double offsetZ);
 
-   bool TryGetNiftiQuaternions(out double quartern_b, out double quartern_c, out double quartern_d, out double[] pixDims, out double[] translations, out double qFace);
+   /// <summary>
+   /// Returns a copy translated by the given voxel amounts before the rotation, scaling, 
+   /// and existing translations are applied.
+   /// </summary>
+   /// <param name="padBeforeX0">In voxels</param>
+   /// <param name="padBeforeY0">In voxels</param>
+   /// <param name="padBeforeZ0">In voxels</param>
+   /// <returns></returns>
+   internal IReadOnlyOrientation GetForPaddedImage(long padBeforeX0, long padBeforeY0, long padBeforeZ0)
+   {
+      return new OrientationMatrix(GetMatrix() * new Matrix4x4_Optimised<double>()
+      {
+         M11 = 1,
+         M22 = 1,
+         M33 = 1,
+         M44 = 1,
+         M14 = -padBeforeX0,
+         M24 = -padBeforeY0,
+         M34 = -padBeforeZ0,
+      });
+   }
+
+
+
+   internal bool TryGetNiftiQuaternions(out double quartern_b, out double quartern_c, out double quartern_d, out double[] pixDims, out double[] translations, out double qFace);
 
    /// <summary>
    /// Returns a copy of the internal matrix used for orientation, if one exists
    /// </summary>
    /// <exception cref="NotSupportedException">Operation not supported</exception>
-   Matrix4x4 GetMatrix();
+   internal Matrix4x4_Optimised<double> GetMatrix();
 
    /// <summary>
    /// Checks that two orientations return similar world coordinates for the same voxel
@@ -34,7 +72,7 @@ public interface IReadOnlyOrientation
    /// <param name="imageSize">Size of the image this will be used with, in voxels. Furthest bounds of this are checked</param>
    /// <param name="tolerance">Defaults to 1/1000th of the smallest voxel size</param>
    /// <returns></returns>
-   public bool TolerantEquals(IReadOnlyOrientation other, ImageSize imageSize, double? toleranceOverride = null)
+   internal bool TolerantEquals(IReadOnlyOrientation other, ImageSize imageSize, double? toleranceOverride = null)
    {
       double tolerance = toleranceOverride ??  VoxelSize.Min()! * 0.001; //1000th of the smallest dim in voxel size 
 

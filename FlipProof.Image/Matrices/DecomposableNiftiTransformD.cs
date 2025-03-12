@@ -6,6 +6,7 @@ namespace FlipProof.Image.Matrices;
 class DecomposableNiftiTransformD : DecomposableNiftiTransform<double>, IReadOnlyOrientation
 {
    public XYZ<double> VoxelSize => new(PixelDimensions[0], PixelDimensions[1], PixelDimensions[2]);
+   public XYZ<double> Translation => new(GetTranslation());
 
    private DecomposableNiftiTransformD(DenseMatrix<double> rot, double[] pixDimensionz, double[] translationz, double qfac) : base(rot, pixDimensionz, translationz, qfac)
    {
@@ -18,7 +19,7 @@ class DecomposableNiftiTransformD : DecomposableNiftiTransform<double>, IReadOnl
       return new DecomposableNiftiTransformD(made.GetRotation(), made.GetPixDim(), made.GetTranslation(), made.Qfac);
    }
 
-   Matrix4x4 IReadOnlyOrientation.GetMatrix() => throw new NotSupportedException();
+   Matrix4x4_Optimised<double> IReadOnlyOrientation.GetMatrix() => new Matrix4x4_Optimised<double>( FastCalcMat);
 
    public IReadOnlyOrientation GetTranslated(double offsetX, double offsetY, double offsetZ)
    {

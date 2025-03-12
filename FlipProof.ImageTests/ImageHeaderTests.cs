@@ -14,6 +14,7 @@ public abstract class ReadOnlyOrientationTests
 {
    protected abstract IReadOnlyOrientation GetSimple(XYZ<float> voxelSize, XYZ<float> translate);
    protected abstract IReadOnlyOrientation Get45DegRotInXYPlane(XYZ<float> voxelSize, XYZ<float> translate);
+   protected abstract IReadOnlyOrientation Get31DegRotInXYPlane(XYZ<float> voxelSize, XYZ<float> translate);
 
    [TestMethod]
    public void GetVoxelSize()
@@ -111,6 +112,104 @@ public abstract class ReadOnlyOrientationTests
 
    }
 
+   [TestMethod]
+   public void GetTranslated()
+   {
+      const float voxelSizeX = 7;
+      const float voxelSizeY = 13;
+      const float voxelSizeZ = 11;
+
+      const float origTransX = 71;
+      const float origTransY = 91;
+      const float origTransZ = -171;
+
+      const float translateX = 10;
+      const float translateY = 11;
+      const float translateZ = 31;
+
+      IReadOnlyOrientation orig = Get31DegRotInXYPlane(new(voxelSizeX, voxelSizeY, voxelSizeZ), new(origTransX, origTransY, origTransZ));
+      IReadOnlyOrientation translated = orig.GetTranslated(translateX, translateY, translateZ);
+
+      Check(0, 0, 0);
+      Check(0, 0, 1);
+      Check(0, 1, 0);
+      Check(1, 0, 0);
+      Check(1, 1, 1);
+      Check(17, 137, 15);
+
+      Assert.AreEqual(orig.VoxelToWorldCoordinate(0,0,0), translated.VoxelToWorldCoordinate(0,0,0) - new XYZ<double>(translateX, translateY, translateZ));
+
+      void Check(int i, int j, int k)
+      {
+         Assert.AreEqual(orig.VoxelToWorldCoordinate(i, j, k), translated.VoxelToWorldCoordinate(i, j, k) - new XYZ<double>(translateX, translateY, translateZ));
+      }
+
+   }
+   [TestMethod]
+   public void GetTranslatedPointOfReferenceVox()
+   {
+      const float voxelSizeX = 2;
+      const float voxelSizeY = 1;
+      const float voxelSizeZ = 1;
+
+      const float origTransX = 0;
+      const float origTransY = 0;
+      const float origTransZ = 0;
+
+      const long translateXVox = -10;
+      const long translateYVox = -11;
+      const long translateZVox = -31;
+
+      IReadOnlyOrientation orig = Get31DegRotInXYPlane(new(voxelSizeX, voxelSizeY, voxelSizeZ), new(origTransX, origTransY, origTransZ));
+      IReadOnlyOrientation translated = orig.GetForPaddedImage(translateXVox, translateYVox, translateZVox);
+
+      // This method is used to pad images and offset the header so that
+      // voxels retain their original position in space
+      // So, the voxel originally at (0,0,0) would now correspond to the voxels at 10,11,31
+      // and likewise, the voxel at (a,b,c) should now be at 10+a, 11+b, 31+c
+      //
+      // Orig
+      //  --------
+      // |a|b|c|d|
+      // ---------
+      // |e|f|g|h|
+      // ---------
+      //
+      // Offset:
+      // 11 cols
+      // |
+      // V
+      // -----------
+      // | | | | | | <-- 10 rows added
+      // ------------
+      // | |a|b|c|d|
+      // ------------
+      // | |e|f|g|h|
+      // ------------
+      // | | | | | |
+      // ------------
+
+
+
+      Check(0, 0, 0);
+      Check(0, 0, 1);
+      Check(0, 1, 0);
+      Check(1, 0, 0);
+      Check(1, 1, 1);
+      Check(17, 137, 15);
+
+
+      void Check(int i, int j, int k)
+      {
+         var expected = orig.VoxelToWorldCoordinate(i, j, k);
+         var actual = translated.VoxelToWorldCoordinate(i + translateXVox, j + translateYVox, k + translateZVox);
+         Assert.AreEqual(expected.X, actual.X, 1e-3);
+         Assert.AreEqual(expected.Y, actual.Y, 1e-3);
+         Assert.AreEqual(expected.Z, actual.Z, 1e-3);
+      }
+
+   }
+
 }
 
 [TestClass]
@@ -120,15 +219,18 @@ public class ImageHeaderTests
    public void GetForPaddedImage()
    {
       const int padX0 = 21;
+      const int padX1 = 17;
       const int padY0 = 19;
+      const int padY1 = 41;
       const int padZ0 = 91;
+      const int padZ1 = 3;
       var origMatrix = new OrientationMatrix(ImageTestsBase.GetRandomMatrix4x4(new Random(44)));
       ImageSize origSize = new(3, 5, 7, 11);
       ImageHeader origHead = new(origSize, origMatrix, CoordinateSystem.RAS, EncodingDirection.X, EncodingDirection.Y, EncodingDirection.Z);
 
-      ImageHeader result = origHead.GetForPaddedImage(padX0, 17, padY0, 41, padZ0, 3, 5, 15);
+      ImageHeader result = origHead.GetForPaddedImage(padX0, padX1, padY0, padY1, padZ0, padZ1, 5, 15);
 
-      Assert.AreEqual(new ImageSize(3 + padX0 + 17, 5 + padY0 + 41, 7 + padZ0 + 3, 11 + 5 + 15), result.Size, "Image size wrong");
+      Assert.AreEqual(new ImageSize(3 + padX0 + padX1, 5 + padY0 + padY1, 7 + padZ0 + padZ1, 11 + 5 + 15), result.Size, "Image size wrong");
 
       for (int x = 0; x < 3; x++)
       {

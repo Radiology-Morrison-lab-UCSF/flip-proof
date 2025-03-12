@@ -9,6 +9,15 @@ public readonly record struct XYZ<T>(T X, T Y, T Z) : IReadOnlyList<T>
    where T : INumber<T>, IMultiplicativeIdentity<T,T>
 {
    /// <summary>
+   /// Creates a new <see cref="XYZ{T}"/>
+   /// </summary>
+   /// <param name="xyz">Must have three elements</param>
+   /// <exception cref="ArgumentException">Array does not have exactly three elements</exception>
+   public XYZ(T[] xyz) : this(xyz.Length == 3 ? xyz[0] : throw new ArgumentException("Must have 3 elements", nameof(xyz)), xyz[1], xyz[2])
+   {
+   }
+
+   /// <summary>
    /// 
    /// </summary>
    /// <param name="index"></param>

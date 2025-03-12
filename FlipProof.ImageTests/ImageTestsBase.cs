@@ -1,4 +1,5 @@
 ﻿using FlipProof.Image;
+using FlipProof.Image.Matrices;
 using FlipProof.Torch;
 using System;
 using System.Numerics;
@@ -184,12 +185,12 @@ public abstract class ImageTestsBase(int seed)
 
    }
 
-   protected Matrix4x4 GetRandomMatrix4x4() => GetRandomMatrix4x4(r);
-   internal static Matrix4x4 GetRandomMatrix4x4(Random r)
+   protected Matrix4x4_Optimised<double> GetRandomMatrix4x4() => GetRandomMatrix4x4(r);
+   internal static Matrix4x4_Optimised<double> GetRandomMatrix4x4(Random r)
    {
-      return new Matrix4x4(r.NextSingle(), r.NextSingle(), r.NextSingle(), r.NextSingle(),
-         r.NextSingle(), r.NextSingle(), r.NextSingle(), r.NextSingle(),
-         r.NextSingle(), r.NextSingle(), r.NextSingle(), r.NextSingle(),
+      return new(r.NextDouble(), r.NextDouble(), r.NextDouble(), r.NextDouble(),
+         r.NextDouble(), r.NextDouble(), r.NextDouble(), r.NextDouble(),
+         r.NextDouble(), r.NextDouble(), r.NextDouble(), r.NextDouble(),
          0,0,0, 1);
    }
 }
