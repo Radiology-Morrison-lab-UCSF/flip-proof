@@ -246,6 +246,6 @@ Finally, Flip Proof is designed to prevent common hidden coding errors that can 
 
 
 ## Licenses
- -  Copyright 2025 Lee Reid
+ -  Copyright 2025 UCSF
  -  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  - `chris_*` images were acquired by Chirs Rorden at the [McCausland Center for Brain Imaging](https://www.mccauslandcenter.sc.edu) and are distributed under the [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/).
