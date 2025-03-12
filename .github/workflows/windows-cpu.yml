@@ -32,4 +32,5 @@ jobs:
     - name: Build
       run: dotnet build --configuration Win-CPU-Debug
     - name: Test
-      run: dotnet test --configuration Win-CPU-Debug --no-build --verbosity normal
+        # NB build here is required or ITK isn't copied in
+      run: dotnet test --configuration Win-CPU-Debug --verbosity normal

@@ -36,4 +36,5 @@ jobs:
     - name: Build
       run: dotnet build --configuration Linux-CPU-Debug --no-restore
     - name: Test
-      run: dotnet test --configuration Linux-CPU-Debug --no-build --verbosity normal
+          # NB build here is required or ITK isn't copied in
+      run: dotnet test --configuration Linux-CPU-Debug --verbosity normal

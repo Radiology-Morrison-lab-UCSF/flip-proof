@@ -9,14 +9,29 @@ namespace FlipProof.ImageTests.Nifti;
 [TestClass]
 public class NiftiReaderTests
 {
+   [TestInitialize]
+   public void Initialise()
+   {
+#pragma warning disable CS0618 // Type or member is obsolete
+      ISpace.Debug_Clear<TestSpace4D>();
+#pragma warning restore CS0618 // Type or member is obsolete
+
+   }
+
+   [TestCleanup]
+   public void Cleanup()
+   {
+#pragma warning disable CS0618 // Type or member is obsolete
+      ISpace.Debug_Clear<TestSpace4D>();
+#pragma warning restore CS0618 // Type or member is obsolete
+
+   }
+
    [TestMethod]
    [DataRow(false)]
    [DataRow(true)]
    public void ReadWriteNifti_NonDiagonalOrientation(bool useSForm)
    {
-#pragma warning disable CS0618 // Type or member is obsolete
-      ISpace.Debug_Clear<TestSpace4D>();
-#pragma warning restore CS0618 // Type or member is obsolete
       ImageFloat<TestSpace4D> orig = GetImageWithNonDiagonalOrientation(useSForm);
       CheckMatrix(orig);
 
