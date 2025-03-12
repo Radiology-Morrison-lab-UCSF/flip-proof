@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -e
 
 # Get the operating system name
@@ -10,6 +11,8 @@ os_name=$(uname -s)
 if [ -e current-build ]; then
   rm current-build
 fi
+
+
 if [ "$os_name" == "Darwin" ]; then
 
     file1=$(pwd)/"macOS/SimpleITKCSharpManaged.dll"
@@ -60,6 +63,8 @@ if [ "$os_name" == "Darwin" ]; then
     
 else
     echo "Using Linux sitk Binary"
+    echo "***** Linking ITK Dir *****"
+    echo "$(pwd)/SimpleITK-2.3.1-CSharp-linux <=====> $(pwd)/current-build"
     ln -s SimpleITK-2.3.1-CSharp-linux current-build
 fi
 

@@ -10,13 +10,14 @@
     <ProjectReference Include="..\FlipProof.Torch\FlipProof.Torch.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(DefineConstants.Contains(LINUX))'">
+
+  <Target Name="PreBuildLinux" BeforeTargets="PreBuildEvent" Condition="'$(DefineConstants.Contains(LINUX))'">
+    <Exec Command="echo 'Linux Build. Constants: $(DefineConstants)'" />
     <Exec Command="cd ITK &amp;&amp; ./build-sitk.sh" />
   </Target>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(DefineConstants.Contains(WINDOWS))'">
+  <Target Name="PreBuildWin" BeforeTargets="PreBuildEvent" Condition="'$(DefineConstants.Contains(WINDOWS))'">
     <Exec Command="ITK\link-sitk.bat" />
   </Target>
-
   <Import Project="..\itk-dependent.props" />
   
 </Project>
