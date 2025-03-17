@@ -1,4 +1,5 @@
-﻿using FlipProof.Image;
+﻿using FlipProof.Base;
+using FlipProof.Image;
 using FlipProof.Torch;
 using System.Numerics;
 using TorchSharp;
@@ -8,7 +9,59 @@ namespace FlipProof.ImageTests;
 [TestClass]
 public class ImageDoubleTests() : OperatorsTests(876)
 {
-   
+   [TestMethod]
+   public void GetVoxelsAsArray4D()
+   {
+      ImageHeader imageHeader = GetRandomHeader() with { Size = new ImageSize(3, 11, 13, 5) };
+
+      ImageDouble<TestSpace3D> orig = GetRandom(imageHeader, out Tensor<double> voxels);
+
+      var arr4D = orig.GetVoxelsAsArray4D();
+
+      AssertVoxelsMatch(arr4D, orig);
+
+   }
+
+   [TestMethod]
+   public void ConstructFromArray4D()
+   {
+      Array4D<double> arr4D = Array4D<double>.FromValueGenerator(3, 11, 13, 5, Random.Shared.NextDouble);
+      ImageHeader imageHeader = GetRandomHeader() with { Size = new ImageSize(3, 11, 13, 5) };
+
+#pragma warning disable CS0618 // Type or member is obsolete
+      ImageDouble<TestSpace3D> orig = new(imageHeader, arr4D);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+      AssertVoxelsMatch(arr4D, orig);
+   }
+
+   private static void AssertVoxelsMatch(Array4D<double> arr4D,  ImageDouble<TestSpace3D> orig)
+   {
+      ImageHeader imageHeader = orig.Header;
+      Assert.AreEqual(imageHeader.Size.X, arr4D.Size0);
+      Assert.AreEqual(imageHeader.Size.Y, arr4D.Size1);
+      Assert.AreEqual(imageHeader.Size.Z, arr4D.Size2);
+      Assert.AreEqual(imageHeader.Size.VolumeCount, arr4D.Size3);
+
+      HashSet<double> vals = new();
+      for (int vol = 0; vol < arr4D.Size3; vol++)
+      {
+         for (int i = 0; i < arr4D.Size0; i++)
+         {
+            for (int j = 0; j < arr4D.Size1; j++)
+            {
+               for (int k = 0; k < arr4D.Size2; k++)
+               {
+                  Assert.AreEqual(orig[i, j, k, vol], arr4D[i, j, k, vol]);
+                  Assert.IsTrue(vals.Add(orig[i, j, k, vol]), "Check voxel values are not all zeros");
+               }
+            }
+         }
+      }
+
+      Assert.IsTrue(vals.Count > 10, "Sanity check dims are not flat");
+   }
+
    private static void OperatorsDifferentTypeTest<TImage, TVoxel, TSpace, TTensor>(Func<ImageDouble<TSpace>> getIm0, Func<ImageHeader, TImage> getIm1) 
       where TImage : Image_SimpleNumeric<TVoxel,TSpace, TImage, TTensor>
       where TSpace : struct, ISpace

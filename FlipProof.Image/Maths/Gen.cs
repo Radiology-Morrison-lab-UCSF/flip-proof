@@ -2986,15 +2986,32 @@ public static class Gen
         return n - rem;
     }
 
-    public static int ToNextMultiple(int n, int multiple)
-    {
-        int rem = n % multiple;
-        if (rem == 0)
-        {
-            return n;
-        }
-        return n + multiple - rem;
-    }
+   public static int ToNextMultiple(int n, int multiple)
+   {
+      int rem = n % multiple;
+      if (rem == 0)
+      {
+         return n;
+      }
+      if (n < 0)
+      {
+         return n - rem;
+      }
+      return n + multiple - rem;
+   }
+   public static long ToNextMultiple(long n, long multiple)
+   {
+      long rem = n % multiple;
+      if (rem == 0)
+      {
+         return n;
+      }
+      if (n < 0)
+      {
+         return n - rem;
+      }
+      return n + multiple - rem;
+   }
 
     public static bool IsPowerOf2(int x)
     {
@@ -3007,13 +3024,13 @@ public static class Gen
 
    [CLSCompliant(false)]
    public static bool IsPowerOf2(uint x)
-    {
-        if (x != 0)
-        {
-            return (x & ~x + 1) == x;
-        }
-        return false;
-    }
+   {
+      if (x != 0)
+      {
+         return (x & ~x + 1) == x;
+      }
+      return false;
+   }
 
     public static double LogOnePlusX(double x)
     {

@@ -7,12 +7,14 @@ using FlipProof.Image.Maths;
 using FlipProof.Image.Matrices;
 using FlipProof.Torch;
 using TorchSharp;
+using static Tensorboard.ApiDef.Types;
 
 namespace FlipProof.Image.Nifti;
 
 public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, IComparable, IEquatable<T>
 {
-	private readonly long _sizeOfT;
+
+   private readonly long _sizeOfT;
 
 	public override long SizeOfT => _sizeOfT;
 
@@ -48,94 +50,88 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		return _voxels.ReadBytes((int)_voxels.Length).FromByteArray<T>();
 	}
 
-	
+
 	public override Image<TSpace> ToImage<TSpace>(bool applyScalingFactors = true)
-   {
+	{
 		bool scaleVoxels = applyScalingFactors && (base.Head.sclSlope != 1f || base.Head.scl_inter != 0f);
 		T[] voxels = GetAllVoxels();
 
+		// --- CAUTION ---
+		// Nifti files are written i (fastest), j, k, volume (slowest)
+		// Torch images are stored volume, k, j, i
+		// ---------------
+
+      ImageHeader imHead = ImageHeader.Create(Head);
+#pragma warning disable CS0618 // Type or member is obsolete
 
       if (scaleVoxels)
-      {
+		{
 			return voxels switch
 			{
-				bool[] b =>		ToFloatImage<bool, TSpace>(Head, b, Convert.ToSingle),
-				byte[] b =>		ToFloatImage<byte, TSpace>(Head, b, Convert.ToSingle),
-				UInt16[] b =>	ToFloatImage<UInt16, TSpace>(Head, b, Convert.ToSingle),
-				UInt32[] b =>	ToFloatImage<UInt32, TSpace>(Head, b, Convert.ToSingle),
-				UInt64[] b => ToDoubleImage<UInt64, TSpace>(Head, b, Convert.ToDouble),
-				sbyte[] b =>	ToFloatImage<sbyte, TSpace>(Head, b, Convert.ToSingle),
-				Int16[] b =>	ToFloatImage<Int16, TSpace>(Head, b, Convert.ToSingle),
-				Int32[] b =>	ToFloatImage<Int32, TSpace>(Head, b, Convert.ToSingle),
-				Int64[] b => ToDoubleImage<Int64, TSpace>(Head, b, Convert.ToDouble),
+				bool[] b => ToFloatImage<bool, TSpace>(Head, imHead, b, Convert.ToSingle),
+				byte[] b => ToFloatImage<byte, TSpace>(Head, imHead, b, Convert.ToSingle),
+				UInt16[] b => ToFloatImage<UInt16, TSpace>(Head, imHead, b, Convert.ToSingle),
+				UInt32[] b => ToFloatImage<UInt32, TSpace>(Head, imHead, b, Convert.ToSingle),
+				UInt64[] b => ToDoubleImage<UInt64, TSpace>(Head, imHead, b, Convert.ToDouble),
+				sbyte[] b => ToFloatImage<sbyte, TSpace>(Head, imHead, b, Convert.ToSingle),
+				Int16[] b => ToFloatImage<Int16, TSpace>(Head, imHead, b, Convert.ToSingle),
+				Int32[] b => ToFloatImage<Int32, TSpace>(Head, imHead, b, Convert.ToSingle),
+				Int64[] b => ToDoubleImage<Int64, TSpace>(Head, imHead, b, Convert.ToDouble),
 				// TO DO: reinstate once complex available again
 				//Complex[] b => ToComplexImage(head,b), // NB NiftiReader does not support double-pairs at the time of writing
-            double[] b =>  ToDoubleImage<TSpace>(Head, b, true),
+				float[] b => ToFloatImage<float, TSpace>(Head, imHead, b, a=>a),
+				double[] b => ToDoubleImage<double, TSpace>(Head, imHead, b, a=>a),
 				_ => throw new NotSupportedException($"Files of type {Head.dataType} are not supported")
 			};
-      }
+		}
 
-		ImageHeader imHead = ImageHeader.Create(Head);
-#pragma warning disable CS0618 // Type or member is obsolete
-      return voxels switch
-      {
-         // TO DO: Support other types
-         bool[] b => new ImageBool<TSpace>(imHead, b),
-         byte[] b => new ImageFloat<TSpace>(imHead, b.CastArrayToFloat()),
-         UInt16[] b => new ImageFloat<TSpace>(imHead, b.CastArrayToFloat()),
-         UInt32[] b => new ImageFloat<TSpace>(imHead, b.CastArrayToFloat()),
-         UInt64[] b => new ImageDouble<TSpace>(imHead, b.CastArrayToDouble()),
-         sbyte[] b => new ImageInt8<TSpace>(imHead, b),
-         Int16[] b => new ImageFloat<TSpace>(imHead, b.CastArrayToFloat()),
-         Int32[] b => new ImageFloat<TSpace>(imHead, b.CastArrayToFloat()),
-         Int64[] b => new ImageDouble<TSpace>(imHead, b.CastArrayToDouble()),
-         // TO DO: Reinstate once complex available again
-         //Complex[] b => ToImage(head, torch.tensor(b), Image3dComplex.Create), // NB NiftiReader does not support double-pairs at the time of writing
-         float[] b => new ImageFloat<TSpace>(imHead, b),
-         double[] b => new ImageDouble<TSpace>(imHead, b),
-         _ => throw new NotSupportedException($"Files of type {Head.dataType} are not supported")
-      };
+		return voxels switch
+		{
+			// TO DO: Support other types
+			bool[] b => new ImageBool<TSpace>(imHead, To4D(imHead.Size, b)),
+			byte[] b => ToFloatImage(imHead, b),
+			UInt16[] b => ToFloatImage(imHead, b),
+			UInt32[] b => ToFloatImage(imHead, b),
+			UInt64[] b => ToDoubleImage(imHead, b),
+			sbyte[] b => new ImageInt8<TSpace>(imHead, To4D(imHead.Size, b)),
+			Int16[] b => ToFloatImage(imHead, b),
+			Int32[] b => ToFloatImage(imHead, b),
+			Int64[] b => ToDoubleImage(imHead, b),
+			// TO DO: Reinstate once complex available again
+			//Complex[] b => ToImage(head, torch.tensor(b), Image3dComplex.Create), // NB NiftiReader does not support double-pairs at the time of writing
+			float[] b => ToFloatImage(imHead, b),
+			double[] b => ToDoubleImage(imHead, b),
+			_ => throw new NotSupportedException($"Files of type {Head.dataType} are not supported")
+		};
+
+      static ImageFloat<TSpace> ToFloatImage<S>(ImageHeader head, S[] arr) => new(head, To4D(head.Size, arr is float[] ff ? ff : arr.CastArrayToFloat()));
+      static ImageDouble<TSpace> ToDoubleImage<S>(ImageHeader head, S[] arr) => new(head, To4D(head.Size, arr is double[] ff ? ff : arr.CastArrayToDouble()));
 #pragma warning restore CS0618 // Type or member is obsolete
 
-
    }
+   private static Array4D<S> To4D<S>(ImageSize imSize, S[] xyzVol) where S : struct
+	{
+		if (imSize.Any(a => a > int.MaxValue))
+		{
+			throw new NotSupportedException($"Images of dimension > {int.MaxValue} are not supported");
+		}
+		Array4D<S> a4D = new((int)imSize.X, (int)imSize.Y, (int)imSize.Z, (int)imSize.VolumeCount, xyzVol);
+		return a4D;
+	}
 
-	private static ImageFloat<TSpace> ToFloatImage<TVox,TSpace>(NiftiHeader head, TVox[] unscaledVoxels, Func<TVox, float> convert)
+   private static ImageFloat<TSpace> ToFloatImage<TVox,TSpace>(NiftiHeader head, ImageHeader imHead, TVox[] unscaledVoxels, Func<TVox, float> convert)
       where TSpace : struct, ISpace
    {
 		float[] scaledVoxels = ScaleData(unscaledVoxels, convert, head.sclSlope, head.scl_inter);
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageFloat<TSpace>(ImageHeader.Create(head), scaledVoxels);
-#pragma warning restore CS0618 // Type or member is obsolete
+      return new ImageFloat<TSpace>(imHead, To4D(imHead.Size, scaledVoxels));
    }
-	private static ImageDouble<TSpace> ToDoubleImage<TVox,TSpace>(NiftiHeader head, TVox[] unscaledVoxels, Func<TVox, double> convert)
+	private static ImageDouble<TSpace> ToDoubleImage<TVox,TSpace>(NiftiHeader head, ImageHeader imHead, TVox[] unscaledVoxels, Func<TVox, double> convert)
       where TSpace : struct, ISpace
    {
 		double[] scaledVoxels = ScaleData(unscaledVoxels, convert, head.sclSlope, head.scl_inter);
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageDouble<TSpace>(ImageHeader.Create(head), scaledVoxels);
+      return new ImageDouble<TSpace>(imHead, To4D(imHead.Size, scaledVoxels));
 #pragma warning restore CS0618 // Type or member is obsolete
-   }
-
-   private static ImageDouble<TSpace> ToDoubleImage<TSpace>(NiftiHeader head, double[] unscaledVoxels, bool scaleVoxels)
-		where TSpace : struct, ISpace
-   {
-		double[] scaledVoxels = scaleVoxels ? ScaleVoxels(head, unscaledVoxels) : unscaledVoxels;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageDouble<TSpace>(ImageHeader.Create(head), scaledVoxels);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-      static double[] ScaleVoxels(NiftiHeader head, double[] unscaledVoxels)
-      {
-         double[] scaledVoxels = new double[unscaledVoxels.Length];
-         for (int i = 0; i < unscaledVoxels.Length; i++)
-         {
-            scaledVoxels[i] = unscaledVoxels[i] * head.sclSlope + head.scl_inter;
-         }
-
-         return scaledVoxels;
-      }
    }
 
 	// TO DO reinstate once complex is possible
@@ -150,25 +146,6 @@ public class NiftiFile<T> : NiftiFile_Base where T : struct, IComparable<T>, ICo
 		//return ToImage(head, torch.tensor(scaledVoxels), Image3dComplex.Create);
   // }
 	
-	private static TIm ToImage<TIm, TVoxel, TSpace>(NiftiHeader head, Tensor<TVoxel> scaledVoxels, Func<ImageHeader, Torch.Tensor<TVoxel>, TIm> createIm)
-		where TSpace : struct, ISpace
-		where TVoxel : struct
-		where TIm : Image<TVoxel, TSpace>
-   {
-      ImageHeader header = ImageHeader.Create(head);
-      return createIm(header, scaledVoxels);
-
-   }
-	
-	private static TIm ToImage<TIm, TVoxel, TSpace>(NiftiHeader head, TVoxel[] scaledVoxels, Func<ImageHeader, TVoxel[], TIm> createIm)
-		where TSpace : struct, ISpace
-		where TVoxel : struct
-		where TIm : Image<TVoxel, TSpace>
-   {
-      ImageHeader header = ImageHeader.Create(head);
-      return createIm(header, scaledVoxels);
-
-   }
 
 	/// <summary>
 	/// 

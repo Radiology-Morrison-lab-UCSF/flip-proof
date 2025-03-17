@@ -19,6 +19,16 @@ public static partial class TensorExtensionMethods
    }
 
    /// <summary>
+   /// Crops the tensor to the specified ranges
+   /// </summary>
+   /// <param name="tensor">The source tensor</param>
+   /// <param name="dimensionSizes">Sizes of each dimension</param>
+   [CLSCompliant(false)]
+   public static Tensor GetSubTensor(this Tensor tensor, params long[] dimensionSizes)
+   {
+      return tensor[dimensionSizes.Select(a => TensorIndex.Slice(0, a)).ToArray()];
+   }
+   /// <summary>
    /// Gets elements indicated by the mask and range for a 2D tensor
    /// </summary>
    /// <param name="tensor">The source tensor</param>

@@ -63,6 +63,16 @@ namespace FlipProof.ImageTests {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] fmri_example_float_nii {
+            get {
+                object obj = ResourceManager.GetObject("fmri_example_float_nii", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] fmri_example_nii {
             get {
                 object obj = ResourceManager.GetObject("fmri_example_nii", resourceCulture);

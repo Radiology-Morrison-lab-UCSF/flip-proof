@@ -1,6 +1,7 @@
 ﻿using FlipProof.Base;
 using FlipProof.Image.IO;
 using FlipProof.Torch;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using TorchSharp;
@@ -148,7 +149,7 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       _data = voxels;
       if(verifyShape)
       {
-         VerifyVoxelArrayShape(ISpace.GetOrientation<TSpace>()!);
+         VerifyVoxelArrayShape(ISpace.GetOrientation<TSpace>() ?? throw new OrientationException("Orientation is not yet registered"));
       }
    }
 
@@ -315,6 +316,12 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// </summary>
    /// <returns></returns>
    public Tensor<TVoxel> GetAllVoxelsAsTensor() => _data.DeepClone();
+
+   /// <summary>
+   /// Returns a copy of the voxels as a 4D array in managed memory
+   /// </summary>
+   /// <returns></returns>
+   public Array4D<TVoxel> GetVoxelsAsArray4D() => _data.Storage.ToArray<Array4D<TVoxel>, TVoxel>(arr => new Array4D<TVoxel>(arr[0], arr[1], arr[2], arr[3]), 4);
 
    public TVoxel GetMaxIntensity() => _data.GetScalarFromResult(torch.max);
    public TVoxel GetMinIntensity() => _data.GetScalarFromResult(torch.min);
@@ -504,6 +511,10 @@ public abstract class Image<TVoxel, TSpace, TSelf, TTensor> : Image<TVoxel, TSpa
    internal Image(TTensor voxels, bool verifyShape) : base(voxels, verifyShape)
    {
       Data = voxels;
+#if DEBUG
+      // If verify is true the orientation will have already been checked in the base class constructor
+      Debug.Assert(verifyShape || ISpace.GetOrientation<TSpace>() is not null, "Space is not initialised but using unsafe constructor");
+#endif
    }
 
    /// <summary>

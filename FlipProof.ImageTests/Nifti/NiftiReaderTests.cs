@@ -102,6 +102,16 @@ public class NiftiReaderTests
       Assert.AreEqual(201.2, world.Y, 0.001);
       Assert.AreEqual(102.6, world.Z, 0.001);
 
+      world = im.Header.VoxelToWorldCoordinate(21, 23, 13);
+      Assert.AreEqual(-201.6, world.X, 0.001);
+      Assert.AreEqual(82.2, world.Y, 0.001);
+      Assert.AreEqual(70.2, world.Z, 0.001);
+
+      // Is float because nifti contains scaling factors
+      Assert.AreEqual(9335f, ((ImageFloat<TestSpace4D>)im)[21, 23, 13,0], "Unexpected voxel value at this index");
+      Assert.AreEqual(9435f, ((ImageFloat<TestSpace4D>)im)[21, 23, 13,1], "Unexpected voxel value at this index");
+      Assert.AreEqual(9339f, ((ImageFloat<TestSpace4D>)im)[21, 23, 13,2], "Unexpected voxel value at this index");
+
    }
 
 

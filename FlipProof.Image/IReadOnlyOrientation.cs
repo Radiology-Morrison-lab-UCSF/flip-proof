@@ -74,7 +74,7 @@ public interface IReadOnlyOrientation
    /// <returns></returns>
    internal bool TolerantEquals(IReadOnlyOrientation other, ImageSize imageSize, double? toleranceOverride = null)
    {
-      double tolerance = toleranceOverride ??  VoxelSize.Min()! * 0.001; //1000th of the smallest dim in voxel size 
+      double tolerance = toleranceOverride ?? VoxelSize.Min()! * 0.001; //1000th of the smallest dim in voxel size 
 
       var this000 = this.VoxelToWorldCoordinate(0,0,0);
       var other000 = other.VoxelToWorldCoordinate(0,0,0);
