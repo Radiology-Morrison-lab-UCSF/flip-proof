@@ -103,6 +103,29 @@ public class Array4D<T> : IVoxelArray<T>, IDisposable
       _data = new Array3D<T>[size3];
       InitialiseAsBlank();
    }
+   /// <summary>
+   /// Creates a new 4D array
+   /// </summary>
+   /// <param name="size0">x</param>
+   /// <param name="size1">y</param>
+   /// <param name="size2">z</param>
+   /// <param name="size3">number of 3d volumes</param>
+   /// <param name="voxels">Ordered i (fastest),j,k,volume (slowest)</param>
+   /// <exception cref="ArgumentException"></exception>
+   public Array4D(int size0, int size1, int size2, int size3, T[] voxels) : this(size0, size1, size2, size3)
+   {
+      if(voxels.Length != NumberOfVoxels)
+      {
+         throw new ArgumentException($"Expected {voxels.Length} voxels but got {NumberOfVoxels}");
+      }
+      int voxelsPerVol = Size0 * Size1 * Size2;
+      int offset = 0;
+      for (int i = 0; i < _data.Length; i++)
+      {
+         _data[i].SetAllVoxels_XFastest(voxels.AsSpan(offset, voxelsPerVol));
+         offset += voxelsPerVol;
+      }
+   }
 
    public static Array4D<T> FromValueGenerator(int size0, int size1, int size2, int size3, Func<T> valueGenerator)
    {
@@ -256,11 +279,16 @@ public class Array4D<T> : IVoxelArray<T>, IDisposable
       return ranks;
    }
 
-   public T[] GetAllVoxels_XFastest()
+   /// <summary>
+   /// Writes voxels to the stream, ordered x,y,z,vols
+   /// </summary>
+   /// <param name="s"></param>
+   public void GetAllVoxels_XFastest(Stream s)
    {
-      T[][] voxelsByImage = _data.ToArray(a => a.GetAllVoxels_XFastest());
-
-      return Array2D<T>.ConcatRowwise(voxelsByImage);
+      foreach (var item in _data)
+      {
+         s.Write(item.GetAllVoxels_XFastest().ToBytes());
+      }
    }
 
 

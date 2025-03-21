@@ -19,11 +19,34 @@ public static class VoxelArrayExtensionMethods
    public static Tensor ToTensor<T>(this IVoxelArray<T> array) where T : struct => array.GetAllVoxels_LastDimFastest().ToTensor(array.Shape.Select(Convert.ToInt64).ToArray());
 
    /// <summary>
-   /// Returns a 4D tensor with the last dimension size 1
+   /// Returns a 4D tensor 
    /// </summary>
    [CLSCompliant(false)]
-   public static Tensor ToTensor4D<T>(this IVoxelArray<T> array) where T : struct => array.GetAllVoxels_LastDimFastest().ToTensor(array.Shape.Select(Convert.ToInt64).Append(1).ToArray());
+   public static Tensor ToTensor4D<T>(this IVoxelArray<T> array) where T : struct
+   {
+      var reordered = array.GetAllVoxels_LastDimFastest();
+      long[] sizes = GetDimSizes(array.Shape);
 
+      return reordered.ToTensor(sizes);
+
+      static long[] GetDimSizes(IReadOnlyList<int> inputShape)
+      {
+         long[] sizes = new long[4];
+         for (int i = 0; i < 4; i++)
+         {
+            if (i >= inputShape.Count)
+            {
+               sizes[i] = 1;
+            }
+            else
+            {
+               sizes[i] = inputShape[i];
+            }
+         }
+
+         return sizes;
+      }
+   }
    [CLSCompliant(false)]
    public static TArr ToArray<TArr,T>(this Tensor tensor, Func<int[], TArr> createEmptyArray, int expectedDimensions)
       where TArr:IVoxelArray<T>

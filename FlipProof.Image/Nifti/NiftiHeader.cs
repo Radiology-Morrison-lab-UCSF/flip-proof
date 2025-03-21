@@ -611,7 +611,7 @@ public class NiftiHeader : IEquatable<NiftiHeader>, IImageHeader
 		sformMatrix = other.Orientation.GetMatrix().ToFloat();
 		
 		float[]	pixelDims = new float[8] { 
-												other.Size.NDims, 
+												(float)qFac, 
 												(float)other.Orientation.VoxelSize.X,
                                     (float)other.Orientation.VoxelSize.Y,
                                     (float)other.Orientation.VoxelSize.Z, 

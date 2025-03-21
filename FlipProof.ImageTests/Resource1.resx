@@ -121,4 +121,7 @@
   <data name="fmri_example_nii" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>fmri-example.nii.gz;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="fmri_example_float_nii" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>fmri-example-float.nii.gz;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

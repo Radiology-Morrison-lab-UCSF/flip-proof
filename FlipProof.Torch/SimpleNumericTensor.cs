@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using TorchSharp;
+using TorchSharp.Modules;
 using static TorchSharp.torch;
 
 namespace FlipProof.Torch;
@@ -35,9 +37,28 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
    }
 
    /// <summary>
+   /// Applies a 3D kernel returning a new object cast to the same type as this
+   /// </summary>
+   /// <remarks>To force the type returned, cast this to the desired output type first</remarks>
+   /// <param name="kernel"></param>
+   /// <returns>A new <see cref="TSelf"/></returns>
+   /// <exception cref="ArgumentException">Kernel is the wrong shape</exception>
+   [CLSCompliant(false)]
+   public TSelf Apply3DKernel<S, TKernel>(SimpleNumericTensor<S, TKernel> kernel)
+      where S : struct
+      where TKernel : SimpleNumericTensor<S, TKernel>
+   {
+      if (kernel.NDims != 3)
+      {
+         throw new ArgumentException($"Expected 3D kernel but got {kernel.NDims}D");
+      }
+      return CreateFromTensor(nn.functional.conv3d(Storage, kernel.Storage), allowCast: true);
+   }
+
+   /// <summary>
    /// Forward fourier transform, returning single precision. Avoid usage on types that cannot be encoded by floats
    /// </summary>
-   /// <param name="dimensions">Which dimensions to transform</param>
+   /// <param name="dimensions">Which dimensions to transform</param> 
    protected Complex32Tensor FFTN(long[]? dimensions = null)
    {
       torch.Tensor result = torch.fft.fftn(Storage, dim:dimensions);

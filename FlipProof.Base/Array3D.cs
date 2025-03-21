@@ -7,13 +7,13 @@ namespace FlipProof.Base;
 /// Describes a 3D array of numbers
 /// </summary>
 /// <typeparam name="T">Number type</typeparam>
-public class Array3D<T> : IVoxelArray<T> where T : struct
+public class Array3D<T> : IVoxelArray<T>, IDisposable where T : struct
 {
    #region PARAMETERS
    // --- ADDITIONAL PARAMETERS TO CLONE METHOD(S) ----
 
    private readonly T[][][] data;
-
+   private bool _isDisposed;
    public IReadOnlyList<IReadOnlyList<T[]>> Data => data;
 
    public int Size0 { get; }
@@ -64,6 +64,32 @@ public class Array3D<T> : IVoxelArray<T> where T : struct
       }
 
       return From1D_XFastest(array, size0, size1, size2);
+   }
+
+   /// <summary>
+   /// Creates an new object given a value generator
+   /// </summary>
+   /// <param name="generator">Accepts i,j,k and returns the expected value</param>
+   /// <param name="size0"></param>
+   /// <param name="size1"></param>
+   /// <param name="size2"></param>
+   /// <returns></returns>
+   public static Array3D<T> FromValueGenerator(Func<int, int, int, T> generator, int size0, int size1, int size2)
+   {
+      Array3D<T> array = new(size0, size1, size2);
+
+      for (int i = 0; i < size0; i++)
+      {
+         for (int j = 0; j < size1; j++)
+         {
+            for (int k = 0; k < size2; k++)
+            {
+               array[i,j,k] = generator(i, j, k);
+            }
+         }
+      }
+
+      return array;
    }
 
    /// <summary>
@@ -965,4 +991,23 @@ public class Array3D<T> : IVoxelArray<T> where T : struct
       }
    }
 
+   public void Dispose()
+   {
+      if(_isDisposed)
+      {
+         return;
+      }
+      _isDisposed = true;
+
+      // dismantle data to potentially encourage GC
+      for (int i = 0; i < data.Length; i++)
+      {
+         var curD = data[i];
+         for(int j = 0; j < curD.Length; j++)
+         {
+            curD[j] = null!;
+         }
+         data[i] = null!;
+      }
+   }
 }

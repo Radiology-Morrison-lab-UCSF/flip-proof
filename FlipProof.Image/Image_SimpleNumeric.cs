@@ -130,6 +130,16 @@ public abstract class Image_SimpleNumeric<TVoxel, TSpace, TSelf, TTensor> : Imag
 
    #endregion
 
+   #region Filters
+
+   /// <summary>
+   /// Applies a 3D kernel to each volume and returns the result
+   /// </summary>
+   /// <param name="kernel">A 3D kernel</param>
+   /// <returns>A new object convolved with the kernel</returns>
+   internal TSelf Apply3DKernel(TTensor kernel) => UnsafeCreate(Data.Apply3DKernel(kernel));
+
+   #endregion
 
    #region Operators
 

@@ -1,56 +1,80 @@
-﻿using FlipProof.Image.Matrices;
-using FlipProof.Image.Nifti;
-using FlipProof.Image;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FlipProof.Image;
 using FlipProof.Image.IO;
-using System.Numerics;
-using FlipProof.Base;
+using FlipProof.Image.Nifti;
 
 namespace FlipProof.ImageTests.Nifti
 {
    [TestClass]
-   public class DecomposableNiftiTransformDTests
+   public class NiftiFile_BaseTests
    {
+      struct MyTestSpace : ISpace { }
+
+      /// <summary>
+      /// Checks that an image created from a nifti is aligned to that nifti
+      /// </summary>
       [TestMethod]
-      public void FromNiftiQuaternions()
+      public void ToImage_CoordinatesMatch()
       {
-         /*
-          * Rotation matrix should be:
-               [ -0.7081229,  0.4710896,  0.5259625;
-                  0.5995155,  0.0076180,  0.8003269;
-                  0.3730189,  0.8820525, -0.2878200 ]
-          */
-         var decomposable = DecomposableNiftiTransformD.FromNiftiQuaternions(0.3781795, 0.707736, 0.5942821, [5.4, 3.3, 7.1], [21.3, -87.1, 101.72], 1);
+         ReadFloatImage(out NiftiFile_Base nii, out ImageFloat<MyTestSpace> image);
 
-         var pixDim = decomposable.GetPixDim();
-         Assert.AreEqual(5.4, pixDim[0], 1e-6);
-         Assert.AreEqual(3.3, pixDim[1], 1e-6);
-         Assert.AreEqual(7.1, pixDim[2], 1e-6);
-         var trans = decomposable.GetTranslation();
-         Assert.AreEqual(21.3, trans[0], 1e-5);
-         Assert.AreEqual(-87.1, trans[1], 1e-5);
-         Assert.AreEqual(101.72, trans[2], 1e-4);
+         IReadOnlyOrientation orient1 = nii.Head.GetVox2WorldDecomposableMatrix_ScannerSpace();
+         IReadOnlyOrientation orient2 = image.Header.Orientation;
 
-         CollectionAssert.AreEqual(new double[] { -0.7081229, 0.4710896, 0.5259625 }, decomposable.GetRotation().GetRow(0),  new DoubleComparer(1e-4));
-         CollectionAssert.AreEqual(new double[] { 0.5995155, 0.0076180, 0.8003269 }, decomposable.GetRotation().GetRow(1), new DoubleComparer(1e-4));
-         CollectionAssert.AreEqual(new double[] { 0.3730189, 0.8820525, -0.2878200 }, decomposable.GetRotation().GetRow(2), new DoubleComparer(1e-4));
+         Assert.IsTrue(orient1.TolerantEquals(orient2, new ImageSize(nii.Head.DataArrayDims[1], nii.Head.DataArrayDims[2], nii.Head.DataArrayDims[3], nii.Head.DataArrayDims[4])));
 
-         // Check the orientation matrix is correct vs coordinates we've derived from
-         // third party programs
+      }
+      /// <summary>
+      /// Checks that a nifti created from an image is aligned to that image
+      /// </summary>
+      [TestMethod]
+      public void FromImage_CoordinatesMatch()
+      {
+         ReadFloatImage(out NiftiFile_Base orig, out ImageFloat<MyTestSpace> image);
+         orig.Dispose();
 
-         // 7,11,13 --> 60.18, 9.708, 121.3
+         using NiftiFile<float> result = NiftiFile_Base.FromImage(image);
 
-         var result = decomposable.VoxelToWorldCoordinate(7, 11, 13);
-         Assert.AreEqual(60.18, result.X, 0.01);
-         Assert.AreEqual(9.708, result.Y, 0.01);
-         Assert.AreEqual(121.3, result.Z, 0.1); // we only know to 4sf due to the third party programs only displaying this
+         IReadOnlyOrientation orient1 = result.Head.GetVox2WorldDecomposableMatrix_ScannerSpace();
+         IReadOnlyOrientation orient2 = image.Header.Orientation;
+
+         Assert.IsTrue(orient1.TolerantEquals(orient2, new ImageSize(orig.Head.DataArrayDims[1], orig.Head.DataArrayDims[2], orig.Head.DataArrayDims[3], orig.Head.DataArrayDims[4])));
 
       }
 
+      /// <summary>
+      /// Round trip of to-from image
+      /// </summary>
+      [TestMethod]
+      public void ToImageFromImage()
+      {
+         ReadFloatImage(out NiftiFile_Base read, out ImageFloat<MyTestSpace> im);
+
+         using var result = NiftiFile<float>.FromImage(im);
+
+
+         // nii --> im --> nii --> im
+         // will automatically check headers match
+         using var resultIm = result.ToImage<MyTestSpace>();
+         Assert.IsTrue((im == resultIm).GetAllVoxels().All(a => a));
+
+         // nii --> im --> nii
+         // just a voxelwise comparison
+         var origVox = read.GetDataStream();
+         var resultVox = result.GetDataStream();
+         origVox.Seek(0, SeekOrigin.Begin);
+         resultVox.Seek(0, SeekOrigin.Begin);
+
+         CollectionAssert.AreEqual(
+            origVox.ReadBytes((int)origVox.Length),
+            resultVox.ReadBytes((int)resultVox.Length));
+      }
+
+      private static void ReadFloatImage(out NiftiFile_Base read, out ImageFloat<MyTestSpace> im)
+      {
+         using NiftiReader nr = new(Gen.GetUnzippedStream(new MemoryStream(Resource1.fmri_example_float_nii, false), true));
+         Assert.IsTrue(nr.TryRead(out string msg, out read));
+         im = (ImageFloat<MyTestSpace>)read.ToImage<MyTestSpace>();
+      }
    }
 
    //[TestClass]

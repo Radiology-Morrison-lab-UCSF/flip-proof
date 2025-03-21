@@ -45,6 +45,11 @@ public sealed partial class ImageDouble<TSpace>
    {
 
    }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageDouble(ImageHeader header, Array4D<double> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
    internal override ImageDouble<TSpace> UnsafeCreate(DoubleTensor voxels) => ImageDouble<TSpace>.UnsafeCreateStatic(voxels);
 
 
@@ -136,6 +141,11 @@ public sealed partial class ImageInt8<TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageInt8(ImageHeader header, Array3D<sbyte> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt8(ImageHeader header, Array4D<sbyte> voxels) : base(header, voxels.ToTensor4D())
    {
 
    }
@@ -232,6 +242,11 @@ public sealed partial class ImageUInt8<TSpace>
    {
 
    }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageUInt8(ImageHeader header, Array4D<byte> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
    internal override ImageUInt8<TSpace> UnsafeCreate(UInt8Tensor voxels) => ImageUInt8<TSpace>.UnsafeCreateStatic(voxels);
 
 
@@ -322,6 +337,11 @@ public sealed partial class ImageInt16<TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageInt16(ImageHeader header, Array3D<Int16> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt16(ImageHeader header, Array4D<Int16> voxels) : base(header, voxels.ToTensor4D())
    {
 
    }
@@ -418,6 +438,11 @@ public sealed partial class ImageInt32<TSpace>
    {
 
    }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt32(ImageHeader header, Array4D<Int32> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
    internal override ImageInt32<TSpace> UnsafeCreate(Int32Tensor voxels) => ImageInt32<TSpace>.UnsafeCreateStatic(voxels);
 
 
@@ -508,6 +533,11 @@ public sealed partial class ImageInt64<TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageInt64(ImageHeader header, Array3D<Int64> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageInt64(ImageHeader header, Array4D<Int64> voxels) : base(header, voxels.ToTensor4D())
    {
 
    }
@@ -604,6 +634,11 @@ public sealed partial class ImageFloat<TSpace>
    {
 
    }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageFloat(ImageHeader header, Array4D<float> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
    internal override ImageFloat<TSpace> UnsafeCreate(FloatTensor voxels) => ImageFloat<TSpace>.UnsafeCreateStatic(voxels);
 
 
@@ -694,6 +729,11 @@ public sealed partial class ImageBool<TSpace>
 
    [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
    public ImageBool(ImageHeader header, Array3D<bool> voxels) : base(header, voxels.ToTensor4D())
+   {
+
+   }
+   [Obsolete("Header is checked at run time. Use an operation with an existing image instead to use compile-time-checks where possible")]
+   public ImageBool(ImageHeader header, Array4D<bool> voxels) : base(header, voxels.ToTensor4D())
    {
 
    }
