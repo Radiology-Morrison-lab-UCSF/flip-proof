@@ -1,7 +1,6 @@
 #pragma expandtemplate typeToReplace=ImageDouble
 #pragma expandtemplate ImageInt8 ImageUInt8 ImageInt16 ImageInt32 ImageInt64 ImageFloat ImageBool ImageComplex ImageComplex32
 
-using FlipProof.Torch;
 using static TorchSharp.torch;
 
 namespace FlipProof.Image;
