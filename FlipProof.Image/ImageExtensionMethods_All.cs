@@ -9,8 +9,6 @@ namespace FlipProof.Image;
 public static partial class ImageExtensionMethods
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageDouble<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageDouble<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -18,8 +16,9 @@ public static partial class ImageExtensionMethods
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageDouble<TSpaceResult>(tensor, true);
+      return new ImageDouble<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -87,8 +86,6 @@ public static partial class ImageExtensionMethods
 public static partial class ImageExtensionMethods_ImageInt8
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt8<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -96,8 +93,9 @@ public static partial class ImageExtensionMethods_ImageInt8
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt8<TSpaceResult>(tensor, true);
+      return new ImageInt8<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -164,8 +162,6 @@ public static partial class ImageExtensionMethods_ImageInt8
 public static partial class ImageExtensionMethods_ImageUInt8
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageUInt8<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageUInt8<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -173,8 +169,9 @@ public static partial class ImageExtensionMethods_ImageUInt8
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageUInt8<TSpaceResult>(tensor, true);
+      return new ImageUInt8<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -241,8 +238,6 @@ public static partial class ImageExtensionMethods_ImageUInt8
 public static partial class ImageExtensionMethods_ImageInt16
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageInt16<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt16<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -250,8 +245,9 @@ public static partial class ImageExtensionMethods_ImageInt16
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt16<TSpaceResult>(tensor, true);
+      return new ImageInt16<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -318,8 +314,6 @@ public static partial class ImageExtensionMethods_ImageInt16
 public static partial class ImageExtensionMethods_ImageInt32
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageInt32<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt32<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -327,8 +321,9 @@ public static partial class ImageExtensionMethods_ImageInt32
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt32<TSpaceResult>(tensor, true);
+      return new ImageInt32<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -395,8 +390,6 @@ public static partial class ImageExtensionMethods_ImageInt32
 public static partial class ImageExtensionMethods_ImageInt64
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageInt64<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageInt64<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -404,8 +397,9 @@ public static partial class ImageExtensionMethods_ImageInt64
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageInt64<TSpaceResult>(tensor, true);
+      return new ImageInt64<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -472,8 +466,6 @@ public static partial class ImageExtensionMethods_ImageInt64
 public static partial class ImageExtensionMethods_ImageFloat
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageFloat<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageFloat<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -481,8 +473,9 @@ public static partial class ImageExtensionMethods_ImageFloat
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageFloat<TSpaceResult>(tensor, true);
+      return new ImageFloat<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -549,8 +542,6 @@ public static partial class ImageExtensionMethods_ImageFloat
 public static partial class ImageExtensionMethods_ImageBool
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageBool<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageBool<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -558,8 +549,9 @@ public static partial class ImageExtensionMethods_ImageBool
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageBool<TSpaceResult>(tensor, true);
+      return new ImageBool<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -626,8 +618,6 @@ public static partial class ImageExtensionMethods_ImageBool
 public static partial class ImageExtensionMethods_ImageComplex
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageComplex<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageComplex<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -635,8 +625,9 @@ public static partial class ImageExtensionMethods_ImageComplex
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageComplex<TSpaceResult>(tensor, true);
+      return new ImageComplex<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
@@ -703,8 +694,6 @@ public static partial class ImageExtensionMethods_ImageComplex
 public static partial class ImageExtensionMethods_ImageComplex32
 {
 
-
-
    [OrientationCheckedAtRuntime]
    public static ImageComplex32<TSpaceResult> ExtractVolume<TSpaceIn, TSpaceResult>(this ImageComplex32<TSpaceIn> me, int index)
    where TSpaceIn : struct, ISpace<TSpaceResult>
@@ -712,8 +701,9 @@ public static partial class ImageExtensionMethods_ImageComplex32
    {
       var tensor = me.Data.CreateFromTensor(me.ExtractVolumeAsTensor(index));
 
+      ImageHeader headerFor3D = ISpace.GetOrientation<TSpaceResult>() ?? me.Header.As3D();
 #pragma warning disable CS0618 // Type or member is obsolete
-      return new ImageComplex32<TSpaceResult>(tensor, true);
+      return new ImageComplex32<TSpaceResult>(headerFor3D, tensor);
 #pragma warning restore CS0618 // Type or member is obsolete
    }
 
