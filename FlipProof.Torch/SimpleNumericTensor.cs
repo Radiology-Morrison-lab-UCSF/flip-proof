@@ -36,6 +36,53 @@ public abstract class SimpleNumericTensor<T,TSelf> : NumericTensor<T,TSelf>
       return (this as TSelf)!;
    }
 
+   #region Statistics
+   /// <summary>
+   /// Mean over all elements
+   /// </summary>
+   /// <returns></returns>
+   public double Mean()
+   {
+      using Tensor t = Storage.mean(ListDimensions(), type: ScalarType.Float64);
+      return t.ToDouble();
+   }
+   /// <summary>
+   /// Std Dev over all elements
+   /// </summary>
+   /// <param name="populationStdDev">Divides by n-1, not n to obtain the unbiased population std dev</param>
+   /// <returns></returns>
+   public double StdDev(bool populationStdDev=true)
+   {
+      Tensor asD = Storage.@double(); // std is only supported for double, float, complex, and does not calculate at double precision for float
+      try
+      {
+         using Tensor t = asD.std(ListDimensions(), unbiased: populationStdDev);
+         return t.ToDouble();
+      }
+      finally
+      {
+         if (!object.ReferenceEquals(asD, Storage))
+         {
+            asD.Dispose();
+         }
+      }
+   }
+
+   /// <summary>
+   /// Returns an array of dimensions this contains
+   /// </summary>
+   private long[] ListDimensions()
+   {
+      long[] longs = new long[this.Shape.Length];
+      for (long i = 0; i < longs.Length; i++)
+      {
+         longs[i] = i;
+      }
+      return longs;
+   }
+
+   #endregion
+
    /// <summary>
    /// Applies a 3D kernel returning a new object cast to the same type as this
    /// </summary>

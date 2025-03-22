@@ -13,6 +13,8 @@ public sealed partial class ImageDouble<TSpace> : Image_FloatingPoint<double, TS
 
    #region Parameters
 
+   #endregion
+
    #region Pythonic Operators
    public ImageDouble<TSpace> Add_UInt8(ImageUInt8<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data + right.Data);
    [CLSCompliant(false)]
@@ -51,7 +53,8 @@ public sealed partial class ImageDouble<TSpace> : Image_FloatingPoint<double, TS
    public ImageDouble<TSpace> Div_Double(ImageDouble<TSpace> right) => ImageDouble<TSpace>.UnsafeCreateStatic(Data / right.Data);
    #endregion
 
-   #endregion
+
+   protected override double DoubleToTVoxel(double val) => val;
 
    /// <summary>
    /// Multiplies the first factor then adds the second, in place.
