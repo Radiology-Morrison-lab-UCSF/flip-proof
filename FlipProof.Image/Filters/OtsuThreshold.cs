@@ -1,17 +1,8 @@
-﻿using FlipProof.Base;
-using FlipProof.Torch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FlipProof.Torch;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 using TorchSharp;
-using TorchSharp.Modules;
 
 namespace FlipProof.Image.Filters;
-
 public class OtsuThreshold
 {
    /// <summary>

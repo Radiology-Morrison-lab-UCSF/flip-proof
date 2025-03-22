@@ -20,6 +20,14 @@ public static class ArrayExtensions
       }
    }
 
+   public static void FillArray<T>(this T[] vals, Func<T> val)
+   {
+      for (int i = 0; i < vals.Length; i++)
+      {
+         vals[i] = val.Invoke();
+      }
+   }
+
 
    public static T[] Flatten<T>(this T[][] jagged)
    {

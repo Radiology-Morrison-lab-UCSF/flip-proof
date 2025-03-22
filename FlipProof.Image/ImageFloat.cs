@@ -8,6 +8,8 @@ public sealed partial class ImageFloat<TSpace> : Image_FloatingPoint<float,TSpac
       where TSpace : struct, ISpace
 {
 
+   protected override float DoubleToTVoxel(double val) => Convert.ToSingle(val);
+
    /// <summary>
    /// Multiplies the first factor then adds the second, in place.
    /// </summary>

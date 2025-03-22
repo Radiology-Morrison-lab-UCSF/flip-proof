@@ -14,23 +14,22 @@ public abstract class FloatingPointTensorTests<T,TTensor>
    protected abstract TTensor ToTensor(T[] inputs);
    static T Cast(int t) => (T)Convert.ChangeType(t, typeof(T));
    static T Cast(float t) => (T)Convert.ChangeType(t, typeof(T));
+   static T Cast(double t) => (T)Convert.ChangeType(t, typeof(T));
    static T[] Cast(int[] t) => t.Select(Cast).ToArray();
+   static T[] Cast(double[] t) => t.Select(Cast).ToArray();
    
 
    [TestMethod]
    public void ReplaceNaN()
    {
       T[] vals = [T.NaN, T.NaN, Cast(5), Cast(7), Cast(11), T.NaN];
-      T[] expected = Cast([13, 13, 5, 7, 11, 13]);
+      T[] expected = Cast(new int[] { 13, 13, 5, 7, 11, 13 });
 
       using TTensor tensor = ToTensor(vals);
-
-      TTensor result = tensor.ReplaceNaN(Cast(13));
+      using TTensor result = tensor.ReplaceNaN(Cast(13));
 
       Assert.AreNotSame(tensor, result);
-
       CollectionAssert.AreEqual(expected, result.ToArray());
-
    }
 
    #region Simple Elementwise Operations
@@ -149,6 +148,20 @@ public abstract class FloatingPointTensorTests<T,TTensor>
 
 
    #endregion
+
+   [TestMethod]
+   public void DivideOperator()
+   {
+      T[] input = Cast([13, 17, 5, 19, 191, float.MaxValue]);
+      double denominator = 7d;
+      T[] expected = Cast([13/ denominator, 17 / denominator, 5 / denominator, 19 / denominator, 191 / denominator, float.MaxValue / denominator]);
+
+      using TTensor tensor = ToTensor(input);
+      using TTensor result = tensor / Cast(denominator);
+
+      Assert.AreNotSame(tensor, result);
+      CollectionAssert.AreEqual(expected, result.ToArray());
+   }
 }
 
 

@@ -73,6 +73,45 @@ public abstract class SimpleNumericTensorTests<T,S>
    }
 
    [TestMethod]
+   public void Mean()
+   {
+      T[] inputArray= GetTestArray();
+
+      double mean = inputArray.Select(a => Convert.ToDouble(a)).Average();
+
+      using S tensor1D = ToTensor(inputArray);
+      double result = tensor1D.Mean();
+      Assert.AreEqual(mean, result, mean * 1e-8);
+
+      using S tensor2D = tensor1D.CreateFromTensor( tensor1D.Storage.reshape(inputArray.Length / 2, 2));
+      result = tensor2D.Mean();
+      Assert.AreEqual(mean, result, mean * 1e-8);
+
+   }
+
+   [TestMethod]
+   [DataRow(true)]
+   [DataRow(false)]
+   public void StdDev(bool unbiased)
+   {
+      T[] inputArray= GetTestArray();
+      double[] inputArrayD = inputArray.Select(a => Convert.ToDouble(a)).ToArray();
+
+      double mean = inputArray.Select(a => Convert.ToDouble(a)).Average();
+      double expected = Math.Sqrt( inputArrayD.Sum(a => Math.Pow(a - mean, 2)) / (unbiased ? inputArray.Length - 1 : inputArray.Length));
+
+      using S tensor1D = ToTensor(inputArray);
+      double result = tensor1D.StdDev(unbiased);
+      Assert.AreEqual(expected, result, expected * 1e-8);
+
+      using S tensor2D = tensor1D.CreateFromTensor( tensor1D.Storage.reshape(inputArray.Length / 2, 2));
+      result = tensor2D.StdDev(unbiased);
+      Assert.AreEqual(expected, result, expected * 1e-8);
+
+   }
+
+
+   [TestMethod]
    public void MulScalar()
    {
       T[] inputArray = Cast([3, 4, 3, 2]);

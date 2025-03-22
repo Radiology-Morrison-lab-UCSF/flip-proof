@@ -101,4 +101,8 @@ public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSe
       Storage.round_();
       return (this as TSelf)!;
    }
+
+   #region Operators
+   public static TSelf operator /(FloatingPointTensor<T, TSelf> left, T right) => CreateTensor(left.Storage / left.CreateScalar(right).Storage, false);
+   #endregion
 }

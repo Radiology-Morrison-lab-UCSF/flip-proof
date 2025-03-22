@@ -80,6 +80,19 @@ public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Imag
 
    #endregion
 
+   #region Statistics
+
+   public new TVoxel Mean() => DoubleToTVoxel(base.Mean());
+   public new TVoxel StdDev() => DoubleToTVoxel(Data.StdDev());
+
+
+   #endregion
+
+   /// <summary>
+   /// Converts a <see cref="double"/> to <see cref="TVoxel"/>
+   /// </summary>
+   protected abstract TVoxel DoubleToTVoxel(double val);
+
    /// <summary>
    /// Rounds voxel values in place
    /// </summary>
@@ -92,5 +105,6 @@ public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Imag
 
    public static TSelf operator -(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data - right);
    public static TSelf operator +(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data + right);
+   public static TSelf operator /(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data / right);
 
 }
