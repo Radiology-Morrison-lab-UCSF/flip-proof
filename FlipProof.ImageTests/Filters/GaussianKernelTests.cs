@@ -13,7 +13,7 @@ public class GaussianKernelTests
 
       GaussianKernel kern = new(sigma);
 
-      AssertEqual(1, 0,0,0);
+      AssertEqual(1, 0, 0, 0);
 
       double expectedAt1Sigma = Math.Exp(-(sigma * sigma) / (2 * sigma * sigma));
       AssertEqual(expectedAt1Sigma, sigmaI, 0, 0);
@@ -21,9 +21,9 @@ public class GaussianKernelTests
       AssertEqual(expectedAt1Sigma, 0, 0, sigmaI);
 
 
-      double expectedAt2Sigma = Math.Exp(-(2 * sigma * 2* sigma) / (2 * sigma * sigma));
-      AssertEqual(expectedAt2Sigma, sigmaI*2, 0, 0);
-      AssertEqual(expectedAt2Sigma, 0, sigmaI*2, 0);
+      double expectedAt2Sigma = Math.Exp(-(2 * sigma * 2 * sigma) / (2 * sigma * sigma));
+      AssertEqual(expectedAt2Sigma, sigmaI * 2, 0, 0);
+      AssertEqual(expectedAt2Sigma, 0, sigmaI * 2, 0);
       AssertEqual(expectedAt2Sigma, 0, 0, sigmaI * 2);
 
 
@@ -53,3 +53,4 @@ public class GaussianKernelTests
       }
    }
 }
+

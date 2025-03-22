@@ -22,7 +22,13 @@ internal interface IKernel<TVoxel> where TVoxel:struct, INumber<TVoxel>
    /// Performs normalisation on the kernel, by default by ensuring it adds to 1
    /// </summary>
    /// <param name="kern"></param>
-   void NormaliseKernel(Array3D<TVoxel> kern)
+   void NormaliseKernel(Array3D<TVoxel> kern) => NormaliseKernelTo(kern, TVoxel.One);
+   
+   /// <summary>
+   /// Performs normalisation on the kernel, by ensuring it adds to the provided value
+   /// </summary>
+   /// <param name="kern"></param>
+   internal static void NormaliseKernelTo(Array3D<TVoxel> kern, TVoxel targetSum)
    {
       TVoxel sum = TVoxel.Zero;
       TVoxel[] allValues = kern.GetAllVoxels_XFastest();
@@ -30,9 +36,12 @@ internal interface IKernel<TVoxel> where TVoxel:struct, INumber<TVoxel>
       {
          sum += item;
       }
+
+      TVoxel mulBy = targetSum / sum;
+
       for (int i = 0; i < allValues.Length; i++)
       {
-         allValues[i] /= sum;
+         allValues[i] *= mulBy;
       }
       kern.SetAllVoxels_XFastest(allValues);
    }
