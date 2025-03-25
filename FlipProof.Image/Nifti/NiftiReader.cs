@@ -100,6 +100,8 @@ where TSpace : struct, ISpace
    {
       return ReadToFloat<TSpace>(fileLoc, lookForZippedVariantIfNotFound: false, out origNifti);
 	}
+	public static ImageBool<TSpace> ReadToBool<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound = true) where TSpace : struct, ISpace
+      =>  ReadToBool<TSpace>(fileLoc, lookForZippedVariantIfNotFound: lookForZippedVariantIfNotFound, out _);
    public static ImageBool<TSpace> ReadToBool<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
       where TSpace : struct, ISpace
    {

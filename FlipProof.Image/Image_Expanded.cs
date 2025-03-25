@@ -70,7 +70,7 @@ public sealed partial class ImageDouble<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageDouble<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -79,7 +79,7 @@ public sealed partial class ImageDouble<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageDouble<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageDouble<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -169,7 +169,7 @@ public sealed partial class ImageInt8<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageInt8<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -178,7 +178,7 @@ public sealed partial class ImageInt8<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageInt8<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageInt8<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -267,7 +267,7 @@ public sealed partial class ImageUInt8<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageUInt8<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -276,7 +276,7 @@ public sealed partial class ImageUInt8<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageUInt8<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageUInt8<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -365,7 +365,7 @@ public sealed partial class ImageInt16<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageInt16<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -374,7 +374,7 @@ public sealed partial class ImageInt16<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageInt16<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageInt16<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -463,7 +463,7 @@ public sealed partial class ImageInt32<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageInt32<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -472,7 +472,7 @@ public sealed partial class ImageInt32<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageInt32<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageInt32<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -561,7 +561,7 @@ public sealed partial class ImageInt64<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageInt64<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -570,7 +570,7 @@ public sealed partial class ImageInt64<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageInt64<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageInt64<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -659,7 +659,7 @@ public sealed partial class ImageFloat<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageFloat<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -668,7 +668,7 @@ public sealed partial class ImageFloat<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageFloat<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageFloat<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
@@ -757,7 +757,7 @@ public sealed partial class ImageBool<TSpace>
    /// <returns>A new image with those values falling outside the mask set to the default value</returns>
    public ImageBool<TSpace> this[ImageBool<TSpace> mask]
    {
-      get => Masked(mask);
+      get => Mask(mask);
       set => Set(value, mask);
    }
 
@@ -766,7 +766,7 @@ public sealed partial class ImageBool<TSpace>
    /// </summary>
    /// <param name="mask"></param>
    /// <returns></returns>
-   public ImageBool<TSpace> Masked(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
+   public ImageBool<TSpace> Mask(ImageBool<TSpace> mask) => UnsafeCreate(_data.Masked(mask.Data));
 
    /// <summary>
    /// Voxels that are true in the mask are set to the provided value
