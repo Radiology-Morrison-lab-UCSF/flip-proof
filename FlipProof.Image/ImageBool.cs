@@ -72,6 +72,7 @@ public partial class ImageBool<TSpace> : Image<bool, TSpace, ImageBool<TSpace>, 
    /// <returns>Bounds of true values</returns>
    public Box4D<long> GetMaskBoundingBox() => Data.GetMaskBounds4D();
 
+
    #region Operators
 
    /// <summary>

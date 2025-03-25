@@ -49,6 +49,7 @@ public abstract class Image<TSpace> : IDisposable
    public abstract ImageBool<TSpace> ToBool();
    public abstract ImageFloat<TSpace> ToFloat();
    public abstract ImageDouble<TSpace> ToDouble();
+   public abstract ImageUInt8<TSpace> ToUInt8();
 
 #pragma warning disable CS0618 // Type or member is obsolete
    protected ImageBool<TSpace> VoxelwiseEquals(Image<TSpace> other) => new(new BoolTensor( RawData.eq(other.RawData)), false);
@@ -245,6 +246,10 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
    /// </summary>
    /// <returns></returns>
    public override ImageBool<TSpace> ToBool() => ImageBool<TSpace>.UnsafeCreateStatic(_data.ToBool());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+   public override ImageUInt8<TSpace> ToUInt8() => this is ImageUInt8<TSpace> imF ? imF : new(_data.ToUInt8(), false);
+
 
 #pragma warning disable CS0618 // Type or member is obsolete
    [CLSCompliant(false)]

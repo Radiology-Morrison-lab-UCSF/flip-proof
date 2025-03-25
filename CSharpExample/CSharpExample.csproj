@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\base.props" />
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->    <!-- Optionally force copy of dependencies from FlipProof.Torch -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlipProof.Base\FlipProof.Base.csproj" />
+    <ProjectReference Include="..\FlipProof.Image\FlipProof.Image.csproj" />
+    <ProjectReference Include="..\FlipProof.ITK\FlipProof.ITK.csproj" />
+    <ProjectReference Include="..\FlipProof.Torch\FlipProof.Torch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SimpleITKCSharpManaged">
+      <HintPath>..\FlipProof.ITK\ITK\current-build\SimpleITKCSharpManaged.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
