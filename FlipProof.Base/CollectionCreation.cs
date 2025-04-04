@@ -231,6 +231,46 @@ public static class CollectionCreation
       }
       throw new NotSupportedException(typeof(T).Name + " is not supported");
    }
+   public static Int16[] CastArrayToInt16<T>(this T[] arr)
+   {
+      if (arr is double[] d)
+      {
+         return Array.ConvertAll(d, Convert.ToInt16);
+      }
+      if (arr is sbyte[] sb)
+      {
+         return Array.ConvertAll(sb, Convert.ToInt16);
+      }
+      if (arr is byte[] b)
+      {
+         return Array.ConvertAll(b, Convert.ToInt16);
+      }
+      if (arr is ushort[] us)
+      {
+         return Array.ConvertAll(us, Convert.ToInt16);
+      }
+      if (arr is short[] s)
+      {
+         return Array.ConvertAll(s, Convert.ToInt16);
+      }
+      if (arr is int[] ai)
+      {
+         return Array.ConvertAll(ai, Convert.ToInt16);
+      }
+      if (arr is uint[] ui)
+      {
+         return Array.ConvertAll(ui, Convert.ToInt16);
+      }
+      if (arr is long[] l)
+      {
+         return Array.ConvertAll(l, Convert.ToInt16);
+      }
+      if (arr is ulong[] ul)
+      {
+         return Array.ConvertAll(ul, Convert.ToInt16);
+      }
+      throw new NotSupportedException(typeof(T).Name + " is not supported");
+   }
 
    public static double[] CastArrayToDouble(this float[] arr)
    {

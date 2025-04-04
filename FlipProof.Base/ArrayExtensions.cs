@@ -1,7 +1,9 @@
 ﻿using FlipProof.Base.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +61,42 @@ public static class ArrayExtensions
       return trans;
    }
 
+
+
+   /// <summary>
+   /// Performs an action depending on the type of the array, overcoming bugs in C# wrt to switching on types (e.g. int[] is uint[])
+   /// </summary>
+   /// <exception cref="NotSupportedException">unsupported type</exception>
+   [CLSCompliant(false)]
+   public static TReturn ArraySwitch<T, TReturn>(this T[] arr,
+      Func<bool[], TReturn> onBool,
+      Func<sbyte[], TReturn> onSByte,
+      Func<Int16[], TReturn> onInt16,
+      Func<Int32[], TReturn> onInt32,
+      Func<Int64[], TReturn> onInt64,
+      Func<byte[], TReturn> onByte,
+      Func<UInt16[], TReturn> onUInt16,
+      Func<UInt32[], TReturn> onUInt32,
+      Func<UInt64[], TReturn> onUInt64,
+      Func<float[], TReturn> onFloat,
+      Func<double[], TReturn> onDouble)
+   {
+      return typeof(T) switch
+      {
+         Type t when t == typeof(bool) => onBool((bool[])(object)arr),
+         Type t when t == typeof(sbyte) => onSByte((sbyte[])(object)arr),
+         Type t when t == typeof(Int16) => onInt16((Int16[])(object)arr),
+         Type t when t == typeof(Int32) => onInt32((Int32[])(object)arr),
+         Type t when t == typeof(Int64) => onInt64((Int64[])(object)arr),
+         Type t when t == typeof(byte) => onByte((byte[])(object)arr),
+         Type t when t == typeof(UInt16) => onUInt16((UInt16[])(object)arr),
+         Type t when t == typeof(UInt32) => onUInt32((UInt32[])(object)arr),
+         Type t when t == typeof(UInt64) => onUInt64((UInt64[])(object)arr),
+         Type t when t == typeof(float) => onFloat((float[])(object)arr),
+         Type t when t == typeof(double) => onDouble((double[])(object)arr),
+         _ => throw new NotSupportedException($"{typeof(T).Name} is not supported")
+      };
+   }
 }
 
 

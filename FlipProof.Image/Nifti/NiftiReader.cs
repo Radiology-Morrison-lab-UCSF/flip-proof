@@ -145,6 +145,19 @@ where TSpace : struct, ISpace
       }
       return asD;
    }
+   public static ImageInt16<TSpace> ReadToInt16<TSpace>(FilePath fileLoc, bool lookForZippedVariantIfNotFound, out NiftiFile_Base origNifti)
+		where TSpace : struct, ISpace
+   {
+      origNifti = Read(fileLoc, lookForZippedVariantIfNotFound);
+      var im = origNifti.ToImage<TSpace>();
+
+      ImageInt16<TSpace> asD = im.ToInt16();
+      if (!object.ReferenceEquals(asD, im))
+      {
+         im.Dispose();
+      }
+      return asD;
+   }
    private static void Checkfilename(ref FilePath fileLoc, bool changeFilenameToZippedVariantIfNotFound)
 	{
 		if (changeFilenameToZippedVariantIfNotFound)

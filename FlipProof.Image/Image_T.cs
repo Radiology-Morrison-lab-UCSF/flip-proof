@@ -50,6 +50,7 @@ public abstract class Image<TSpace> : IDisposable
    public abstract ImageFloat<TSpace> ToFloat();
    public abstract ImageDouble<TSpace> ToDouble();
    public abstract ImageUInt8<TSpace> ToUInt8();
+   public abstract ImageInt16<TSpace> ToInt16();
 
 #pragma warning disable CS0618 // Type or member is obsolete
    protected ImageBool<TSpace> VoxelwiseEquals(Image<TSpace> other) => new(new BoolTensor( RawData.eq(other.RawData)), false);
@@ -249,6 +250,8 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
 #pragma warning disable CS0618 // Type or member is obsolete
    public override ImageUInt8<TSpace> ToUInt8() => this is ImageUInt8<TSpace> imF ? imF : new(_data.ToUInt8(), false);
+#pragma warning disable CS0618 // Type or member is obsolete
+   public override ImageInt16<TSpace> ToInt16() => this is ImageInt16<TSpace> imF ? imF : new(_data.ToInt16(), false);
 
 
 #pragma warning disable CS0618 // Type or member is obsolete
