@@ -72,6 +72,27 @@ public partial class ImageBool<TSpace> : Image<bool, TSpace, ImageBool<TSpace>, 
    /// <returns>Bounds of true values</returns>
    public Box4D<long> GetMaskBoundingBox() => Data.GetMaskBounds4D();
 
+
+   public IEnumerable<XYZA<double>> GetWorldCoordsWhereTrue()
+   {
+      foreach(var coord in GetAllVoxelIndicesWhereTrue())
+      {
+         var worldCoord = Header.VoxelToWorldCoordinate(coord.X, coord.Y, coord.Z);
+         yield return new XYZA<double>(worldCoord.X, worldCoord.Y, worldCoord.Z, coord.A);
+      }
+   }
+
+   public IEnumerable<XYZA<long>> GetAllVoxelIndicesWhereTrue()
+   {
+      Int64Tensor indices = Int64Tensor.CreateTensor(torch.argwhere(Data.Storage), false);
+
+      long count = indices.Shape[0];
+      for (int i = 0; i < count; i++)
+      {
+         yield return VoxelCoordsToTensorCoords(new(indices[i, 0], indices[i, 1], indices[i, 2], indices[i, 3]));
+      }
+   }
+
    #region Operators
 
    /// <summary>

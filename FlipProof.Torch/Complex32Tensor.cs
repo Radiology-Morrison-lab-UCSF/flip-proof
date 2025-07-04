@@ -18,6 +18,18 @@ public sealed partial class Complex32Tensor : ComplexNumericTensor<Complex32, Co
    [CLSCompliant(false)]
    public override Tensor ArrayToTensor(Complex32[] arr) => torch.tensor(arr.Select(a=>(a.Real, a.Imaginary)).ToArray());
 
+#warning needs unit test
+   public FloatTensor GetReal() => new(Storage.real.clone());
+#warning needs unit test
+   public FloatTensor GetImaginary() => new(torch.imag(Storage).clone());
+
+   /// <summary>
+   /// Calculates the magnitude of the complex number: sqrt(real^2 + imag^2)
+   /// </summary>
+   /// <returns></returns>
+#warning needs unit test
+   public FloatTensor GetMagnitude() => new(Storage.abs());
+
    [CLSCompliant(false)]
    protected override Complex32 ToScalar(Tensor t) => new(t.ToComplex32());
 
@@ -36,6 +48,17 @@ public sealed partial class Complex32Tensor : ComplexNumericTensor<Complex32, Co
    }
 
    /// <summary>
+   /// Performs FFT shift to have negative frequencies first, a periodic shift so that the origin is in the center of the image
+   /// </summary>
+   /// <param name="dimensions">Dimensions to transform</param>
+   public Complex32Tensor FFTShift(long[]? dimensions = null)
+   {
+#warning needs unit test
+      var realImag = torch.fft.fftshift(Storage, dim:dimensions);
+      return Complex32Tensor.CreateTensor(realImag, false);
+   }
+
+   /// <summary>
    /// Inverse fourier transform
    /// </summary>
    /// <param name="dimensions">Dimensions to transform</param>
@@ -45,5 +68,20 @@ public sealed partial class Complex32Tensor : ComplexNumericTensor<Complex32, Co
       return FloatTensor.CreateTensor(realImag.real, true);
    }
 
+   /// <summary>
+   /// Multiplies real by the provided tensor, elementwise, in place
+   /// </summary>
+   /// <param name="right"></param>
+   /// <returns></returns>
+   public Complex32Tensor MultiplyInPlace(FloatTensor right)
+   {
+#warning needs unit test
+      Storage.mul_(right.Storage);
+      return this;
+   }
 
+   //#region Operators
+   // TO DO
+   //public static Complex32Tensor operator *(Complex32Tensor left, FloatTensor right) => CreateTensor(left.Storage * right.Storage, false);
+   //#endregion
 }

@@ -75,6 +75,13 @@ public abstract class FloatingPointTensor<T, TSelf> : SimpleNumericTensor<T, TSe
 
    #endregion
 
+   /// <summary>
+   /// Computes the arctangent of the quotient of two tensors, element-wise. This object is the y in atan2(y,x)
+   /// </summary>
+   /// <param name="x">The denominator</param>
+  #warning needs unit test
+   public TSelf ATan2(TSelf x) => CreateFromTensor(Storage.atan2(x.Storage));
+
 
    /// <summary>
    /// This divided by the other, and floors the result

@@ -13,7 +13,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </None>
-    <None Update="..\FlipProof.ITK\ITK\current-build\SimpleITKCSharpNative.dll">
+    <!-- The asterisk below prevents this breaking when building for linux -->
+    <None Update="..\FlipProof.ITK\ITK\current-build\SimpleITKCSharpNative*.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </None>

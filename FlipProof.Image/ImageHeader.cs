@@ -71,12 +71,9 @@ public record ImageHeader(ImageSize Size,
 
 
 
-   public XYZ<double> VoxelToWorldCoordinate(XYZ<float> vox) => VoxelToWorldCoordinate(vox.X, vox.Y, vox.Z);
-   
-   public XYZ<double> VoxelToWorldCoordinate(float x, float y, float z)
-   {
-      return Orientation.VoxelToWorldCoordinate(x, y, z);
-   }
+   public XYZ<double> VoxelToWorldCoordinate(XYZ<float> vox) => Orientation.VoxelToWorldCoordinate(vox.X, vox.Y, vox.Z);
+   public XYZ<double> VoxelToWorldCoordinate(XYZA<float> vox) => Orientation.VoxelToWorldCoordinate(vox.X, vox.Y, vox.Z);
+   public XYZ<double> VoxelToWorldCoordinate(float x, float y, float z) => Orientation.VoxelToWorldCoordinate(x, y, z);
 
 
 

@@ -39,8 +39,35 @@ public sealed partial class ImageComplex32<TSpace> : ImageComplexType<Complex32,
    #endregion
 
 
-   public ImageFloat<TSpace> IFFT() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.IFFTN([0,1,2]));
+   public ImageFloat<TSpace> IFFT() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.IFFTN([TensorCoordI, TensorCoordJ, TensorCoordK]));
+   /// <summary>
+   /// Performs FFT shift to have negative frequencies first, a periodic shift so that the origin is in the center of the image
+   /// </summary>
+#warning unit test required
+   public ImageComplex32<TSpace> FFTShift() => UnsafeCreateStatic(Data.FFTShift([TensorCoordI, TensorCoordJ, TensorCoordK]));
 
+   /// <summary>
+   /// Returns a copy of the real component
+   /// </summary>
+   /// <returns></returns>
+   public ImageFloat<TSpace> GetReal() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.GetReal());
+   /// <summary>
+   /// Returns a copy of the imaginary component
+   /// </summary>
+   public ImageFloat<TSpace> GetImaginary() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.GetImaginary());
+
+   /// <summary>
+   /// Multiplies elementwise, in place, and returns this object
+   /// </summary>
+   /// <param name="other"></param>
+   /// <returns></returns>
+   public ImageComplex32<TSpace> MultiplyInPlace(ImageFloat<TSpace> other)
+   {
+      Data.MultiplyInPlace(other.Data);
+      return this;
+   }
+
+   public ImageFloat<TSpace> GetMagnitude() => ImageFloat<TSpace>.UnsafeCreateStatic(Data.GetMagnitude());
 
    #region Operators
 
@@ -61,7 +88,7 @@ public sealed partial class ImageComplex32<TSpace> : ImageComplexType<Complex32,
    //public static ImageComplex32<TSpace> operator *(float left, ImageComplex32<TSpace> right) => right.OperatorToNew(t => t.multiply(left), Create);
    //public static ImageComplex32<TSpace> operator *(ImageComplex32<TSpace> left, ImageDouble<TSpace> right) => left.OperatorToNew(right, torch.multiply, Create);
    //public static ImageComplex32<TSpace> operator *(ImageDouble<TSpace> left, ImageComplex32<TSpace> right) => left.OperatorToNew(right, torch.multiply, Create);
-   //public static ImageComplex32<TSpace> operator *(ImageComplex32<TSpace> left, ImageFloat<TSpace>  right) => left.OperatorToNew(right, torch.multiply, Create);
+   //public static ImageComplex32<TSpace> operator *(ImageComplex32<TSpace> left, ImageFloat<TSpace>  right) => left.UnsafeCreate(left.Data * right.Data);
    //public static ImageComplex32<TSpace> operator *(ImageFloat<TSpace>  left, ImageComplex32<TSpace> right) => left.OperatorToNew(right, torch.multiply, Create);
 
 

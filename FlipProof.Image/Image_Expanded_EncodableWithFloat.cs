@@ -8,22 +8,26 @@ namespace FlipProof.Image;
 public partial class ImageFloat<TSpace>
 {
    public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN([0, 1, 2]));
+
 }
 
 #region TEMPLATE EXPANSION
 public partial class ImageInt8<TSpace>
 {
    public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN([0, 1, 2]));
+
 }
 
 public partial class ImageUInt8<TSpace>
 {
    public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN([0, 1, 2]));
+
 }
 
 public partial class ImageInt16<TSpace>
 {
    public ImageComplex32<TSpace> FFT() => ImageComplex32<TSpace>.UnsafeCreateStatic(Data.FFTN([0, 1, 2]));
+
 }
 
 #endregion TEMPLATE EXPANSION

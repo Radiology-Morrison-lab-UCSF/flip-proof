@@ -103,6 +103,13 @@ public abstract class Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> : Imag
       return (this as TSelf)!;
    }
 
+   /// <summary>
+   /// Computes the arctangent of the quotient of two tensors, element-wise. This object is the y in atan2(y,x)
+   /// </summary>
+   /// <param name="x">The denominator</param>
+   public TSelf ATan2(TSelf x) => UnsafeCreate(Data.ATan2(x.Data));
+
+
    public static TSelf operator -(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data - right);
    public static TSelf operator +(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data + right);
    public static TSelf operator /(Image_FloatingPoint<TVoxel, TSpace, TSelf, TTensor> left, TVoxel right) => left.UnsafeCreate(left.Data / right);

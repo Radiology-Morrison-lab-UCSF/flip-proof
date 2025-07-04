@@ -275,6 +275,15 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
 
    #region Get / Calc
 
+   #region Image ijk to Tensor ijk
+   // -----------------------------
+   // Be extremely careful altering the relationship between image and tensor
+   // coordinates. Ensure any change updates all methods in this section
+   // -----------------------------
+
+   /// <summary>
+   /// Gets the voxel at this location
+   /// </summary>
    public TVoxel this[int x, int y, int z, int volume]
    {
       get => _data[x, y, z, volume];
@@ -307,6 +316,36 @@ public abstract class Image<TVoxel, TSpace> : Image<TSpace>
       get => this[index.X, index.Y, index.Z, volume];
       set => this[index.X, index.Y, index.Z, volume] = value;
    }
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   internal static XYZA<long> VoxelCoordsToTensorCoords(XYZA<long> voxelCoords) => voxelCoords;
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   internal static XYZA<long> TensorCoordsToVoxelCoords(XYZA<long> voxelCoords) => voxelCoords;
+
+   /// <summary>
+   /// Index in tensor indicating image i
+   /// </summary>
+   internal const long TensorCoordI = 0;
+   /// <summary>
+   /// Index in tensor indicating image j
+   /// </summary>
+   internal const long TensorCoordJ = 1;
+   /// <summary>
+   /// Index in tensor indicating image k
+   /// </summary>
+   internal const long TensorCoordK = 2;
+   /// <summary>
+   /// Index in tensor indicating image vol
+   /// </summary>
+   internal const long TensorCoordVol = 3;
+
+   // -----------------------------
+   // Be extremely careful altering the relationship between image and tensor
+   // coordinates. Ensure any change updates all methods in this section
+   // -----------------------------
+
+   #endregion
 
    public IEnumerable<XYZA<long>> GetAllVoxelIndices() => Header.Size.GetAllVoxelIndices();
 
